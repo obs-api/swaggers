@@ -5,7 +5,7 @@
     "version": "2.0",
     "title": "Core Information",
     "x-logo": {
-      "url": "https://developer.orange.com/ope-contents/developers/me/offers/m7SPJpGL8FzTElI2/products/9o5OZf2T2w6Ga6Rk/contents/WbUTLp4sjIn9r0TG",
+      "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
       "backgroundColor": "#FFFFFF"
     },
     "contact": {
@@ -3597,10 +3597,6 @@
                   "UNKNOWN"
                 ],
                 "description": "Role of the Configuration Item. The Equipment or Access Line can be a main (Primary) or not (secondary) equipment, access line."
-              },
-              "reference": {
-                "type": "string",
-                "description": "Commercial Reference of the Configuration Item."
               },
               "hardware": {
                 "type": "object",

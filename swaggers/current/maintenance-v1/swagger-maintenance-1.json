@@ -1,0 +1,828 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Describes a Enterprise Scheduled Works API.\nScheduled works are maintenance periods on your network that can be transparent or provide a service disruption. Origins can be Customer Changes, Orange Backbones changes and also Carriers Changes. Customers can also submit Maintenance Period planned in their premises.\nThe visibility is  -24 days up to +24 days. \nSome Carriers scheduled works can be visible if occurred after the next 24 days.\n\n**Release: pre-release 1.1**\nAddition of header parameters along with version and doc API enhancement\n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **Scheduled Works** : A scheduled Work is a maintenance periods initiated by on your network (Technical changes), on the Orange Business Service Backbones or partner Carriers. \n- **Search** : used to retrieve Scheduled Works thanks to a complex search.\n- **Snapshots** : used to determine the number of Scheduled Works based on an attribute.\n- **Status** : used to know the status of API components.\n\n### Scheduled Work Management API performs the following operations :\n- Create a Scheduled Work.\n- Retrieve a Scheduled Work or a collection of Scheduled Works or only one Scheduled Work.\n- Find Scheduled Works  by using a complex search.\n- Report a Scheduled Work.\n- Compute statistics on Scheduled Works.\n\n##\n### Scopes for Auth 2.0  \n \nThe API requires an OAuth 2.0 authentication. During the authentication, the scope must be specified.\n| Scope | Features |\n| --- | --- |\n| b2b.maintenance |  Manage your Scheduled Works |\n| b2b.maintenance.readonly |  View your Scheduled Works |\n\n\n### Webhooks/ notifications \n> Not available yet\n\nYou can receive notification but you have to subscribe to event thru the   [API Administration  portal](https://#)   or via [Webhook Management API](https://#)   \n\n| Event  | Comment |\n| --- | --- |\n| b2b.maintenance.new | Trigged when a Scheduled Works is added |\n| b2b.maintenance.update | Trigged when a Scheduled Work is modified |\n \n\n\n***\nCopyright © OBS 2017. All Rights Reserved.\n\n",
+    "version": "1.0",
+    "title": "API Maintenance for Business",
+    "x-logo": {
+      "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  "host": "api.orange.com",
+  "basePath": "/maintenance/b2b/v1/ScheduleWorks",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json;charset=utf-8"
+  ],
+  "tags": [
+    {
+      "name": "ScheduledWorks",
+      "description": "Track and Report Schedule Works"
+    }
+  ],
+  "paths": {
+    "/scheduledWorks": {
+      "get": {
+        "tags": [
+          "ScheduledWorks"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "scheduledWorkFind",
+        "summary": "List all scheduled works",
+        "description": "Returns a list of Scheduled Works (20 max per default) sorted by the updated date in descending order.\nThe number of returned items and the sort can be changed with query parameters.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first element of the collection",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of elements to retrieve (it can be greater than the actual available number of items).",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. Fields must be separated by a comma.",
+            "type": "string",
+            "enum": [
+              "id",
+              "-id",
+              "externalReference",
+              "-externalReference",
+              "group",
+              "-group",
+              "status",
+              "-status",
+              "impact",
+              "-impact",
+              "requestType",
+              "-requestType",
+              "priority",
+              "-priority",
+              "period.startAt",
+              "-period.startAt",
+              "period.endAt",
+              "-period.endAt",
+              "requestedAt",
+              "-requestedAt",
+              "customer.id",
+              "-customer.id",
+              "customer.name",
+              "-customer.name",
+              "impactedDevice.id",
+              "-impactedDevice.id",
+              "impactedDevice.externalReference",
+              "-impactedDevice.externalReference",
+              "impactedDevice.address.country",
+              "-impactedDevice.address.country",
+              "impactedDevice.address.region",
+              "-impactedDevice.address.region",
+              "impactedDevice.address.city",
+              "-impactedDevice.address.city",
+              "contact.firstname",
+              "-contact.firstname",
+              "contact.lastname",
+              "-contact.lastname",
+              "contact.name",
+              "-contact.name",
+              "contact.email",
+              "-contact.email"
+            ]
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve. Fields must be separated by a comma. If empty all fields are returned.\nNot available in MVP Phase #1",
+            "type": "string"
+          },
+          {
+            "name": "externalReference",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  external reference set by the Customer. \n_Example: group=TY00_\nNOTE: Not supported yet",
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "filters by the group (common id when an event impacts several devices).\n_Example: group=X400503434_",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "filters by the status.\n_Example: status=planned_",
+            "type": "string"
+          },
+          {
+            "name": "impact",
+            "required": false,
+            "in": "query",
+            "description": "filters by the impact.\n_Example: impact=degradedMode_",
+            "type": "string",
+            "enum": [
+              "moreThanFiveMinutes",
+              "betweenOneAndFiveMinutes",
+              "lessOneMinute",
+              "degradedMode",
+              "noImpact"
+            ]
+          },
+          {
+            "name": "requestType",
+            "required": false,
+            "in": "query",
+            "description": "filters by the requestType.\n_Example: requestType=networkChange_",
+            "type": "string"
+          },
+          {
+            "name": "priority",
+            "required": false,
+            "in": "query",
+            "description": "filters by the priority.\n_Example: priority=expedite_",
+            "type": "string",
+            "enum": [
+              "expedite",
+              "emergency",
+              "planned"
+            ]
+          },
+          {
+            "name": "contact.name",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  lastname of the contact.\n_Example: contact.name=john%20DOE_",
+            "type": "string"
+          },
+          {
+            "name": "contact.firstname",
+            "required": false,
+            "in": "query",
+            "description": "filters by the firstname of the contact.\n_Example: contact.firstname=John_",
+            "type": "string"
+          },
+          {
+            "name": "contact.lastname",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  lastname of the contact.\n_Example: contact.lastname=DOE_",
+            "type": "string"
+          },
+          {
+            "name": "contact.email",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  email of the contact.\n_Example: contact.email=joe.doe@orange.com_",
+            "type": "string"
+          },
+          {
+            "name": "impactedDevice.id",
+            "required": false,
+            "in": "query",
+            "description": "filters by the id of the impacted device.\n_Example: impactedDevice.id=KBE45003_",
+            "type": "string"
+          },
+          {
+            "name": "impactedDevice.externalReference",
+            "required": false,
+            "in": "query",
+            "description": "filters by the externalReference of the impacted device.\n_Example: impactedDevice.externalReference=A00453_",
+            "type": "string"
+          },
+          {
+            "name": "impactedDevice.address.city",
+            "required": false,
+            "in": "query",
+            "description": "filters by the city of the impacted device.\n_Example: impactedDevice.address.city=London_",
+            "type": "string"
+          },
+          {
+            "name": "impactedDevice.address.region",
+            "required": false,
+            "in": "query",
+            "description": "filters by region of the impacted device.\n_Example: impactedDevice.address.region=emea_",
+            "type": "string"
+          },
+          {
+            "name": "impactedDevice.address.country",
+            "required": false,
+            "in": "query",
+            "description": "filters by country of the impacted device.\n_Example: impactedDevice.address.country=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.startedAt",
+            "required": false,
+            "in": "query",
+            "description": "filters by start date of the maintenance period\n_Example: period.startedAt=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.endedAt",
+            "required": false,
+            "in": "query",
+            "description": "filters by end date of the maintenance period\n_Example: period.endedAt=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.duration",
+            "required": false,
+            "in": "query",
+            "description": "filters by end date of the maintenance period\n_Example: period.duration=2_",
+            "type": "string"
+          },
+          {
+            "name": "period.frequency",
+            "required": false,
+            "in": "query",
+            "description": "filters by the frequency of the maintenance period\n_Example: period.frequency=2_",
+            "type": "string"
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "filters by the customer id /code.\n_Example: customer.name=123456",
+            "type": "string"
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "filters by the customer name.\n_Example: customer.name=ACME",
+            "type": "string"
+          },
+          {
+            "name": "customer.segment",
+            "required": false,
+            "in": "query",
+            "description": "filters by the segment of the customer .\n_Example: customer.segment=int",
+            "type": "string"
+          } 
+           
+           
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ScheduledWork"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items in the collection.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items contained in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          } 
+         
+          
+        }
+      }
+    },
+    "/scheduledWorks/{ScheduledWorkId}": {
+      "get": {
+        "tags": [
+          "ScheduledWorks"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "scheduledWorkGet",
+        "summary": "Get details of scheduled work",
+        "description": "This method allows to retrieve all details of a specific scheduled work via the id.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "ScheduledWorkId",
+            "required": true,
+            "in": "path",
+            "description": "",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve. Fields must be separated by a comma. If empty all fields are returned.\nNot available in MVP Phase #1",
+            "type": "string"
+          } 
+           
+           
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ScheduledWork"
+            },
+            "headers": {
+              "X-OAPI-Request-Id": {
+                "description": "",
+                "type": "string"
+              }
+            }
+          },
+         
+          
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Regions": {
+      "description": "List of International regions",
+      "type": "string",
+      "enum": [
+        "emea",
+        "apac",
+        "amer"
+      ]
+    },
+    "Segments": {
+      "description": "List of Customer Segments",
+      "type": "string",
+      "enum": [
+        "fr",
+        "int"
+      ]
+    },
+    "Statuses": {
+      "description": "List of possible values of Status",
+      "type": "string",
+      "enum": [
+        "cancel",
+        "planning",
+        "released",
+        "logged",
+        "rejected",
+        "rescheduled",
+        "successful",
+        "closed"
+      ]
+    },
+    "Impacts": {
+      "description": "List all different impacts",
+      "type": "string",
+      "enum": [
+        "moreThanFiveMinutes",
+        "betweenOneAndFiveMinutes",
+        "lessOneMinute",
+        "degradedMode",
+        "noImpact"
+      ]
+    },
+    "GroupBy": {
+      "description": "List of attributes for the Snapshot groupBy query parameter.",
+      "type": "string",
+      "enum": [
+        "priority",
+        "status",
+        "group",
+        "impact",
+        "type",
+        "customer.id",
+        "customer.name",
+        "requestType",
+        "impactedDevice.id",
+        "impactedDevice.externalReference",
+        "impactedDevice.address.city",
+        "impactedDevice.address.region",
+        "impactedDevice.address.country",
+        "period.startedAt",
+        "period.endedAt",
+        "period.duration",
+        "period.frequency"
+      ]
+    },
+    "Sort": {
+      "description": "Possible attributes for the sort on the query & search end-points",
+      "type": "string",
+      "enum": [
+        "id",
+        "-id",
+        "externalReference",
+        "-externalReference",
+        "group",
+        "-group",
+        "status",
+        "-status",
+        "impact",
+        "-impact",
+        "requestType",
+        "-requestType",
+        "priority",
+        "-priority",
+        "period.startAt",
+        "-period.startAt",
+        "period.endAt",
+        "-period.endAt",
+        "requestedAt",
+        "-requestedAt",
+        "customer.id",
+        "-customer.id",
+        "customer.name",
+        "-customer.name",
+        "impactedDevice.id",
+        "-impactedDevice.id",
+        "impactedDevice.externalReference",
+        "-impactedDevice.externalReference",
+        "impactedDevice.address.country",
+        "-impactedDevice.address.country",
+        "impactedDevice.address.region",
+        "-impactedDevice.address.region",
+        "impactedDevice.address.city",
+        "-impactedDevice.address.city",
+        "contact.firstname",
+        "-contact.firstname",
+        "contact.lastname",
+        "-contact.lastname",
+        "contact.name",
+        "-contact.name",
+        "contact.email",
+        "-contact.email"
+      ]
+    },
+    "impactTypes": {
+      "description": "",
+      "type": "string",
+      "enum": [
+        "direct",
+        "indirect"
+      ]
+    },
+    "Priority": {
+      "description": "List of possible values for Priority",
+      "type": "string",
+      "enum": [
+        "expedite",
+        "emergency",
+        "planned"
+      ]
+    },
+    "SnapshotMode": {
+      "description": "Indicates the return format on snapshots",
+      "type": "string",
+      "enum": [
+        "standard",
+        "explode"
+      ]
+    },
+    "Granularity": {
+      "description": "List of possible granularity for Snapshots with an Date attribute",
+      "type": "string",
+      "enum": [
+        "second",
+        "hour",
+        "day",
+        "week",
+        "month",
+        "year"
+      ]
+    },
+    "Error": {
+      "description": "",
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "infoURL": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "ScheduledWork": {
+      "description": "Description of the  Schedule Work model.",
+      "required": [
+        "id",
+        "group",
+        "status",
+        "impact",
+        "title",
+        "description",
+        "contact",
+        "priority",
+        "period",
+        "customer",
+        "issuedAt",
+        "issuedBy",
+        "region",
+        "comment",
+        "createdAt",
+        "updatedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "single Identifier of the Scheduled Work",
+          "type": "string"
+        },
+        "externalReference": {
+          "description": "customer reference for the scheduled work.",
+          "type": "string"
+        },
+        "group": {
+          "description": "common id od the event, especially used when the event impacts several devices",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/Statuses"
+        },
+        "impact": {
+          "$ref": "#/definitions/Impacts"
+        },
+        "title": {
+          "description": "Title of the the schedule work",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the schedule work",
+          "type": "string"
+        },
+        "contact": {
+          "$ref": "#/definitions/Individual"
+        },
+        "requestedAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "priority": {
+          "$ref": "#/definitions/Priority"
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "issuedAt": {
+          "description": "Date indicating when the Scheduled Work has been issued. The format of the date must be compliant with ISO-8601",
+          "type": "string",
+          "format": "date"
+        },
+        "issuedBy": {
+          "description": "Indicate the name of the company in charge of the scheduled work (Orange Business Services or a Carrier name)",
+          "type": "string"
+        },
+        "impactedDevice": {
+          "$ref": "#/definitions/Device"
+        },
+        "requestType": {
+          "description": "Type of the change request",
+          "type": "string"
+        },
+        "region": {
+          "$ref": "#/definitions/Regions"
+        },
+        "comment": {
+          "description": "Orange Business Services Comment",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "Date of creation of item. The format of the date must be compliant with ISO-8601",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "description": "Date of the last update of the item. The format of the date must be compliant with ISO-8601.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Individual": {
+      "description": "Describe the model of an  individual.",
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Single identifier of the individual.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Formatted name composed of the title and the first and last name of the individual.",
+          "type": "string"
+        },
+        "title": {
+          "description": "The title of the individual.\n_Example: Mr., Mrs., or Miss_",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the individual.",
+          "type": "string"
+        },
+        "middleName": {
+          "description": "The middle name of the individual.",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "The last name of the individual.",
+          "type": "string"
+        },
+        "gender": {
+          "description": "The gender of the individual.",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the individual. There is no need to include the scheme \"mailto:\".",
+          "type": "string"
+        },
+        "phone": {
+          "description": "The phone number.  Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        },
+        "mobile": {
+          "description": "The mobile phone number. Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        }
+      }
+    },
+    "Customer": {
+      "description": "Model of a Customer",
+      "required": [
+        "id",
+        "name",
+        "segment"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Single identifier of the customer. It is your Customer code.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the Customer.",
+          "type": "string"
+        },
+        "segment": {
+          "$ref": "#/definitions/Segments"
+        }
+      }
+    },
+    "Device": {
+      "description": "Description of the Device Model",
+      "required": [
+        "id",
+        "externalReference",
+        "isDirectImpact",
+        "address"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Single identifier of a device",
+          "type": "string"
+        },
+        "externalReference": {
+          "description": "Reference of the device set by the customer.",
+          "type": "string"
+        },
+        "isDirectImpact": {
+          "description": "flag indicating if the impact is direct or indirect",
+          "type": "boolean"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        }
+      }
+    },
+    "Address": {
+      "description": "Description of the Address model",
+      "required": [
+        "streetName",
+        "city",
+        "postalCode",
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "streetName": {
+          "description": "Name of the street.",
+          "type": "string"
+        },
+        "streetExtensionName": {
+          "description": "extension name of the street.",
+          "type": "string"
+        },
+        "locality": {
+          "description": "Locality of the address.\n_Example: Sophia-Antipolis_",
+          "type": "string"
+        },
+        "city": {
+          "description": "Name of the city",
+          "type": "string"
+        },
+        "postalCode": {
+          "description": "postalCode of the address",
+          "type": "string"
+        },
+        "country": {
+          "description": "The ISO code of the country based on the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) norm.\n_Example: FR, GB, DE, IT, ES_",
+          "type": "string"
+        },
+        "formattedAddress": {
+          "description": "The full address containing the street number, street letter, street name, postal code, city name and country\nNot available for the time being",
+          "type": "string"
+        },
+        "geographicPoint": {
+          "$ref": "#/definitions/GeoCoding"
+        }
+      }
+    },
+    "GeoCoding": {
+      "description": "Description of the geographical point model.",
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "description": "Latitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "description": "Longitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "accuracy": {
+          "description": "Accuracy of the geographical point.",
+          "type": "string"
+        }
+      }
+    },
+    "Period": {
+      "description": "Description of the  maintenance period",
+      "required": [
+        "startedAt",
+        "endedAt",
+        "duration"
+      ],
+      "type": "object",
+      "properties": {
+        "startedAt": {
+          "description": "Start date of the maintenance periodDefined in [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string"
+        },
+        "endedAt": {
+          "description": "End date of the maintenance period. Defined in [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string",
+          "format": "date-time"
+        },
+        "frequency": {
+          "description": "Frequency in case of recurrent maintenance period.",
+          "type": "string"
+        },
+        "duration": {
+          "description": "Duration in Minutes of the maintenance period",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3508 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Describes a Customer API for managing bills.\n \n \n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **bills** : A bill  is a request for payment of money owed. It defines the services used, the charges, usage dates and different amounts.\n- **billingAccounts** :  used to retrieve billing account informations.\n- **search** : used to retrieve bills with complex search.\n- **reports** : used to get reports.\n- **snapshots** : used to determine the number of bills based on an attribute.\n- **status** : used to know the status of API components.\n\n### Billing Management API performs the following operations :\n- Retrieve a bill or a collection of bills depending on filter criteria.\n- Download a bill file.\n- Retrieve bill's items depending on filter criteria.\n- Retrieve a billing account number or a colelction of billing account numbers depending on filter criteria.\n- Retrieve the list of bills by using a complex search.\n- Create a report, retrieve one or a collection of reports depending on filter criteria.\n- Download a report file.\n- Retrieve statistics on bills depending on filter criteria.\n\n##\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:bills |  Allow to track bills |\n| b2b:bills:read |  Allow to track bills |\n\n<!--\n### Webhook / Hub\n\n- You can register a listener\n- You can unregister a listener\n- You can publish an eventType\n\n| Event  | Comment |\n| --- | --- |\n| bill_created | Trigged when a new bill is added |\n| bill_updated | Trigged when a bill is modified |\n| bill_completed | Trigged when a bill is completed |\n-->\n\n\n***\nCopyright © OBS 2017. All Rights Reserved.\n\n",
+    "version": "2.0",
+    "title": "Billing",
+    "x-logo": {
+      "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
+      "backgroundColor": "#FFFFFF"
+    }
+  },
+  "host": "api.orange.com",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "produces": [
+    "application/json;charset=utf-8"
+  ],
+  "tags": [
+    {
+      "name": "Bills",
+      "description": ""
+    },
+    {
+      "name": "Items",
+      "description": ""
+    },
+    {
+      "name": "BillingAccounts",
+      "description": ""
+    },
+    {
+      "name": "Search",
+      "description": ""
+    },
+    {
+      "name": "Snapshots",
+      "description": ""
+    },
+    {
+      "name": "Reports",
+      "description": ""
+    },
+    {
+      "name": "CustomerSpecificReports",
+      "description": ""
+    },
+    {
+      "name": "Status",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/bills": {
+      "get": {
+        "tags": [
+          "Bills"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "billFind",
+        "summary": "List all bills.",
+        "description": "Returns a list of bills sorted by issue date descending.\nThe number of returned items and the sort can be changed with query parameters.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The comma-separated list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order.",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "billingAccount.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of the given billing account.",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of the given type.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "invoice",
+                "creditNote"
+              ]
+            }
+          },
+          {
+            "name": "issuedAt",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of specified issuedAt. It's possible to use interval (in this case the start date is inclusive, and the end date is exclusive).\n_Example: \"?issuedAt=2010-01-01/2010-02-01\" or \"?issuedAt=2010-01-01/\" or \"?issuedAt=/2010-02-01\"_",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "currency.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of the given currency. Format: Three-letter ISO 4217 currency code.",
+            "type": "string"
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of specified period. It’s possible to use interval (in this case the start date is inclusive, and the end date is exclusive).\nExample: “?period=2010-01-01/2010-02-01” or “?period=2010-01-01/” or “?period=/2010-02-01”",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "sendingFormat",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills for the given sending format.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "paper",
+                "eInvoicing"
+              ]
+            }
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills for the given customer ID.",
+            "type": "string"
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills for the given customer name.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Bill"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/bills/{BillId}": {
+      "get": {
+        "tags": [
+          "Bills"
+        ],
+        "produces": [
+          "application/json",
+          "application/pdf",
+          "application/zip"
+        ],
+        "operationId": "billGet",
+        "summary": "Retrieve a bill.",
+        "description": "Retrieves the details of an existing bill. Supply the unique bill ID from the bill list and API will return the corresponding bill information. To download the bill's PDF file, you have to specify \"Accept\" header with \"application/pdf\" value. For Italian invoices in FatturaPA format, the value is \"application/zip\".",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "BillId",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Bill"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/bills/{billId}/items": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "billItemFind",
+        "summary": "List all bill's items.",
+        "description": "Supply the unique bill ID and API will return a list of bill’s items sorted by issue date descending.\nThe number of returned items and the sort can be changed with query parameters.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "billId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bills of the given type.\n_Example: type=recurring,onetime_",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "recurring",
+                "onetime",
+                "traffic"
+              ]
+            }
+          },
+          {
+            "name": "service.name",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bill items with the given service name.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "required": false,
+            "in": "query",
+            "description": "Only returns bill items with the given charge description.",
+            "type": "string"
+          },
+          {
+            "name": "site.city",
+            "required": false,
+            "in": "query",
+            "description": "Only return bill items of the given city.",
+            "type": "string"
+          },
+          {
+            "name": "site.country.id",
+            "required": false,
+            "in": "query",
+            "description": "Only return bill items of the given country.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BillItem"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/billingAccounts": {
+      "get": {
+        "tags": [
+          "BillingAccounts"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "billingAccountFind",
+        "summary": "List all billing account.",
+        "description": "Returns a list of billing account.\nThe number of returned items and the sort can be changed with query parameters.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The comma-separated list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order.",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns billing account for the given customer ID.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BillingAccount"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "Accept-Language": {
+                "description": "The required language for localizable strings.\n_Default: en_.",
+                "type": "string",
+                "default": "en"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/billingAccounts/{BillingAccountId}": {
+      "get": {
+        "tags": [
+          "BillingAccounts"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "billingAccountGet",
+        "summary": "Retrieve a billing account.",
+        "description": "Retrieves the details of an existing BAN. Supply the unique BAN ID from the BAN list and API will return the corresponding bill account information.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "BillingAccountId",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/BillingAccount"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "post": {
+        "tags": [
+          "Search"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "billCreate",
+        "summary": "Retrieve the list of bills by using a complex search.",
+        "description": "This query allows complex searches using boolean operators `and`, `or`, `not`. The query is a JSON object passed in the HTTP body.\n\nExamples:\n\n- Search invoices, without credit notes:\n\n`{ \"type\": \"invoice\" }`\n\n- Search bills in euro or US dollar:\n\n`{ \"currency.id\": [\"EUR\", \"USD\"] }`\n\n- Search bills for customer number 9999 and in euro:\n\n`{ \"customer.id\": \"9999\", \"currency.id\": \"EUR\" }`\nAlternative syntax: `{ \"$and\": [{ \"customer.id\": \"9999\" }, { \"currency.id\": \"EUR\" }] }`\n\n- Search bills for customer number 9999 or in euro:\n\n`{ \"$or\":[{ \"customer.id\": \"9999\" }, { \"currency.id\": \"EUR\" }]}`\n\n- Search bills of all customers except 9999:\n\n`{ \"$not\": {\"customer.id\": \"9999\"} }`",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "description": "Search criteria.\n_Example : {\"$or\": [{\"currency.id\": \"GBP\"}, {\"currency.id\": \"JPY\"}]}_",
+            "schema": {
+              "$ref": "#/definitions/SearchRequest"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The comma-separated list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order.",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Bill"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/snapshots": {
+      "get": {
+        "tags": [
+          "Snapshots"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "snapshotFind",
+        "summary": "Retrieve statistics.",
+        "description": "List of counters of bills grouped by one attribute.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.\n**Available only if \"isKeyValueMode\" query parameter has the value \"true\".**",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.\n**Available only if \"isKeyValueMode\" query parameter has the value \"true\".**",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Allows to filter the results by key or by value. Prefixing with a \"-\" sign will indicate a descending order.\n_Example: key, -key, value, -value._",
+            "type": "string"
+          },
+          {
+            "name": "groupBy",
+            "required": true,
+            "in": "query",
+            "description": "Indicate the delivery case 's attribute to group.\n_Example: groupBy=status_",
+            "type": "string"
+          },
+          {
+            "name": "granularity",
+            "required": false,
+            "in": "query",
+            "description": "If the groupBy query parameter is a date, you can specify the granularity query parameter. By default, the value is 'day'.\n_Example: granularity=hour_",
+            "type": "string",
+            "enum": [
+              "hour",
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          {
+            "name": "isKeyValueMode",
+            "required": false,
+            "in": "query",
+            "description": "Use key/value format for the response or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of the given customer ID.",
+            "type": "string"
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of the given customer name.",
+            "type": "string"
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of specified period. It’s possible to use an interval (in this case the start date is inclusive, and the end date is exclusive).\n_Examples: “?issuedAt=2010-01-01/2010-02-01” or “?issuedAt=2010-01-01,” or “?issuedAt=/2010-02-01”_",
+            "type": "string"
+          },
+          {
+            "name": "billingAccount.id",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of the given billing account.",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of the given type.",
+            "type": "string",
+            "enum": [
+              "invoice",
+              "creditNote"
+            ]
+          },
+          {
+            "name": "issuedAt",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of specified issuedAt. It’s possible to use an interval (in this case the start date is inclusive, and the end date is exclusive).\n_Examples: “?issuedAt=2010-01-01/2010-02-01” or “?issuedAt=2010-01-01,” or “?issuedAt=/2010-02-01”_",
+            "type": "string"
+          },
+          {
+            "name": "currency.id",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills of the given currency. Format: Three-letter ISO 4217 currency code.",
+            "type": "string"
+          },
+          {
+            "name": "sendingFormat",
+            "required": false,
+            "in": "query",
+            "description": "Only include bills for the given sending format.",
+            "type": "string",
+            "enum": [
+              "paper",
+              "eInvoicing"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Snapshot"
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias. Available only if \"isKeyValueMode\" query parameter has the value \"true\".",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body. Available only if \"isKeyValueMode\" query parameter has the value \"true\".",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/reports": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "reportFind",
+        "summary": "List of reports.",
+        "description": "This method allows to list all reports.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The comma-separated list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order.",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports of the given customer ID.",
+            "type": "string"
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports of the given customer name.",
+            "type": "string"
+          },
+          {
+            "name": "period",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports of specified period.It’s possible to use an interval (in this case the start date is inclusive, and the end date is exclusive).\nExample: “?period=2010-01-01/2010-02-01” or “?period=2010-01-01/” or “?period=/2010-02-01”",
+            "type": "string"
+          },
+          {
+            "name": "bill.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports of the given bill IDs.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "billingAccount.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports of the given billing accounts.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Report"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "",
+        "operationId": "post-reports",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "parameters": [
+          {
+            "type": "string",
+            "in": "query",
+            "name": "x-api-key"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "period": {
+                  "type": "object",
+                  "properties": {
+                    "startedAt": {
+                      "type": "string"
+                    },
+                    "endedAt": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "customer": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "billingAccount": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "offset": {
+                  "type": "string"
+                },
+                "limit": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "string"
+                },
+                "format": {
+                  "type": "string"
+                },
+                "": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "/reports/{ReportId}": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "produces": [
+          "application/json",
+          "application/pdf",
+          "text/csv",
+          "application/zip"
+        ],
+        "operationId": "reportGet",
+        "summary": "Get a report.",
+        "description": "This method allows to get a report. To download the file in PDF or CSV format you have to specify the \"Accept\" header with the values \"application/pdf\" or \"text/csv\".",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "ReportId",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/customerSpecificReports": {
+      "get": {
+        "tags": [
+          "CustomerSpecificReports"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "customerSpecificReportFind",
+        "summary": "List all customer-specific reports",
+        "description": "Returns a list of reports, where each report has the following attributes:",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The comma-separated list of field names to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order.",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n*Example: &fields=reference,status,type,primaryContact.name*",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Filter the list by finding the input string in the response fields.\n*Example: query=SANOFI*",
+            "type": "string"
+          },
+          {
+            "name": "displayName",
+            "required": false,
+            "in": "query",
+            "description": "If the name of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayId",
+            "required": false,
+            "in": "query",
+            "description": "If the id of a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "displayHref",
+            "required": false,
+            "in": "query",
+            "description": "If the href to a linked resource must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "displayLink",
+            "required": false,
+            "in": "query",
+            "description": "If the navigation must be displayed or not.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports for the given customer ID.",
+            "type": "string"
+          },
+          {
+            "name": "billingAccount.id",
+            "required": false,
+            "in": "query",
+            "description": "Only returns reports for the given billing account ID.",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CustomerSpecificReport"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items matching criterias.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items returned in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/customerSpecificReports/{CustomerSpecificReportId}": {
+      "get": {
+        "tags": [
+          "CustomerSpecificReports"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "customerSpecificReportGet",
+        "summary": "Retrieve a customer-specific report.",
+        "description": "Retrieves the details of an existing report.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "CustomerSpecificReportId",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/CustomerSpecificReport"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "tags": [
+          "Status"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "statusFind",
+        "summary": "Get the status of the API.",
+        "description": "This method allows to get the status of API components.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve.  You can specify a field, a resource or a resource's field.\n_Example: &fields=version,status_",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nList of supported error codes:\n- 20: Invalid URL parameter value\n- 21: Missing body\n- 22: Invalid body\n- 23: Missing body field\n- 24: Invalid body field\n- 25: Missing header\n- 26: Invalid header value\n- 27: Missing query-string parameter\n- 28: Invalid query-string parameter value",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "401": {
+            "description": "Unauthorized\n\nList of supported error codes:\n- 40: Missing credentials\n- 41: Invalid credentials\n- 42: Expired credentials",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "403": {
+            "description": "Forbidden\n\nList of supported error codes:\n- 50: Access denied\n- 51: Forbidden requester\n- 52: Forbidden user\n- 53: Too many requests",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "404": {
+            "description": "Not Found\n\nList of supported error codes:\n- 60: Resource not found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed\n\nList of supported error codes:\n- 61: Method not allowed",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error\n\nList of supported error codes:\n- 1: Internal error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable\n\nList of supported error codes:\n- 5: The service is temporarily unavailable\n- 6: Orange API is over capacity, retry later !",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ChargeType": {
+      "description": "List of charge's types.",
+      "type": "string",
+      "enum": [
+        "recurring",
+        "onetime",
+        "traffic"
+      ]
+    },
+    "Segment": {
+      "description": "The segment of the customer.",
+      "type": "string",
+      "enum": [
+        "int",
+        "fr",
+        "both"
+      ]
+    },
+    "Gender": {
+      "description": "Values for Gender field",
+      "type": "string",
+      "enum": [
+        "female",
+        "male",
+        "other",
+        "none"
+      ]
+    },
+    "BillStatus": {
+      "description": "",
+      "type": "string",
+      "enum": [
+        "toBePaid",
+        "paid"
+      ]
+    },
+    "Granularity": {
+      "description": "granulary for reports & snapshots",
+      "type": "string",
+      "enum": [
+        "hour",
+        "day",
+        "week",
+        "month",
+        "year"
+      ]
+    },
+    "ComponentStatus": {
+      "description": "The status of a component.",
+      "type": "string",
+      "enum": [
+        "ok",
+        "ko",
+        "degraded"
+      ]
+    },
+    "BillType": {
+      "description": "List of bill's types.",
+      "type": "string",
+      "enum": [
+        "invoice",
+        "creditNote"
+      ]
+    },
+    "SendingFormat": {
+      "description": "List of sending formats.",
+      "type": "string",
+      "enum": [
+        "paper",
+        "eInvoicing"
+      ]
+    },
+    "Value": {
+      "description": "",
+      "type": "string",
+      "enum": [
+        "value"
+      ]
+    },
+    "ReportType": {
+      "description": "List of report's type.",
+      "type": "string",
+      "enum": [
+        "audioAndWebConferencing",
+        "businessEverywhereSmartUsage",
+        "contactEveryoneUsage",
+        "flexComputingUsage",
+        "flexSslService",
+        "flexibleContactCenter",
+        "ipDialUsage",
+        "invoiceInCsvFormat",
+        "invoiceTrafficInCsvFormat",
+        "invoiceUsageInCsvFormat",
+        "m2mBundle",
+        "m2mData",
+        "m2mDetailed",
+        "m2mInvoice",
+        "m2mSms",
+        "m2mVoice",
+        "managedContactCenter",
+        "managedVoicePortal",
+        "voiceBusinessTalkDetail",
+        "voiceBusinessTalkSummaryPerCallingNumber",
+        "voiceBusinessTalkSummaryPerSite",
+        "voiceContactCenterSummaryPerNumber",
+        "voiceContactCenterSummaryPerSite",
+        "voiceContactCenterDetail"
+      ]
+    },
+    "ServiceType": {
+      "description": "List of service's types.",
+      "type": "string",
+      "enum": [
+        "bvpnCorporate",
+        "bvpnSmall",
+        "dslSelect",
+        "vmsVpn"
+      ]
+    },
+    "FileFormat": {
+      "description": "List of file formats.",
+      "type": "string",
+      "enum": [
+        "zip",
+        "csv",
+        "pdf"
+      ]
+    },
+    "DurationUnit": {
+      "description": "List of duration's units.",
+      "type": "string",
+      "enum": [
+        "min",
+        "hour"
+      ]
+    },
+    "TrafficType": {
+      "description": "List of traffic's types.",
+      "type": "string",
+      "enum": [
+        "offNetDest",
+        "ccMin",
+        "nivrMin",
+        "onNetDest",
+        "rsMin"
+      ]
+    },
+    "UsageClass": {
+      "description": "List of usage's classes.",
+      "type": "string",
+      "enum": [
+        "class1",
+        "class2",
+        "class3",
+        "class4",
+        "class5"
+      ]
+    },
+    "ZErrorDetail": {
+      "description": "",
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "infoURL": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "ZError": {
+      "description": "",
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "infoURL": {
+          "description": "",
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ZErrorDetail"
+          }
+        }
+      }
+    },
+    "Individual": {
+      "description": "Model of an individual.",
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of an individual.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The title and the first and last name of the individual.",
+          "type": "string"
+        },
+        "title": {
+          "description": "The title of the individual.\n_Example: Mr., Mrs., or Miss_",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the individual.",
+          "type": "string"
+        },
+        "middleName": {
+          "description": "The middle name of the individual.",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "The last name of the individual.",
+          "type": "string"
+        },
+        "gender": {
+          "$ref": "#/definitions/Gender"
+        },
+        "mobile": {
+          "description": "The mobile phone number. Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        },
+        "phone": {
+          "description": "The phone number.  Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the individual. There is no need to include the scheme \"mailto:\".",
+          "type": "string"
+        }
+      }
+    },
+    "Bill": {
+      "description": "Model of a bill.",
+      "required": [
+        "id",
+        "customer",
+        "type",
+        "billingAccount",
+        "currency",
+        "issuedAt",
+        "totalAmount",
+        "totalExcludedTaxAmount",
+        "createdAt",
+        "updatedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the bill.",
+          "type": "string"
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "type": {
+          "$ref": "#/definitions/BillType"
+        },
+        "billingAccount": {
+          "$ref": "#/definitions/BillingAccountRef"
+        },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        },
+        "issuedAt": {
+          "description": "The issued date of the bill.",
+          "type": "string",
+          "format": "date"
+        },
+        "totalAmount": {
+          "description": "The total amount of the bill.",
+          "type": "number",
+          "format": "double"
+        },
+        "totalExcludedTaxAmount": {
+          "description": "The total amount without the tax.",
+          "type": "number",
+          "format": "double"
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        },
+        "paymentTerm": {
+          "description": "The payment term of the bill.\n_Example: 45 days after issue date._",
+          "type": "string"
+        },
+        "paymentDueDate": {
+          "description": "The payment due date of the bill.",
+          "type": "string",
+          "format": "date"
+        },
+        "sendingFormat": {
+          "$ref": "#/definitions/SendingFormat"
+        },
+        "contact": {
+          "$ref": "#/definitions/Individual"
+        },
+        "_links": {
+          "$ref": "#/definitions/Links"
+        },
+        "createdAt": {
+          "description": "Date when the bill was last created. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "description": "Date when the bill was last updated. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Customer": {
+      "description": "Model of a customer.",
+      "required": [
+        "id",
+        "name",
+        "segment"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the customer.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the customer.",
+          "type": "string"
+        },
+        "segment": {
+          "$ref": "#/definitions/Segment"
+        },
+        "href": {
+          "description": "Reference of the customer.",
+          "type": "string"
+        }
+      }
+    },
+    "BillItem": {
+      "description": "Model of a bill item.",
+      "required": [
+        "id",
+        "period",
+        "site",
+        "type",
+        "price",
+        "exchangeRate",
+        "numberOfDays",
+        "service",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the bill item.",
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        },
+        "site": {
+          "$ref": "#/definitions/BillItemLocation"
+        },
+        "type": {
+          "$ref": "#/definitions/ChargeType"
+        },
+        "price": {
+          "description": "The price.",
+          "type": "number",
+          "format": "double"
+        },
+        "exchangeRate": {
+          "description": "Exchange rates between two currencies, ex billing in local currency and order in USD.",
+          "type": "number",
+          "format": "double"
+        },
+        "amounts": {
+          "$ref": "#/definitions/BillItemAmount"
+        },
+        "comment": {
+          "description": "Comment on the bill item.",
+          "type": "string"
+        },
+        "crossReference": {
+          "description": "TC Cross Reference",
+          "type": "string"
+        },
+        "numberOfDays": {
+          "description": "In the case of an invoicing during a month, it is the number of days in the month in which the service is invoiced.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "service": {
+          "$ref": "#/definitions/Service"
+        },
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceOrderRef"
+          }
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax"
+          }
+        },
+        "description": {
+          "description": "Charge description.",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "Date when the bill item was last created. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "description": "Date when the bill item was last updated. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Location": {
+      "description": "Model of a location.",
+      "required": [
+        "name",
+        "address",
+        "primaryContact"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the location.",
+          "type": "string"
+        },
+        "externalReference": {
+          "description": "Reference set by the customer.",
+          "type": "string"
+        },
+        "tradingName": {
+          "description": "The tranding name of the location.",
+          "type": "string"
+        },
+        "siret": {
+          "description": "The siret number of the location.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the location.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of premises such as Wharehouse, office, shop etc..",
+          "type": "string"
+        },
+        "phone": {
+          "description": "The phone number of the location. Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        },
+        "fax": {
+          "description": "The fax number of the location. Use the [Rec.E164](http://www.itu.int/rec/T-REC-E.164/) without \"+\" prefix.",
+          "type": "string"
+        },
+        "accessInformation": {
+          "description": "The access information of the location.",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the location. There is no need to include the scheme \"mailto:\".",
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "primaryContact": {
+          "$ref": "#/definitions/Individual"
+        },
+        "secondaryContact": {
+          "$ref": "#/definitions/Individual"
+        },
+        "comment": {
+          "description": "A comment on the location.",
+          "type": "string"
+        },
+        "href": {
+          "description": "Unique URI used to access to the location resource. **Final URL to be determined**",
+          "type": "string"
+        }
+      }
+    },
+    "Address": {
+      "description": "Model of an address.",
+      "required": [
+        "streetName",
+        "postalCode",
+        "city",
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "streetNumber": {
+          "description": "Number of the street.",
+          "type": "string"
+        },
+        "streetLetter": {
+          "description": "Letter of the street or extensions such as bis, ter.",
+          "type": "string"
+        },
+        "streetType": {
+          "description": "street Type : alley, avenue, boulevard, brae, crescent, drive, highway, lane, terrace, parade, place, tarn, way, wharf, …",
+          "type": "string"
+        },
+        "streetName": {
+          "description": "Name of the street.",
+          "type": "string"
+        },
+        "streetExtensionName": {
+          "description": "extension name of the street.",
+          "type": "string"
+        },
+        "locality": {
+          "description": "Locality of the address.\n_Example: Sophia-Antipolis_",
+          "type": "string"
+        },
+        "postalCode": {
+          "description": "postalCode of the address.",
+          "type": "string"
+        },
+        "city": {
+          "description": "Name of the city",
+          "type": "string"
+        },
+        "country": {
+          "$ref": "#/definitions/Country"
+        },
+        "state": {
+          "description": "State of the address.",
+          "type": "string"
+        },
+        "formattedStreet": {
+          "description": "The full street name containing the street number, street letter, street type and street name.",
+          "type": "string"
+        },
+        "formattedAddress": {
+          "description": "The full address containing the street number, street letter, street type, street name, postal code and city name.",
+          "type": "string"
+        },
+        "geographicPoint": {
+          "$ref": "#/definitions/GeoCoding"
+        },
+        "localPlace": {
+          "$ref": "#/definitions/LocalPlace"
+        }
+      }
+    },
+    "Country": {
+      "description": "Describes Minimal Country object with a reference on the complete details of the country",
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The ISO code of the country based on the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) norm.\n_Example: FR, GB, DE, IT, ES_",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the country. The language is defined with the HTTP header \"Content-Language\" . Only 'en' and 'fr' are supported. By default the English name is returned.",
+          "type": "string"
+        },
+        "href": {
+          "description": "URI on the complete country object. __Final URL to be determined__",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceOrder": {
+      "description": "Model of a service order",
+      "required": [
+        "id",
+        "name",
+        "items",
+        "taxRate",
+        "amount",
+        "createdAt",
+        "updatedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "items": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "taxRate": {
+          "description": "",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/Individual"
+        },
+        "updatedAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedBy": {
+          "$ref": "#/definitions/Individual"
+        }
+      }
+    },
+    "ServiceOrderItem": {
+      "description": "Model of a service order item",
+      "required": [
+        "id",
+        "site",
+        "taxRate",
+        "amount",
+        "characteristics",
+        "charges",
+        "startedAt",
+        "createdAt",
+        "updatedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "site": {
+          "$ref": "#/definitions/Location"
+        },
+        "taxRate": {
+          "description": "",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "type": "string"
+        },
+        "characteristics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceCharacteristics"
+          }
+        },
+        "charges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BillItem"
+          }
+        },
+        "startedAt": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "createdAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ServiceCharacteristics": {
+      "description": "Model of a service characteristics",
+      "required": [
+        "name",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the service characteristics. (Example: access speed, bandwith, ...)",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value of the service characteristics",
+          "type": "string"
+        }
+      }
+    },
+    "GeoCoding": {
+      "description": "This model allows to locate a geographical point with coordinates.",
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "description": "Latitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "description": "Longitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "accuracy": {
+          "description": "Accuracy of the geographical point.",
+          "type": "string"
+        }
+      }
+    },
+    "LocalPlace": {
+      "description": "Model of a local place.",
+      "type": "object",
+      "properties": {
+        "building": {
+          "description": "The building name of the local place.",
+          "type": "string"
+        },
+        "residence": {
+          "description": "The residence name of the local place.",
+          "type": "string"
+        },
+        "floorNumber": {
+          "description": "The floor number of the local place.",
+          "type": "string"
+        },
+        "roomNumber": {
+          "description": "The room number of the local place.",
+          "type": "string"
+        }
+      }
+    },
+    "Currency": {
+      "description": "Describe the structured date of Currency.",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Three-letter ISO 4217 currency code, for example EUR for euros.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the currency such as Euros, Dollars.",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "Symbol of the currency.\n_Example: €, $, ¥_",
+          "type": "string"
+        }
+      }
+    },
+    "Snapshot": {
+      "description": "",
+      "required": [
+        "key"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/Value"
+        }
+      }
+    },
+    "Status": {
+      "description": "Model of a status.",
+      "required": [
+        "name",
+        "status",
+        "version"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Service internal name.",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/ComponentStatus"
+        },
+        "version": {
+          "description": "API version (major dot minor dot patch numbers).",
+          "type": "string"
+        }
+      }
+    },
+    "StatusComponent": {
+      "description": "Definition of the status of a component.",
+      "required": [
+        "name",
+        "status",
+        "version"
+      ],
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Component name.",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/ComponentStatus"
+        },
+        "version": {
+          "description": "Component version (major dot minor dot patch numbers).",
+          "type": "string"
+        }
+      }
+    },
+    "BillingAccount": {
+      "description": "Model of a billing account.",
+      "required": [
+        "id",
+        "name",
+        "customer"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the billing account.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the billing account.",
+          "type": "string"
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        }
+      }
+    },
+    "BillingAccountRef": {
+      "description": "Model of a billing account.",
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Account number.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the account.",
+          "type": "string"
+        }
+      }
+    },
+    "Links": {
+      "description": "Navigation.",
+      "required": [
+        "self",
+        "items"
+      ],
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/LinkHref"
+        },
+        "items": {
+          "$ref": "#/definitions/LinkHref"
+        }
+      }
+    },
+    "LinkHref": {
+      "description": "Model of a link href.",
+      "required": [
+        "href"
+      ],
+      "type": "object",
+      "properties": {
+        "href": {
+          "description": "Link to resource.",
+          "type": "string"
+        }
+      }
+    },
+    "Hub": {
+      "description": "",
+      "required": [
+        "callback"
+      ],
+      "type": "object",
+      "properties": {
+        "callback": {
+          "description": "Communication endpoint address.",
+          "type": "string"
+        }
+      }
+    },
+    "HubClient": {
+      "description": "",
+      "type": "object",
+      "properties": {}
+    },
+    "HubResponse": {
+      "description": "Modle of a hub response.",
+      "required": [
+        "id",
+        "callback"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the listener.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "callback": {
+          "description": "URL of the listener.",
+          "type": "string"
+        },
+        "query": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "HubClientCreateBody": {
+      "description": "",
+      "required": [
+        "eventId",
+        "eventType",
+        "event"
+      ],
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "description": "",
+          "type": "string"
+        },
+        "eventType": {
+          "description": "",
+          "type": "string"
+        },
+        "eventTime": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "event": {
+          "$ref": "#/definitions/HubEvent"
+        }
+      }
+    },
+    "HubEvent": {
+      "description": "",
+      "required": [
+        "resourceName"
+      ],
+      "type": "object",
+      "properties": {
+        "resourceName": {
+          "description": "JSON object. The key of the object is the resource name and the value it is the resource model.",
+          "type": "string"
+        }
+      }
+    },
+    "ReportOld": {
+      "description": "Model of a report.",
+      "required": [
+        "id",
+        "type",
+        "query"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the report.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ReportType"
+        },
+        "name": {
+          "description": "The name of the report file.",
+          "type": "string"
+        },
+        "query": {
+          "$ref": "#/definitions/ReportQuery"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReportColumns"
+          }
+        },
+        "_links": {
+          "$ref": "#/definitions/LinksReport"
+        }
+      }
+    },
+    "ReportQuery": {
+      "description": "Model of a report's query.",
+      "required": [
+        "customer",
+        "billingAccounts",
+        "bills",
+        "period"
+      ],
+      "type": "object",
+      "properties": {
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "billingAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BillingAccountRef"
+          }
+        },
+        "bills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BillRef"
+          }
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/locationRef"
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceType"
+          }
+        },
+        "chargeTypes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChargeType"
+          }
+        }
+      }
+    },
+    "Period": {
+      "description": "Model of a period.",
+      "required": [
+        "startedAt",
+        "endedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "startedAt": {
+          "description": "The start date of the period.",
+          "type": "string",
+          "format": "date"
+        },
+        "endedAt": {
+          "description": "The end date of the period.",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "BillRef": {
+      "description": "",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "locationRef": {
+      "description": "",
+      "required": [
+        "id",
+        "city"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "string"
+        },
+        "city": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "LinksReport": {
+      "description": "Navigation.",
+      "required": [
+        "self",
+        "result"
+      ],
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/LinkHref"
+        },
+        "result": {
+          "$ref": "#/definitions/LinkHrefWithType"
+        }
+      }
+    },
+    "ReportColumns": {
+      "description": "Model of a report's columns.",
+      "required": [
+        "column"
+      ],
+      "type": "object",
+      "properties": {
+        "column": {
+          "description": "Matching a column to its label displayed in the file.\n_Example: \"country.id\":\"Country Name\"_",
+          "type": "string"
+        }
+      }
+    },
+    "LinkHrefWithType": {
+      "description": "",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LinkHref"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/definitions/FileFormat"
+            }
+          }
+        }
+      ]
+    },
+    "Report": {
+      "description": "Model of a report.",
+      "required": [
+        "id",
+        "type",
+        "name",
+        "customer",
+        "billingAccount",
+        "bill",
+        "period"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the report.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ReportType"
+        },
+        "name": {
+          "description": "The name of the report file.",
+          "type": "string"
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "billingAccount": {
+          "$ref": "#/definitions/BillingAccountRef"
+        },
+        "bill": {
+          "$ref": "#/definitions/BillRef"
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        }
+      }
+    },
+    "Service": {
+      "description": "Model of a service.",
+      "required": [
+        "id",
+        "name",
+        "startedAt"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the service.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name ot the service.",
+          "type": "string"
+        },
+        "startedAt": {
+          "description": "Started date of the service.",
+          "type": "string",
+          "format": "date"
+        },
+        "speed": {
+          "description": "Speed of the service.",
+          "type": "string"
+        },
+        "bandwidth": {
+          "description": "Bandwidth of the service.",
+          "type": "string"
+        },
+        "serialNumber": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the service.",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceOrderRef": {
+      "description": "Model of a service order.",
+      "required": [
+        "id"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the order.",
+          "type": "string"
+        },
+        "href": {
+          "description": "URI on the complete order object.",
+          "type": "string"
+        }
+      }
+    },
+    "BillItemLocation": {
+      "description": "Model of an item location.",
+      "required": [
+        "id",
+        "city",
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the location.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the location.",
+          "type": "string"
+        },
+        "street": {
+          "description": "Street of the location.",
+          "type": "string"
+        },
+        "postalCode": {
+          "description": "Postal code of the location.",
+          "type": "string"
+        },
+        "city": {
+          "description": "The city of the location.",
+          "type": "string"
+        },
+        "country": {
+          "$ref": "#/definitions/Country"
+        },
+        "state": {
+          "description": "State of the location.",
+          "type": "string"
+        },
+        "href": {
+          "description": "URI on the complete order object.",
+          "type": "string"
+        }
+      }
+    },
+    "BillItemAmount": {
+      "description": "Model of a bill item amounts.",
+      "required": [
+        "taxExcludedAmount",
+        "taxIncludedAmount",
+        "taxableAmount",
+        "discountAmount",
+        "discountPercentage",
+        "preDiscountAmount"
+      ],
+      "type": "object",
+      "properties": {
+        "taxExcludedAmount": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "taxIncludedAmount": {
+          "description": "Total with taxes and possible discounts.",
+          "type": "number",
+          "format": "double"
+        },
+        "taxableAmount": {
+          "description": "Amount subject to taxes",
+          "type": "number",
+          "format": "double"
+        },
+        "discountAmount": {
+          "description": "Discount amount.",
+          "type": "number",
+          "format": "double"
+        },
+        "discountPercentage": {
+          "description": "Discount percentage when renewing a price or contractual agreement with the customer.",
+          "type": "number",
+          "format": "double"
+        },
+        "preDiscountAmount": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Traffic": {
+      "description": "Model of a traffic.",
+      "required": [
+        "type",
+        "origin",
+        "originDna",
+        "destination",
+        "destinationDna",
+        "call"
+      ],
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/TrafficType"
+        },
+        "origin": {
+          "description": "Origin of the traffic.",
+          "type": "string"
+        },
+        "originDna": {
+          "description": "",
+          "type": "string"
+        },
+        "destination": {
+          "description": "Destination of the traffic.",
+          "type": "string"
+        },
+        "destinationDna": {
+          "description": "",
+          "type": "string"
+        },
+        "call": {
+          "$ref": "#/definitions/TrafficCall"
+        },
+        "unitPrice": {
+          "description": "Unit price of the traffic.",
+          "type": "number",
+          "format": "double"
+        },
+        "ratingAmount": {
+          "description": "Rating amount of the traffic.",
+          "type": "number",
+          "format": "double"
+        },
+        "user": {
+          "$ref": "#/definitions/Individual"
+        },
+        "domainName": {
+          "description": "Domain name of the traffic.",
+          "type": "string"
+        }
+      }
+    },
+    "Duration": {
+      "description": "Model of a duration.",
+      "required": [
+        "unit",
+        "quantity"
+      ],
+      "type": "object",
+      "properties": {
+        "unit": {
+          "$ref": "#/definitions/DurationUnit"
+        },
+        "quantity": {
+          "description": "Quantity of the duration.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "TrafficCall": {
+      "description": "Model of a traffic call.",
+      "required": [
+        "number",
+        "totalDuration"
+      ],
+      "type": "object",
+      "properties": {
+        "number": {
+          "description": "Number of calls.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalDuration": {
+          "$ref": "#/definitions/Duration"
+        }
+      }
+    },
+    "Usage": {
+      "description": "Model of an usage.",
+      "required": [
+        "class",
+        "routerName",
+        "fee",
+        "unitPrice",
+        "percentile",
+        "amount",
+        "ratedAmountWithoutTax"
+      ],
+      "type": "object",
+      "properties": {
+        "class": {
+          "$ref": "#/definitions/UsageClass"
+        },
+        "routerName": {
+          "description": "Router name",
+          "type": "string"
+        },
+        "fee": {
+          "$ref": "#/definitions/UsageFee"
+        },
+        "unitPrice": {
+          "description": "Unit price of the usage.",
+          "type": "number",
+          "format": "double"
+        },
+        "percentile": {
+          "description": "percentile of the usage.",
+          "type": "string"
+        },
+        "amount": {
+          "description": "Amount of the usage.",
+          "type": "number",
+          "format": "double"
+        },
+        "ratedAmountWithoutTax": {
+          "description": "Rated amount without tax of the usage.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "UsageFee": {
+      "description": "Model of a usage fee.",
+      "required": [
+        "minimum",
+        "maximum"
+      ],
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "description": "Minimum of the usage fee.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maximum": {
+          "description": "Maximum of the usage fee.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Tax": {
+      "description": "Model of a tax.",
+      "required": [
+        "rate",
+        "amount"
+      ],
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the tax.",
+          "type": "string"
+        },
+        "rate": {
+          "description": "Rate of the tax.",
+          "type": "number",
+          "format": "double"
+        },
+        "amount": {
+          "description": "Amount of the tax.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "SearchRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {}
+    },
+    "CustomerSpecificReport": {
+      "description": "Model of customer-specific report",
+      "required": [
+        "id",
+        "name",
+        "sizeInBytes",
+        "availability"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The id of customer-specific report",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of customer-specific report",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description associated with the customer-specific report",
+          "type": "string"
+        },
+        "sizeInBytes": {
+          "description": "The size of file in bytes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "availability": {
+          "$ref": "#/definitions/Period"
+        },
+        "href": {
+          "description": "link to resource",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

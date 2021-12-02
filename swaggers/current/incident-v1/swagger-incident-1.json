@@ -5,7 +5,7 @@
     "version": "1.1.0",
     "title": "Incident",
     "x-logo": {
-      "url": "/redoc/logo.png",
+      "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
       "backgroundColor": "#FFFFFF"
     },
     "contact": {
