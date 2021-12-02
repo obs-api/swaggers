@@ -6,7 +6,7 @@
     "title": "Network",
     "x-logo": {
        
-      "url": "../../assets/logo.png",
+      "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
       "backgroundColor": "#FFFFFF"
     },
     "contact": {
