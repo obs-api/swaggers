@@ -1,0 +1,4067 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Core Information provides several methods to access transversal information and the global inventory.is an API restricted to Orange Business Services customers.\n\nThis API allows to retrieve the list of Customer Accounts, Location, Resources, Products and Services. \n\n### Internationalization\nThis API Provides data only in English\n### Resources\n\n- **accounts** :  Customer Accounts \n- **locations** :  Geographic place identified by a postal address where equipment are deployed.\n- **servicePoints** : Installed offers / solutions.\n- **configurationItems** : Equipments or supports installed based on Service Points.\n\n\n- **doc** : Documentation of the API in Swagger format.\n- **status** : Health of the API component.\n- **version** : Version of the API component.\n\nCopyright © OBS 2021. All Rights Reserved.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:core-information| Full access of the API. |\n| b2b:core-information:readonly | API limited to read actions |  \n\n# Authentication\n \nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services for _'Machine2Machine'_ mode.",
+    "version": "2.0",
+    "title": "Core Information",
+    "x-logo": {
+      "url": "https://developer.orange.com/ope-contents/developers/me/offers/m7SPJpGL8FzTElI2/products/9o5OZf2T2w6Ga6Rk/contents/WbUTLp4sjIn9r0TG",
+      "backgroundColor": "#FFFFFF"
+    },
+    "contact": {
+      "name": "Philippe VALETTE",
+      "email": "philippe.valette@orange.com",
+      "url": "https://developer.orange.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "Accounts",
+      "description": "Customer Account is a key object for API for Business catalog."
+    },
+    {
+      "name": "Locations",
+      "description": "A location represents a geographic place with a postal address. Normally, it is the premises where equipment are deployed or buildings/offices where employees work"
+    },
+    {
+      "name": "Service Points",
+      "description": "Retrieve information on Installed offers, solutions"
+    },
+    {
+      "name": "Configuration Items",
+      "description": "List of installed equipments such as Routers, Switches etc... and also Access Lines."
+    },
+    {
+      "name": "Miscellaneous",
+      "description": "Functions for Tracking the status of the API, versioning and ability to download the Swagger"
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "operationId": "FindAccounts",
+        "summary": "Find Accounts",
+        "description": "This method allows to list all Customer Accounts associated to the authenticated login.  ",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API.",
+            "required": false,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 250,
+              "maximum": 250,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. \n*Example: /accounts?sort=-name*",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AccountSort"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.\n*Example: /accounts?fields=id,name*",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AccountFields"
+              }
+            }
+          },
+          {
+            "name": "displayLinks",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show related resources links",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          },
+          {
+            "name": "displayNulls",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show null valued parameters",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerAccount"
+                }
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "description": "Number of total items matching the request"
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "description": "Number of returned items matching the request."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ],
+        "tags": [
+          "Accounts"
+        ]
+      },
+      "parameters": []
+    },
+    "/accounts/{accountId}": {
+      "get": {
+        "summary": "Get Account Details",
+        "tags": [
+          "Accounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerAccount"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetAccount",
+        "description": "Get details of a specific account.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AccountFields"
+              }
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.\n*Example: /accounts?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayLinks",
+            "description": "Flag to be set to show related resources links"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag to be set to show null valued parameters"
+          }
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "accountId",
+          "description": "Single Identifier of an Customer Account.",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/locations": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "FindLocations",
+        "summary": "Find Locations",
+        "description": "This method allows to list all locations matching filter criterias.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API.",
+            "required": false,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "The maximum number of items to retrieve.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 250,
+              "maximum": 250,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Indicate the order of the response. The parameter contains a list of attributes. The minus symbol allows to indicate the desc order. Example: /locations?sort=-updatedAt",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LocationSort"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma. Example: /locations?fields=id,name",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LocationFields"
+              }
+            }
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the Orange Identifier of the location. Several values can be specified (separated by a comma)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "customerReference",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the Customer Reference of the location. Several values can be specified (separated by a comma)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the name of the location. Several values can be specified (separated by a comma)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the Company name of the location. Several values can be specified (separated by a comma)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address.city",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the city of the location. Several values can be specified (separated by a comma)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address.country",
+            "required": false,
+            "in": "query",
+            "description": "Filters by the country of the location. Several values can be specified (separated by a comma). The code is based on the ISO-3166-1 alpha 2 norm.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "displayLinks",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show related resources links",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          },
+          {
+            "name": "displayNulls",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show null valued parameters",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "headers": {
+              "X-Total-Count": {
+                "description": "Number of total items matching the request",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Result-Count": {
+                "description": "Number of returned items matching the request.",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "content": {
+              "application/json;charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    },
+    "/locations/aggregate": {
+      "get": {
+        "summary": "Aggregate Locations",
+        "tags": [
+          "Locations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "AggregateLocations",
+        "description": "This method allows to count locations futher one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.\n\nFor example, the call `GET /locations/aggregate?groupBy=address.country`\n\nwill returns\n\n`\n{\n   'DE': 5,\n   'FR' : 10,\n   'IT' : 2\n}\n`\n\nThe _groupBy_ Query Parameter supports several attributes ex:  ` GET /servicePoints/aggregate?groupBy=address.country,customer.id`",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "description": "List of attributes to aggregate",
+            "name": "groupBy"
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the identifier of the location",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the name of the location",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "customerReference",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the customer reference",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "address.postalCode",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the postal code",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "address.state",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the state",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "address.locality",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the locality",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address.city",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the city name",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "address.country",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the country code name",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the  customer identifier",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the  customer name",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the  type",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "building",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the name of the building",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "localCompany",
+            "required": false,
+            "in": "query",
+            "description": "Filter with the name of the company",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/locations/{locationId}": {
+      "get": {
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "GetLocation",
+        "summary": "Get Location Details",
+        "description": "The method retrieve all attributes of a Location.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "locationId",
+            "required": true,
+            "in": "path",
+            "description": "Orange Single Identifier of the Location.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-API-KEY",
+            "required": false,
+            "in": "header",
+            "description": "The API Key required for using Orange Business Services API.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "required": false,
+            "in": "query",
+            "description": "The list of field names to retrieve. You can specify a field, a resource or a resource’s field. __Example: /locations?fields=name,status",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/LocationFields"
+              }
+            }
+          },
+          {
+            "name": "displayLinks",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show related resources links",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          },
+          {
+            "name": "displayNulls",
+            "required": false,
+            "in": "query",
+            "description": "Flag to be set to show null valued parameters",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json;charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    },
+    "/configurationItems": {
+      "get": {
+        "summary": "Find Configuration Items",
+        "tags": [
+          "Configuration Items"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConfigurationItem"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "description": "Number of total items matching the request"
+              },
+              "X-Result-Count": {
+                "description": "Number of returned items matching the request.",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "FindConfigurationItems",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "default": 250,
+              "minimum": 0,
+              "format": "int32"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250,
+              "default": 250,
+              "format": "int32"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "name": "sort",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ConfigurationItemsSort"
+              }
+            },
+            "in": "query",
+            "description": "The field name to sort the response. Prefixing a field name with a \"-\" sign will indicate a descending order. __Example: /configurationItems?sort=-updatedAt"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ConfigurationItemsFields"
+              }
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.\n*Example: /configurationItems?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayLinks",
+            "description": "Flag to be set to show related resources links"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag to be set to show null valued parameters"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filters by the Orange identifier of the configuration item. Several values can be specified (separated by a comma) "
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "name",
+            "description": "Filters by the Orange name of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "reference",
+            "description": "Filters by the Orange Conmmercial Reference of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customerReference",
+            "description": "Filters by the Customer Reference of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "type",
+            "description": "Filters by the type of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "category",
+            "description": "Filters by the category of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "state",
+            "description": "Filters by the provisioning state of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filters by the Csutomer Account identifier. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filters by the Customer Name associated to the Configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.id",
+            "description": "Filters by the Orange location identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.name",
+            "description": "Filters by the location name. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.customerReference",
+            "description": "Filters by the Location Customer Name. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.city",
+            "description": "Filters by the city where the configuration item is installed. Several values can be specified (separated by a comma)."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.country",
+            "description": "Filters by the country where the configuration item is installed. Several values can be specified (separated by a comma).The code is based on the ISO-3166-1 alpha 2 norm."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "order.id",
+            "description": "Filters by the Orange Order identifier of the configuration item. Several values can be specified (separated by a comma)."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.id",
+            "description": "Filters by the Offer identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.name",
+            "description": "Filters by the Offer name assowciated to the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.family",
+            "description": "Filters by the Offer Family of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "servicePoint.id",
+            "description": "Filters by the Service Point identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "servicePoint.customerReference",
+            "description": "Filters by the Customer Reference of the Service Point associated to the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ],
+        "description": "This method returns Configuration Items matching criterias.",
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/configurationItems/aggregate": {
+      "get": {
+        "summary": "Aggregate configuration Items",
+        "tags": [
+          "Configuration Items"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "AggregateConfigurationItem",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy",
+            "description": "List of attributes to aggregate"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filters by the Orange identifier of the configuration item. Several values can be specified (separated by a comma) "
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "name",
+            "description": "Filters by the Orange name of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "reference",
+            "description": "Filters by the Orange Conmmercial Reference of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customerReference",
+            "description": "Filters by the Customer Reference of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "type",
+            "description": "Filters by the type of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "category",
+            "description": "Filters by the category of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "state",
+            "description": "Filters by the provisioning state of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filters by the Csutomer Account identifier. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filters by the Customer Name associated to the Configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.id",
+            "description": "Filters by the Orange location identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.name",
+            "description": "Filters by the location name. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.customerReference",
+            "description": "Filters by the Location Customer Name. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.city",
+            "description": "Filters by the city where the configuration item is installed. Several values can be specified (separated by a comma)."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.country",
+            "description": "Filters by the country where the configuration item is installed. Several values can be specified (separated by a comma).The code is based on the ISO-3166-1 alpha 2 norm."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "order.id",
+            "description": "Filters by the Orange Order identifier of the configuration item. Several values can be specified (separated by a comma)."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.id",
+            "description": "Filters by the Offer identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.name",
+            "description": "Filters by the Offer name assowciated to the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.family",
+            "description": "Filters by the Offer Family of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "servicePoint.id",
+            "description": "Filters by the Service Point identifier of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "servicePoint.customerReference",
+            "description": "Filters by the Customer Reference of the Service Point associated to the configuration item. Several values can be specified (separated by a comma)"
+          }
+        ],
+        "description": "This method allows to count Access Lines items futher one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.\n\nFor example, the call `GET /accessLines/aggregate?groupBy=state`\n\nwill returns\n\n`\n{\n   'INSTALLING': 5,\n   'OPERATIONAL' : 10,\n   'TERMINATED' : 2\n}\n`\n\nThe _groupBy_ Query Parameter supports several attributes ex:  ` GET /requests/aggregate?groupBy=status,offer.family`"
+      }
+    },
+    "/configurationItems/{configurationItemId}": {
+      "get": {
+        "summary": "Get Configuration Item details",
+        "tags": [
+          "Configuration Items"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationItem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetConfigurationItem",
+        "description": "The method retrieve all attributes of a Configuration Item.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ConfigurationItemsFields"
+              }
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.\n*Example: /configurationItems?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayLinks",
+            "description": "Flag to be set to show related resources links"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag to be set to show null valued parameters"
+          }
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "configurationItemId",
+          "description": "Configuration Item identifier.",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/servicePoints": {
+      "get": {
+        "summary": "Find Service Points",
+        "tags": [
+          "Service Points"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServicePoint"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "Number of total items matching the request",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Result-Count": {
+                "description": "Number of returned items matching the request.",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "FindServicePoints",
+        "description": "This method returns all Service Points matching criterias.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "default": 0
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 250,
+              "minimum": 0,
+              "default": 250
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ServicePointFields"
+              }
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Indicate the order of the response. The parameter contains a list of attributes. The minus symbol allows to indicate the desc order. Example: /servicePoints?sort=-updatedAt"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ServicePointSort"
+              }
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma. Example: /servicePoints?fields=id,name"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayLinks",
+            "description": "Flag to be set to show related resources links."
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag to be set to show null valued parameters"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filters by the provisioning state of the Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "name",
+            "description": "Filters by the name of the Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customerReference",
+            "description": "Filters by the Customer Reference of the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "state",
+            "description": "Filters by the provisioning state of the Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.id",
+            "description": "Filters by the Orange identifier of the Installed Offer. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.name",
+            "description": "Filters by the installed offer name for this Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filters by the Customer Identifier associated to Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filters by the Customer Account Name associated to Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "billingAccount.id",
+            "description": "Filters by the billing account associated to the Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "billingAccount.code",
+            "description": "Filters by the Billing sub account code associated to the Service Point. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "agreement.id",
+            "description": "Filters by the Agreement identifier associated to the configuration item. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "in": "query",
+            "name": "location.id",
+            "description": "Filters by the Orange identifier of the location where the Service Point has been deployed. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.name",
+            "description": "Filters by the name of the location where the Servie Point has been deployed. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.customerReference",
+            "description": "Filters by the Customer Reference of the location where the Service Pointhas been deployed. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "offer.family",
+            "description": "Filters by the family of the Installed Offer. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.city",
+            "description": "Filters by the city name of the location where the Servie Point has been deployed. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in": "query",
+            "name": "location.address.country",
+            "description": "Filters by the country code of the location where the Servie Point has been deployed. Several values can be specified (separated by a comma)"
+          }
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    },
+    "/servicePoints/aggregate": {
+      "get": {
+        "summary": "Aggegate Service Points",
+        "tags": [
+          "Service Points"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "AggregrateServicePoint",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "description": "The API Key required for using Orange Business Services API.",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy",
+            "required": true,
+            "description": "List of attributes to aggregate"
+          },
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array"
+            },
+            "description": "Only return Service Points for this identifier or a lst of identifiers."
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array"
+            },
+            "description": "Only return Service Points for this name or a lst of names."
+          },
+          {
+            "name": "customerReference",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this Customer Reference."
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this State."
+          },
+          {
+            "name": "offer.id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this Offer. Need to indicate the identifier of the Offer.\n"
+          },
+          {
+            "name": "offer.name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this Offer. Need to indicate the name of the Offer."
+          },
+          {
+            "name": "offer.family",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Filter by the Offer Family such as _NETWORK_., _CLOUD_"
+          },
+          {
+            "name": "orderedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Filter by the Ordering creation date."
+          },
+          {
+            "name": "billingStartedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "items": {
+                "type": "string"
+              },
+              "format": "date-time"
+            },
+            "description": "Filter by the date of the beginning of the billing. "
+          },
+          {
+            "name": "billingEndedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "items": {
+                "type": "string"
+              },
+              "format": "date-time"
+            },
+            "description": "Filter by the date of the end of the billing. "
+          },
+          {
+            "name": "startedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "items": {
+                "type": "string"
+              },
+              "format": "date-time"
+            },
+            "description": "Filter by the date when the service started. "
+          },
+          {
+            "name": "endedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "items": {
+                "type": "string"
+              },
+              "format": "date-time"
+            },
+            "description": "Filter by the date when the service ended. "
+          },
+          {
+            "name": "billingAccount.id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this Billing Account Identifier."
+          },
+          {
+            "name": "agreement.id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points for this Agreement Identifier."
+          },
+          {
+            "name": "location.id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points with the given location Identifier(s)."
+          },
+          {
+            "name": "location.name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points with the given Location Name."
+          },
+          {
+            "name": "location.customerReference",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points with the given Location Customer Reference."
+          },
+          {
+            "name": "updatedAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Only return Service Points updated at the given date."
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Only return Service Points created at the given date."
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Only return Service Points with the given Customer Identifier."
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array"
+            },
+            "description": "Only return Service Points with the given Customer Name."
+          }
+        ],
+        "description": "This method allows to count Service Points items futher one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.\n\nFor example, the call `GET /servicePoints/aggregate?groupBy=state`\n\nwill returns\n\n`\n{\n   'INSTALLING': 5,\n   'OPERATIONAL' : 10,\n   'TERMINATED' : 2\n}\n`\n\nThe _groupBy_ Query Parameter supports several attributes ex:  ` GET /servicePoints/aggregate?groupBy=state,offer.family`"
+      }
+    },
+    "/servicePoints/{servicePointId}": {
+      "get": {
+        "summary": "Get Service Point Details",
+        "tags": [
+          "Service Points"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServicePoint"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetServicePoint",
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ServicePointSort"
+              }
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma. Example: /servicePoints?fields=id,name"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayLinks",
+            "description": "Flag to be set to show related resources links."
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag to be set to show null valued parameters"
+          }
+        ],
+        "description": "The method retrieve all attributes of a Service Point."
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "servicePointId",
+          "description": "Single Identifier of a Service Point",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/version": {
+      "get": {
+        "operationId": "GetAPIVersion",
+        "summary": "Get API Version",
+        "description": "This method provides detailed information on the API (Version/patch...)",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json;charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Version"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Miscellaneous"
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    },
+    "/doc": {
+      "get": {
+        "operationId": "DownloadSwagger",
+        "summary": "Download Swagger",
+        "description": "Provide the current version of the Swagger File.\nThe API key is not required for this end-point.",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Documentation"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Miscellaneous"
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    },
+    "/status": {
+      "get": {
+        "operationId": "GetStatus",
+        "summary": "Get API Status",
+        "description": "This method allows to provide the current status of the API. ",
+        "deprecated": false,
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the API."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "ko"
+                      ],
+                      "description": "Status of the API. 'ok' indicates that the API is available without problems. 'ko' indicates that the API is facing some issues."
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of the API in the format Major, Minor and patch number."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the API."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "ko"
+                      ],
+                      "description": "Status of the API. 'ok' indicates that the API is available without problems. 'ko' indicates that the API is facing some issues."
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of the API in the format Major, Minor and patch number."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Miscellaneous"
+        ],
+        "security": [
+          {
+            "OrangeDeveloper": [
+              "b2b:core-information",
+              "b2b:core-information:readOnly"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.orange.com/core-information/b2b/v2/",
+      "description": "Orange Developer"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "ServicePointFields": {
+        "description": "List of values for partial response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "name",
+          "customerReference",
+          "state",
+          "offer.id",
+          "offer.name",
+          "offer.family",
+          "customer.id",
+          "customer.name",
+          "billingAccount.id",
+          "billingAccount.name",
+          "category",
+          "criticality",
+          "agreement.id",
+          "location.id",
+          "location.name",
+          "location.customerReference",
+          "location.company",
+          "location.building",
+          "location.residence",
+          "location.address.street",
+          "location.address.extendedStreet",
+          "location.address.locality",
+          "location.address.postalCode",
+          "location.address.city",
+          "location.address.state",
+          "location.address.country",
+          "location.formattedAddress",
+          "location.floor",
+          "location.room",
+          "location.stair",
+          "location.phone",
+          "keyDates.orderedAt",
+          "keyDates.startedAt",
+          "keyDates.terminatedAt",
+          "keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "properties.option",
+          "properties.voip.unmanagedChannelCount",
+          "properties.voip.managedChannelCount",
+          "properties.voip.type",
+          "properties.voip.option",
+          "properties.voip.codec",
+          "properties.voip.vpn",
+          "properties.video.unmanagedChannelCount",
+          "properties.video.managedChannelCount",
+          "properties.intranet.bandwidth",
+          "properties.intranet.unit",
+          "properties.wan.mode",
+          "properties.wan.isStandard",
+          "properties.wan.isInternet",
+          "properties.dsl.phoneNumber",
+          "properties.community.id",
+          "properties.community.name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ServicePointSort": {
+        "description": "List of values for sorting the response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "-id",
+          "name",
+          "-name",
+          "customerReference",
+          "-customerReference",
+          "state",
+          "-state",
+          "offer.id",
+          "-offer.id",
+          "offer.name",
+          "-offer.name",
+          "offer.family",
+          "-offer.family",
+          "customer.id",
+          "-customer.id",
+          "customer.name",
+          "-customer.name",
+          "billingAccount.id",
+          "-billingAccount.id",
+          "billingAccount.name",
+          "-billingAccount.name",
+          "category",
+          "-category",
+          "criticality",
+          "-criticality",
+          "agreement.id",
+          "-agreement.id",
+          "location.id",
+          "-location.id",
+          "location.name",
+          "-location.name",
+          "location.customerReference",
+          "-location.customerReference",
+          "location.address.postalCode",
+          "-location.address.postalCode",
+          "location.address.city",
+          "-location.address.city",
+          "location.address.country",
+          "-location.address.country",
+          "location.formattedAddress",
+          "-location.formattedAddress",
+          "keyDates.orderedAt",
+          "-keyDates.orderedAt",
+          "keyDates.startedAt",
+          "-keyDates.startedAt",
+          "keyDates.terminatedAt",
+          "-keyDates.terminatedAt",
+          "keyDates.billingStartedAt",
+          "-keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "-keyDates.billingEndedAt",
+          "properties.community.id",
+          "-properties.community.id",
+          "properties.community.name",
+          "-properties.community.name",
+          "createdAt",
+          "-createdAt",
+          "updatedAt",
+          "-updatedAt"
+        ]
+      },
+      "AccountFields": {
+        "description": "List of values for partial response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "name",
+          "updatedAt",
+          "createdAt"
+        ]
+      },
+      "AccountSort": {
+        "description": "List of values for sorting the response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "-id",
+          "name",
+          "-name",
+          "updatedAt",
+          "-createdAt"
+        ]
+      },
+      "LocationFields": {
+        "description": "List of values for partial response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "name",
+          "customerReference",
+          "customer.id",
+          "customer.name",
+          "company",
+          "building",
+          "address.city",
+          "address.country",
+          "address.locality",
+          "address.street",
+          "address.extendedStreet",
+          "address.postalCode",
+          "timeZone.id",
+          "timeZone.name",
+          "timeZone.gmt",
+          "phone",
+          "createdAt",
+          "updatedAt",
+          "address.state",
+          "formattedAddress",
+          "residence",
+          "floor",
+          "room",
+          "stairCase",
+          "geoCoding.latitude",
+          "geoCoding.longitude",
+          "geoCoding.accuracy"
+        ]
+      },
+      "LocationSort": {
+        "description": "List of values for sorting the response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "-id",
+          "name",
+          "-name",
+          "customerReference",
+          "-customerReference",
+          "customer.id",
+          "-customer.id",
+          "customer.name",
+          "-customer.name",
+          "company",
+          "-company",
+          "building",
+          "-building",
+          "address.city",
+          "-address.city",
+          "address.country",
+          "-address.country",
+          "address.locality",
+          "-address.locality",
+          "createdAt",
+          "-createdAt",
+          "updatedAt",
+          "-updatedAt",
+          "address.street",
+          "-address.street",
+          "address.postalCode",
+          "-address.postalCode",
+          "address.state",
+          "-address.state",
+          "formattedAddress",
+          "-formattedAddress",
+          "phone",
+          "-phone",
+          "timeZone.id",
+          "-timeZone.id",
+          "timeZone.name",
+          "-timeZone.name",
+          "timeZone.gmt",
+          "-timeZone.gmt",
+          "residence",
+          "-residence",
+          "floor",
+          "-floor",
+          "room",
+          "-room",
+          "stairCase",
+          "-stairCase",
+          "geoCoding.latitude",
+          "-geoCoding.latitude",
+          "geoCoding.longitude",
+          "-geoCoding.longitude",
+          "geoCoding.accuracy",
+          "-geoCoding.accuracy"
+        ]
+      },
+      "ConfigurationItemsSort": {
+        "description": "List of values for sorting the response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "-id",
+          "name",
+          "-name",
+          "reference",
+          "-reference",
+          "customerReference",
+          "-customerReference",
+          "category",
+          "-category",
+          "type",
+          "-type",
+          "state",
+          "-state",
+          "customer.id",
+          "-customer.id",
+          "customer.name",
+          "-customer.name",
+          "location.id",
+          "-location.id",
+          "location.name",
+          "-location.name",
+          "location.customerReference",
+          "-location.customerReference",
+          "location.address.city",
+          "-location.address.city",
+          "location.address.country",
+          "-location.address.country",
+          "offer.id",
+          "-offer.id",
+          "offer.name",
+          "-offer.name",
+          "offer.family",
+          "-offer.family",
+          "servicePoint.id",
+          "-servicePoint.id",
+          "servicePoint.name",
+          "-servicePoint.name",
+          "servicePoint.customerReference",
+          "-servicePoint.customerReference",
+          "community",
+          "-community",
+          "keyDates.orderedAt",
+          "-keyDates.orderedAt",
+          "keyDates.activatedAt",
+          "-keyDates.activatedAt",
+          "keyDates.terminatedAt",
+          "-keyDates.terminatedAt",
+          "properties.role",
+          "-properties.role",
+          "properties.hardware.manufacturer",
+          "-properties.hardware.manufacturer",
+          "properties.hardware.model",
+          "-properties.hardware.model",
+          "properties.hardware.family",
+          "-properties.hardware.family",
+          "properties.hardware.chassis",
+          "-properties.hardware.chassis",
+          "properties.hardware.serialNumber",
+          "-properties.hardware.serialNumber"
+        ]
+      },
+      "ConfigurationItemsFields": {
+        "description": "List of values for sorting the response.",
+        "type": "string",
+        "enum": [
+          "id",
+          "name",
+          "reference",
+          "customerReference",
+          "category",
+          "type",
+          "state",
+          "customer.id",
+          "customer.name",
+          "location.id",
+          "location.name",
+          "location.customerReference",
+          "location.company",
+          "location.building",
+          "location.residence",
+          "location.address.street",
+          "location.address.extendedStreet",
+          "location.address.locality",
+          "location.address.postalCode",
+          "location.address.city",
+          "location.address.state",
+          "location.address.country",
+          "location.formattedAddress",
+          "location.floor",
+          "location.room",
+          "location.stair",
+          "location.phone",
+          "offer.id",
+          "offer.name",
+          "offer.family",
+          "servicePoint.id",
+          "servicePoint.name",
+          "servicePoint.customerReference",
+          "serviceLevelManagement.code",
+          "serviceLevelManagement.coverage",
+          "serviceLevelManagement.restoreTime",
+          "serviceLevelManagement.responseTime",
+          "ownedBy.id",
+          "ownedBy.name",
+          "managedBy.id",
+          "managedBy.name",
+          "supportedBy.id",
+          "supportedBy.name",
+          "inHouseLocation.room",
+          "stair",
+          "floor",
+          "community",
+          "keyDates.orderedAt",
+          "keyDates.activatedAt",
+          "keyDates.terminatedAt",
+          "properties.role",
+          "properties.reference",
+          "properties.hardware.manufacturer",
+          "properties.hardware.model",
+          "properties.hardware.family",
+          "properties.hardware.chassis",
+          "properties.hardware.serialNumber",
+          "properties.network.ipAddress",
+          "properties.line.phoneNumber",
+          "properties.bandwidth.rx",
+          "properties.bandwidth.tx",
+          "properties.bandwidth.unit"
+        ]
+      },
+      "HyperlinkMethod": {
+        "type": "string",
+        "description": "List of HTTP authorized methods.",
+        "enum": [
+          "GET",
+          "POST",
+          "PATCH",
+          "DELETE"
+        ],
+        "default": "GET"
+      },
+      "Offer": {
+        "type": "object",
+        "description": "Information on the associated Offer.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifier of an Offer"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the main Offer associatzed to the device"
+          },
+          "family": {
+            "type": "string",
+            "description": "Family of the offer such as NETWORK, VOICE..."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "family"
+        ]
+      },
+      "Error": {
+        "description": "Information of the occured error.",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Code of the error.."
+          },
+          "message": {
+            "type": "string",
+            "description": "Type of the error."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the occured error."
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "description": "Information on the location",
+        "title": "Location",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the location",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the location",
+            "type": "string"
+          },
+          "customerReference": {
+            "description": "Reference set by Customer",
+            "type": "string"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "company": {
+            "description": "Name of the local company. It is not the Customer Account.",
+            "type": "string"
+          },
+          "building": {
+            "description": "Name of the building",
+            "type": "string"
+          },
+          "residence": {
+            "type": "string",
+            "description": "Name of the Residence."
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "formattedAddress": {
+            "description": "Complete address with street, postal code, city and country",
+            "type": "string"
+          },
+          "floor": {
+            "description": "floor number of the location",
+            "type": "string"
+          },
+          "room": {
+            "description": "Room number or reference.",
+            "type": "string"
+          },
+          "stair": {
+            "type": "string",
+            "description": "Information on the Stair case."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the location. "
+          },
+          "openingHours": {
+            "description": "Free text for describing the Opening Hours",
+            "type": "string"
+          },
+          "timeZone": {
+            "$ref": "#/components/schemas/TimeZone"
+          },
+          "geoCoding": {
+            "$ref": "#/components/schemas/GeoCoding"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time",
+            "example": "2021-03-05T13:15:30Z"
+          },
+          "updatedAt": {
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-03-05T13:15:30Z"
+          },
+          "_links": {
+            "$ref": "#/components/schemas/LocationLinks"
+          }
+        },
+        "required": [
+          "id",
+          "customer",
+          "address",
+          "phone",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Address": {
+        "description": "Information on the address.",
+        "type": "object",
+        "properties": {
+          "street": {
+            "description": "Name of the street.",
+            "type": "string"
+          },
+          "extendedStreet": {
+            "description": "Additional information on the  street.",
+            "type": "string"
+          },
+          "locality": {
+            "description": "Locality of the address.\n_Example: Sophia-Antipolis_",
+            "type": "string"
+          },
+          "postalCode": {
+            "description": "PostalCode (ZipCode) of the address.",
+            "type": "string"
+          },
+          "city": {
+            "description": "City or town of the address",
+            "type": "string"
+          },
+          "state": {
+            "description": "Federated entity of the address (State, Canton, Province, Bundesland,etc)",
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "description": "Code of the country in the ISO-3166-1 alpha 2 norm.",
+            "example": "FR",
+            "maxLength": 2,
+            "minLength": 2
+          }
+        },
+        "required": [
+          "street",
+          "city",
+          "country"
+        ]
+      },
+      "GeoCoding": {
+        "required": [
+          "latitude",
+          "longitude",
+          "accuracy"
+        ],
+        "description": "Latitude and Longitude of the Location.",
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "string",
+            "description": "latitude of the location."
+          },
+          "longitude": {
+            "type": "string",
+            "description": "longitude of the location."
+          },
+          "accuracy": {
+            "type": "string",
+            "description": "accuracy of GPS information."
+          }
+        }
+      },
+      "Customer": {
+        "description": "Information on the Customer.",
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Unique identifier of the Customer.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the Customer.",
+            "type": "string"
+          }
+        }
+      },
+      "Version": {
+        "required": [
+          "version",
+          "deprecated"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "$ref": "#/components/schemas/VersionDetails"
+          },
+          "deprecated": {
+            "description": "Flag indicating if the API is deprecated",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "Version of the API."
+      },
+      "TimeZone": {
+        "description": "Information of the TimeZone of the location.",
+        "type": "object",
+        "title": "TimeZone",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single identifier of the TimeZone."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the TimeZone slot."
+          },
+          "gmt": {
+            "type": "string",
+            "description": "GMT information of the TimeZone."
+          },
+          "offset": {
+            "description": "Offset in minutes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "gmt",
+          "offset"
+        ]
+      },
+      "LocationLinks": {
+        "description": "HATEOAS links of the location. This allows to navigate between API.",
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/Hyperlink"
+          }
+        }
+      },
+      "Hyperlink": {
+        "required": [
+          "href"
+        ],
+        "type": "object",
+        "properties": {
+          "href": {
+            "description": "URI of the resource",
+            "type": "string"
+          },
+          "method": {
+            "$ref": "#/components/schemas/HyperlinkMethod"
+          },
+          "payload": {
+            "description": "Body in case of POST or PUT, PATCH method.",
+            "type": "string"
+          }
+        },
+        "description": "Information on the HTTP link."
+      },
+      "CustomerLinks": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "devices": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "incidents": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "changeRequests": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "quoteRequests": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "orders": {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          "locations": {
+            "$ref": "#/components/schemas/Hyperlink"
+          }
+        },
+        "description": "HATEOAS links of the Customer. This allows to navigate between APIs."
+      },
+      "VersionDetails": {
+        "description": "Detailed information on the API version.",
+        "required": [
+          "major",
+          "minor",
+          "patch"
+        ],
+        "type": "object",
+        "properties": {
+          "major": {
+            "description": "Major number of the API version.",
+            "type": "string"
+          },
+          "minor": {
+            "description": "Minor number of the API version.",
+            "type": "string"
+          },
+          "patch": {
+            "description": "Patch number of the API version.",
+            "type": "string"
+          }
+        }
+      },
+      "Documentation": {
+        "type": "object",
+        "description": "Swagger of the API."
+      },
+      "CustomerAccount": {
+        "type": "object",
+        "title": "Accounts",
+        "description": "Informatio on a Customer Account.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifier of the Customer."
+          },
+          "code": {
+            "type": "string",
+            "description": "Code identifying the Customer."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Customer."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time",
+            "example": "2021-03-05T13:15:30Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time",
+            "example": "2021-03-05T13:15:30Z"
+          },
+          "_links": {
+            "$ref": "#/components/schemas/CustomerLinks"
+          }
+        },
+        "required": [
+          "id",
+          "code"
+        ]
+      },
+      "LocationShort": {
+        "type": "object",
+        "description": "Information on the Location.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the Location."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the location."
+          },
+          "customerReference": {
+            "type": "string",
+            "description": "Reference of the Location set by the Customer."
+          },
+          "company": {
+            "description": "Name of the local company. It is not the Customer Account.",
+            "type": "string"
+          },
+          "building": {
+            "description": "Name of the building.",
+            "type": "string"
+          },
+          "residence": {
+            "type": "string",
+            "description": "Name of the residence."
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "formattedAddress": {
+            "description": "Complete address with street, postal code, city and country.",
+            "type": "string"
+          },
+          "floor": {
+            "type": "string",
+            "description": "Number of the floor."
+          },
+          "room": {
+            "type": "string",
+            "description": "Number or reference of the Room."
+          },
+          "stair": {
+            "type": "string",
+            "description": "Stair information."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone Number of the location."
+          }
+        },
+        "required": [
+          "name",
+          "address"
+        ]
+      },
+      "ConfigurationItem": {
+        "title": "ConfigurationItem",
+        "type": "object",
+        "description": "Information on a Configuration Item.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifier of a Configuration Item."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the configuration item."
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference of the Configuration Item."
+          },
+          "customerReference": {
+            "type": "string",
+            "description": "Reference set by the Customer to identify the Configuration Item"
+          },
+          "category": {
+            "type": "array",
+            "description": "Category of the Configuration Item.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItemCategory"
+            }
+          },
+          "type": {
+            "type": "array",
+            "description": "Type of the Configuration Item.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItemType"
+            }
+          },
+          "state": {
+            "type": "array",
+            "description": "Provisioning State of the Configuration Item.",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItemState"
+            }
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationShort"
+          },
+          "offer": {
+            "$ref": "#/components/schemas/Offer"
+          },
+          "servicePoint": {
+            "$ref": "#/components/schemas/ConfigurationItemServicePoint"
+          },
+          "community": {
+            "type": "string",
+            "description": "Community/VPN where the Configuration Item is deployed."
+          },
+          "serviceLevelManagement": {
+            "type": "object",
+            "description": "Information on the Service Level Management.",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Code of the Service Level Management."
+              },
+              "coverage": {
+                "type": "string",
+                "description": "Coverage of the Service Level Management."
+              },
+              "restoreTime": {
+                "type": "string",
+                "description": "Restore Time defined."
+              },
+              "responseTime": {
+                "type": "string",
+                "description": "Response Time defined."
+              }
+            }
+          },
+          "ownedBy": {
+            "type": "object",
+            "description": "Information on the Owner.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Single Identifier of the owner of the Configuration Item."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the owner of the Configuration Item."
+              }
+            }
+          },
+          "managedBy": {
+            "type": "object",
+            "description": "Information on the entity in charge of the management.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Single Identifier of the entity in charge of the Management."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the entity in charge of the Management."
+              }
+            }
+          },
+          "supportedBy": {
+            "type": "object",
+            "description": "Entity that will provide the Support.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Single Identifier of the entity in charge of the support."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the entity in charge of the support."
+              }
+            }
+          },
+          "inHouseLocation": {
+            "type": "object",
+            "description": "Additional information where the Configuration Item is installed/deployed.",
+            "properties": {
+              "room": {
+                "type": "string",
+                "description": "Room Number."
+              },
+              "stair": {
+                "type": "string",
+                "description": "Stair name or number."
+              },
+              "floor": {
+                "type": "string",
+                "description": "Number of the floor where the Configuration Item is installed."
+              }
+            }
+          },
+          "keyDates": {
+            "type": "object",
+            "description": "Dates of the Configuration Item Lifecycle.",
+            "properties": {
+              "orderedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01"
+              },
+              "activatedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01"
+              },
+              "terminatedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01"
+              }
+            }
+          },
+          "properties": {
+            "type": "object",
+            "description": "Properties of the Configuration Item.",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "PRIMARY",
+                  "SECONDARY",
+                  "SINGLE",
+                  "UNKNOWN"
+                ],
+                "description": "Role of the Configuration Item. The Equipment or Access Line can be a main (Primary) or not (secondary) equipment, access line."
+              },
+              "reference": {
+                "type": "string",
+                "description": "Commercial Reference of the Configuration Item."
+              },
+              "hardware": {
+                "type": "object",
+                "description": "Information on the hardware of the equipment. Available only if the Configuration Item is a device.",
+                "properties": {
+                  "manufacturer": {
+                    "type": "string",
+                    "description": "Manufacturer of the Configuration Item."
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "Model of the Configuration Item."
+                  },
+                  "family": {
+                    "type": "string",
+                    "description": "Family of the device such as _NETWORK_."
+                  },
+                  "chassis": {
+                    "type": "string",
+                    "description": "Chassis Name of the Configuration Item."
+                  },
+                  "serialNumber": {
+                    "type": "string",
+                    "description": "Serial Number of the Configuration Item."
+                  }
+                }
+              },
+              "network": {
+                "type": "object",
+                "description": "Information about Network solutions. Only available on Network Equipments.",
+                "properties": {
+                  "ipAddress": {
+                    "type": "string",
+                    "description": "Main IP Address of the Configuration Item."
+                  }
+                }
+              },
+              "line": {
+                "type": "object",
+                "description": "Information on the Access Line. Available only for Network solutions.",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone Number of the Access Line."
+                  }
+                }
+              },
+              "bandwidth": {
+                "type": "object",
+                "description": "Information on the Bandwidth of an Access Line. Available only on Access Lines.",
+                "properties": {
+                  "rx": {
+                    "type": "string",
+                    "description": "Bandwith of received data"
+                  },
+                  "tx": {
+                    "type": "string",
+                    "description": "Bandwith of sent data."
+                  },
+                  "unit": {
+                    "type": "string",
+                    "description": "Unit of the bandwidh values."
+                  }
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-03-05T13:15:30Z",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2021-03-05T13:15:30Z",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time"
+          },
+          "_link": {
+            "type": "object",
+            "description": "HATEOAS links of the location. This allows to navigate between API.",
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Hyperlink"
+              },
+              "location": {
+                "$ref": "#/components/schemas/Hyperlink"
+              },
+              "servicePoint": {
+                "$ref": "#/components/schemas/Hyperlink"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ServicePoint": {
+        "title": "ServicePoint",
+        "description": "Information on a Service Point.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single identifier of the Service Point"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Service Point composed of the Reference of the location and the type of service."
+          },
+          "customerReference": {
+            "type": "string",
+            "description": "Reference set by the Customer."
+          },
+          "state": {
+            "$ref": "#/components/schemas/ProvisioningState"
+          },
+          "offer": {
+            "$ref": "#/components/schemas/Offer"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "billingAccount": {
+            "$ref": "#/components/schemas/BillingAccount"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the Service Point specified by the Customer during the Ordering process."
+          },
+          "criticality": {
+            "type": "string",
+            "description": "Criticality of the Service Point specified by the Customer during the Ordering process."
+          },
+          "agreement": {
+            "type": "object",
+            "description": "Information on the Agreement",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Single Identifier of the Agreement."
+              }
+            }
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationShort"
+          },
+          "keyDates": {
+            "type": "object",
+            "description": "Key dates of the Lifecycle of the Service Point.",
+            "properties": {
+              "orderedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01",
+                "description": "Date when the item has been ordered by the Customer."
+              },
+              "startedAt": {
+                "type": "string",
+                "example": "2021-01-01",
+                "format": "date",
+                "description": "Date when the item has been installed and Ready for Service."
+              },
+              "terminatedAt": {
+                "type": "string",
+                "example": "2021-01-01",
+                "format": "date",
+                "description": "Date when the item has been disconnected."
+              },
+              "billingStartedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01",
+                "description": "Date when the billing started for this item."
+              },
+              "billingEndedAt": {
+                "type": "string",
+                "format": "date",
+                "example": "2021-01-01",
+                "description": "Date when the billing started for this item."
+              }
+            }
+          },
+          "properties": {
+            "$ref": "#/components/schemas/ServicePointProperties"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-03-05T13:15:30Z",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "example": "2021-03-05T13:15:30Z"
+          },
+          "_links": {
+            "type": "object",
+            "description": "HATEOAS links of the location. This allows to navigate between API.",
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Hyperlink"
+              },
+              "configurationItems": {
+                "$ref": "#/components/schemas/Hyperlink"
+              },
+              "location": {
+                "$ref": "#/components/schemas/Hyperlink"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ConfigurationItemServicePoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifier of a Service Point."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of a Service Point."
+          },
+          "customerReference": {
+            "type": "string",
+            "description": "Customer Reference of a Service Point."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "customerReference"
+        ],
+        "description": "Service Point of the Access Line."
+      },
+      "ConfigurationItemState": {
+        "title": "ConfigurationItemState",
+        "description": "List of Configuration Item Provisioning State.",
+        "type": "string",
+        "enum": [
+          "INSTALLING",
+          "OPERATIONAL",
+          "TERMINATED",
+          "CANCELLED",
+          "UNKNOWN"
+        ]
+      },
+      "ConfigurationItemType": {
+        "title": "ConfigurationItemType",
+        "type": "string",
+        "enum": [
+          "ROUTER",
+          "IP_SWITCH",
+          "ETHERNET_SWITCH"
+        ],
+        "description": "List of Configuration Item Types."
+      },
+      "ConfigurationItemCategory": {
+        "title": "List of categories.",
+        "type": "string",
+        "enum": [
+          "ACCESS_LINE",
+          "WAN_DEVICE",
+          "LAN_DEVICE",
+          "OTHER"
+        ],
+        "description": "Category of the Configuration Item."
+      },
+      "ProvisioningState": {
+        "title": "ProvisioningState",
+        "description": "Provisionning State of the configuration item.",
+        "type": "string",
+        "enum": [
+          "INSTALLING",
+          "OPERATIONAL",
+          "TERMINATED"
+        ]
+      },
+      "BillingAccount": {
+        "title": "BillingAccount",
+        "description": "Information on the billing account.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of a Billing Account."
+          },
+          "code": {
+            "type": "string",
+            "description": "Sub code of the Billing Account."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Billing Account."
+          }
+        }
+      },
+      "ServicePointProperties": {
+        "title": "ServicePointProperties",
+        "type": "object",
+        "description": "Properties of a Service Point.",
+        "properties": {
+          "option": {
+            "type": "string"
+          },
+          "voip": {
+            "$ref": "#/components/schemas/ServicePointPropertiesVoiceIP"
+          },
+          "video": {
+            "$ref": "#/components/schemas/ServicePointPropertiesVideo"
+          },
+          "intranet": {
+            "$ref": "#/components/schemas/ServicePointPropertiesIntranet"
+          },
+          "wan": {
+            "$ref": "#/components/schemas/ServicePointPropertiesWan"
+          },
+          "dsl": {
+            "$ref": "#/components/schemas/ServicePointPropertiesDsl"
+          },
+          "community": {
+            "$ref": "#/components/schemas/ServicePointPropertiesCommunity"
+          }
+        }
+      },
+      "ServicePointPropertiesVideo": {
+        "title": "ServicePointPropertiesVideo",
+        "type": "object",
+        "properties": {
+          "unmanagedChannelCount": {
+            "type": "integer"
+          },
+          "managedChannelCount": {
+            "type": "integer"
+          }
+        },
+        "description": "Properties of the Video Conferencing Service."
+      },
+      "ServicePointPropertiesIntranet": {
+        "title": "ServicePointPropertiesIntranet",
+        "type": "object",
+        "properties": {
+          "bandwidth": {
+            "type": "string",
+            "description": "Bandwidth configured for the intranet service."
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit uses for the bandwidth."
+          }
+        }
+      },
+      "ServicePointPropertiesVoiceIP": {
+        "title": "ServicePointPropertiesVoiceIP",
+        "type": "object",
+        "description": "Properties of the Voice Over IP Services.",
+        "properties": {
+          "unmanagedChannelCount": {
+            "type": "integer",
+            "description": "Number of the unmanaged Channels for VoIP service."
+          },
+          "managedChannelCount": {
+            "type": "integer",
+            "description": "Number of managed channels for VoIP Service."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of VoIP service."
+          },
+          "option": {
+            "type": "string",
+            "description": "Subcribed options for Voice over IP."
+          },
+          "codec": {
+            "type": "string",
+            "description": "Name of the VoIP Codec."
+          },
+          "vpn": {
+            "type": "string",
+            "description": "Name of the VPN for Voice over IP service."
+          }
+        }
+      },
+      "ServicePointPropertiesWan": {
+        "title": "ServicePointPropertiesWan",
+        "type": "object",
+        "description": "Properties of the WAN Services.",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "description": "Mode of the WAN service."
+          },
+          "isStandard ": {
+            "type": "string",
+            "description": "Flag indicating if the service is Standard."
+          },
+          "isInternet": {
+            "type": "string",
+            "description": "Flag indicating that the service WAN supports Internet"
+          }
+        }
+      },
+      "ServicePointPropertiesDsl": {
+        "title": "ServicePointPropertiesDsl",
+        "type": "object",
+        "description": "Properties of the DSL service.",
+        "properties": {
+          "phoneNumber": {
+            "type": "string",
+            "description": "Phonenumber of the DSL Line."
+          }
+        }
+      },
+      "ServicePointPropertiesCommunity": {
+        "title": "ServicePointPropertiesCommunity",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single identifier of the community."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the community, or Network."
+          }
+        },
+        "description": "Properties of the community."
+      }
+    },
+    "securitySchemes": {
+      "OrangeDeveloper": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api.orange.com/oauth/v3/token",
+            "refreshUrl": "https://api.orange.com/oauth/v3/token",
+            "scopes": {
+              "b2b:core-information": "Allow to read and manage actions",
+              "b2b:core-information:readOnly": "Allow only to read actions"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "OrangeDeveloper": []
+    }
+  ]
+}
