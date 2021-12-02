@@ -5,7 +5,9 @@
     "version": "2.0.0",
     "title": "Network",
     "x-logo": {
-      "url": "/redoc/logo.png",
+      "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4
+  //8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+      "url2": "/redoc/logo.png",
       "backgroundColor": "#FFFFFF"
     },
     "contact": {
