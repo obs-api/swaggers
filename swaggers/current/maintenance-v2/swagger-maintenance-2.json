@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "Describes a Enterprise Scheduled Works API.\nScheduled works are maintenance periods on your network that can be transparent or provide a service disruption. Origins can be Customer Changes, Orange Backbones changes and also Carriers Changes. Customers can also submit Maintenance Period planned in their premises.\nThe visibility is  -24 days up to +24 days. \nSome Carriers scheduled works can be visible if occurred after the next 24 days.\n\n**Release: pre-release 1.1**\nAddition of header parameters along with version and doc API enhancement\n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **Scheduled Works** : A scheduled Work is a maintenance periods initiated by on your network (Technical changes), on the Orange Business Service Backbones or partner Carriers. \n- **Search** : used to retrieve Scheduled Works thanks to a complex search.\n- **Snapshots** : used to determine the number of Scheduled Works based on an attribute.\n- **Status** : used to know the status of API components.\n\n### Scheduled Work Management API performs the following operations :\n- Create a Scheduled Work.\n- Retrieve a Scheduled Work or a collection of Scheduled Works or only one Scheduled Work.\n- Find Scheduled Works  by using a complex search.\n- Report a Scheduled Work.\n- Compute statistics on Scheduled Works.\n\n##\n### Scopes for Auth 2.0  \n \nThe API requires an OAuth 2.0 authentication. During the authentication, the scope must be specified.\n| Scope | Features |\n| --- | --- |\n| b2b.maintenance |  Manage your Scheduled Works |\n| b2b.maintenance.readonly |  View your Scheduled Works |\n\n\n### Webhooks/ notifications \n> Not available yet\n\nYou can receive notification but you have to subscribe to event thru the   [API Administration  portal](https://#)   or via [Webhook Management API](https://#)   \n\n| Event  | Comment |\n| --- | --- |\n| b2b.maintenance.new | Trigged when a Scheduled Works is added |\n| b2b.maintenance.update | Trigged when a Scheduled Work is modified |\n \n\n\n***\nCopyright © OBS 2017. All Rights Reserved.\n\n",
-    "version": "1.0",
+    "version": "2.0",
     "title": "Orange Business Services - Maintenance API",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -10,7 +10,7 @@
     }
   },
   "host": "api.orange.com",
-  "basePath": "/maintenance/b2b/v1/ScheduleWorks",
+  "basePath": "/maintenance/b2b/v2",
   "schemes": [
     "https"
   ],
@@ -112,10 +112,10 @@
             "type": "string"
           },
           {
-            "name": "externalReference",
+            "name": "customerReference",
             "required": false,
             "in": "query",
-            "description": "filters by the  external reference set by the Customer. \n_Example: group=TY00_\nNOTE: Not supported yet",
+            "description": "filters by the  Customer reference set by the Customer. _Example: group=TY00_NOTE: Not supported yet",
             "type": "string"
           },
           {
@@ -194,38 +194,38 @@
             "type": "string"
           },
           {
-            "name": "impactedDevice.id",
+            "name": "configurationItem.name",
             "required": false,
             "in": "query",
-            "description": "filters by the id of the impacted device.\n_Example: impactedDevice.id=KBE45003_",
+            "description": "filters by type of the impacted Configuration Item._Example: configurationItem.name=_",
             "type": "string"
           },
           {
-            "name": "impactedDevice.externalReference",
+            "name": "configurationItem.customerReference",
             "required": false,
             "in": "query",
-            "description": "filters by the externalReference of the impacted device.\n_Example: impactedDevice.externalReference=A00453_",
+            "description": "filters by the reference set by the customer for the  impacted Configuration Item._Example: impactedDevice.externalReference=A00453_",
             "type": "string"
           },
           {
-            "name": "impactedDevice.address.city",
+            "name": "configurationItem.id",
             "required": false,
             "in": "query",
-            "description": "filters by the city of the impacted device.\n_Example: impactedDevice.address.city=London_",
+            "description": "filters by the id of the impacted Configuration Item._Example: configurationItem.id=10-CD123456",
             "type": "string"
           },
           {
-            "name": "impactedDevice.address.region",
+            "name": "configurationItem.type",
             "required": false,
             "in": "query",
-            "description": "filters by region of the impacted device.\n_Example: impactedDevice.address.region=emea_",
+            "description": "filters by type of the impacted Configuration Item._Example: impactedDevice.address.region=emea_",
             "type": "string"
           },
           {
-            "name": "impactedDevice.address.country",
+            "name": "configurationItem.category",
             "required": false,
             "in": "query",
-            "description": "filters by country of the impacted device.\n_Example: impactedDevice.address.country=gb_",
+            "description": "filters by the category of the impacted Configuration Item._Example: configurationItem.category=_",
             "type": "string"
           },
           {
@@ -271,14 +271,17 @@
             "type": "string"
           },
           {
-            "name": "customer.segment",
-            "required": false,
+            "type": "boolean",
             "in": "query",
-            "description": "filters by the segment of the customer .\n_Example: customer.segment=int",
-            "type": "string"
-          } 
-           
-           
+            "name": "displayLinks",
+            "description": "Flag for displaying the HATEOS links of linked ressources."
+          },
+          {
+            "type": "boolean",
+            "in": "query",
+            "name": "displayNulls",
+            "description": "Flag for displaying all fields even if the value is null."
+          }
         ],
         "responses": {
           "200": {
@@ -301,11 +304,208 @@
                 "format": "int32"
               }
             }
-          } 
-         
-          
+          }
         }
       }
+    },
+    "/scheduledWorks/aggregate": {
+      "get": {
+        "tags": [
+          "ScheduledWorks"
+        ],
+        "produces": [
+          "application/json;charset=utf-8"
+        ],
+        "operationId": "scheduledWorkAggregate",
+        "summary": "Aggregate Scheduled Works",
+        "description": "Returns a list of Scheduled Works (20 max per default) sorted by the updated date in descending order.\nThe number of returned items and the sort can be changed with query parameters.",
+        "deprecated": false,
+        "parameters": [
+          {
+            "name": "customerReference",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  Customer reference set by the Customer. _Example: group=TY00_NOTE: Not supported yet",
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "required": false,
+            "in": "query",
+            "description": "filters by the group (common id when an event impacts several devices).\n_Example: group=X400503434_",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "filters by the status.\n_Example: status=planned_",
+            "type": "string"
+          },
+          {
+            "name": "impact",
+            "required": false,
+            "in": "query",
+            "description": "filters by the impact.\n_Example: impact=degradedMode_",
+            "type": "string",
+            "enum": [
+              "moreThanFiveMinutes",
+              "betweenOneAndFiveMinutes",
+              "lessOneMinute",
+              "degradedMode",
+              "noImpact"
+            ]
+          },
+          {
+            "name": "requestType",
+            "required": false,
+            "in": "query",
+            "description": "filters by the requestType.\n_Example: requestType=networkChange_",
+            "type": "string"
+          },
+          {
+            "name": "priority",
+            "required": false,
+            "in": "query",
+            "description": "filters by the priority.\n_Example: priority=expedite_",
+            "type": "string",
+            "enum": [
+              "expedite",
+              "emergency",
+              "planned"
+            ]
+          },
+          {
+            "name": "contact.name",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  lastname of the contact.\n_Example: contact.name=john%20DOE_",
+            "type": "string"
+          },
+          {
+            "name": "contact.firstname",
+            "required": false,
+            "in": "query",
+            "description": "filters by the firstname of the contact.\n_Example: contact.firstname=John_",
+            "type": "string"
+          },
+          {
+            "name": "contact.lastname",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  lastname of the contact.\n_Example: contact.lastname=DOE_",
+            "type": "string"
+          },
+          {
+            "name": "contact.email",
+            "required": false,
+            "in": "query",
+            "description": "filters by the  email of the contact.\n_Example: contact.email=joe.doe@orange.com_",
+            "type": "string"
+          },
+          {
+            "name": "configurationItem.id",
+            "required": false,
+            "in": "query",
+            "description": "filters by the id of the impacted Configuration Item._Example: impactedDevice.id=10-CD123456",
+            "type": "string"
+          },
+          {
+            "name": "configurationItem.name",
+            "required": false,
+            "in": "query",
+            "description": "filters by the name of the impacted Configuration._Example: impactedDevice.externalReference=A00453_",
+            "type": "string"
+          },
+          {
+            "name": "configurationItem.customerReference",
+            "required": false,
+            "in": "query",
+            "description": "filters by the reference set by the customer for the  impacted Configuration Item._Example: impactedDevice.externalReference=A00453_",
+            "type": "string"
+          },
+          {
+            "name": "configurationItem.type",
+            "required": false,
+            "in": "query",
+            "description": "filters by type of the impacted Configuration Item._Example: impactedDevice.address.region=emea_",
+            "type": "string"
+          },
+          {
+            "name": "configurationItem.category",
+            "required": false,
+            "in": "query",
+            "description": "filters by the category of the impacted Configuration Item._Example: impactedDevice.address.country=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.startedAt",
+            "required": false,
+            "in": "query",
+            "description": "filters by start date of the maintenance period\n_Example: period.startedAt=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.endedAt",
+            "required": false,
+            "in": "query",
+            "description": "filters by end date of the maintenance period\n_Example: period.endedAt=gb_",
+            "type": "string"
+          },
+          {
+            "name": "period.duration",
+            "required": false,
+            "in": "query",
+            "description": "filters by end date of the maintenance period\n_Example: period.duration=2_",
+            "type": "string"
+          },
+          {
+            "name": "period.frequency",
+            "required": false,
+            "in": "query",
+            "description": "filters by the frequency of the maintenance period\n_Example: period.frequency=2_",
+            "type": "string"
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "filters by the customer id /code.\n_Example: customer.name=123456",
+            "type": "string"
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "filters by the customer name.\n_Example: customer.name=ACME",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ScheduledWork"
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "description": "The total number of items in the collection.",
+                "type": "integer",
+                "format": "int32"
+              },
+              "X-Result-Count": {
+                "description": "The actual number of items contained in the response body.",
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      },
+      "parameters": []
     },
     "/scheduledWorks/{ScheduledWorkId}": {
       "get": {
@@ -333,9 +533,17 @@
             "in": "query",
             "description": "The list of field names to retrieve. Fields must be separated by a comma. If empty all fields are returned.\nNot available in MVP Phase #1",
             "type": "string"
-          } 
-           
-           
+          },
+          {
+            "type": "boolean",
+            "in": "query",
+            "name": "displayNulls"
+          },
+          {
+            "type": "boolean",
+            "in": "query",
+            "name": "displayLinks"
+          }
         ],
         "responses": {
           "200": {
@@ -350,9 +558,74 @@
               }
             }
           }
-         
-          
         }
+      }
+    },
+    "/doc": {
+      "get": {
+        "summary": "Download Swagger",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "operationId": "downladSwagger",
+        "description": "This method allows to download the current Swagger file of the API. \n\nThe API Key is not required for accessing this end-point.",
+        "parameters": []
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Retrieve Status of the API",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the API."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Status of the API. 'ok' indicates that the API is available without problems. 'ko' indicates that the API is facing some issues.",
+                  "enum": [
+                    "ok",
+                    "ko"
+                  ]
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Version of the API in the format Major, Minor and patch number."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getStatus",
+        "description": "This method allows to get the status of the API. \n\nThe API Key is not required for accessing this end-point."
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Retrieve API version",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Version"
+            }
+          }
+        },
+        "operationId": "getVersion",
+        "description": "Return the current version of the API including Major Release number, Minor Release number and Patch number.\n\nThe Major Release number is present in the URI of the API. \n\nThe API Key is not required for accessing this end-point."
       }
     }
   },
@@ -373,6 +646,29 @@
         "fr",
         "int"
       ]
+    },
+    "VersionDetails": {
+      "description": "Detailed information on the API version.",
+      "required": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "type": "object",
+      "properties": {
+        "major": {
+          "description": "Major number of the API version.",
+          "type": "string"
+        },
+        "minor": {
+          "description": "Minor number of the API version.",
+          "type": "string"
+        },
+        "patch": {
+          "description": "Patch number of the API version.",
+          "type": "string"
+        }
+      }
     },
     "Statuses": {
       "description": "List of possible values of Status",
@@ -507,65 +803,24 @@
         "year"
       ]
     },
-    "Error": {
-      "description": "",
-      "required": [
-        "code",
-        "message"
-      ],
-      "type": "object",
-      "properties": {
-        "code": {
-          "description": "",
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "description": "",
-          "type": "string"
-        },
-        "description": {
-          "description": "",
-          "type": "string"
-        },
-        "infoURL": {
-          "description": "",
-          "type": "string"
-        }
-      }
-    },
     "ScheduledWork": {
       "description": "Description of the  Schedule Work model.",
-      "required": [
-        "id",
-        "group",
-        "status",
-        "impact",
-        "title",
-        "description",
-        "contact",
-        "priority",
-        "period",
-        "customer",
-        "issuedAt",
-        "issuedBy",
-        "region",
-        "comment",
-        "createdAt",
-        "updatedAt"
-      ],
       "type": "object",
       "properties": {
         "id": {
           "description": "single Identifier of the Scheduled Work",
           "type": "string"
         },
-        "externalReference": {
+        "customerReference": {
           "description": "customer reference for the scheduled work.",
           "type": "string"
         },
         "group": {
           "description": "common id od the event, especially used when the event impacts several devices",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the the schedule work",
           "type": "string"
         },
         "status": {
@@ -574,46 +829,35 @@
         "impact": {
           "$ref": "#/definitions/Impacts"
         },
-        "title": {
-          "description": "Title of the the schedule work",
-          "type": "string"
-        },
         "description": {
           "description": "Description of the schedule work",
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/definitions/Period"
+        },
+        "priority": {
+          "$ref": "#/definitions/Priority"
+        },
+        "type": {
+          "description": "Type of the change request",
           "type": "string"
         },
         "contact": {
           "$ref": "#/definitions/Individual"
         },
-        "requestedAt": {
-          "description": "",
-          "type": "string",
-          "format": "date-time"
-        },
-        "priority": {
-          "$ref": "#/definitions/Priority"
-        },
-        "period": {
-          "$ref": "#/definitions/Period"
-        },
         "customer": {
           "$ref": "#/definitions/Customer"
-        },
-        "issuedAt": {
-          "description": "Date indicating when the Scheduled Work has been issued. The format of the date must be compliant with ISO-8601",
-          "type": "string",
-          "format": "date"
         },
         "issuedBy": {
           "description": "Indicate the name of the company in charge of the scheduled work (Orange Business Services or a Carrier name)",
           "type": "string"
         },
-        "impactedDevice": {
-          "$ref": "#/definitions/Device"
+        "configurationItem": {
+          "$ref": "#/definitions/ConfigurationItems"
         },
-        "requestType": {
-          "description": "Type of the change request",
-          "type": "string"
+        "location": {
+          "$ref": "#/definitions/Location"
         },
         "region": {
           "$ref": "#/definitions/Regions"
@@ -621,6 +865,20 @@
         "comment": {
           "description": "Orange Business Services Comment",
           "type": "string"
+        },
+        "keyDates": {
+          "type": "object",
+          "properties": {
+            "requestedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date indicating when the Scheduled Work has been issued. The format of the date must be compliant with ISO-8601"
+            }
+          }
         },
         "createdAt": {
           "description": "Date of creation of item. The format of the date must be compliant with ISO-8601",
@@ -632,7 +890,24 @@
           "type": "string",
           "format": "date-time"
         }
-      }
+      },
+      "required": [
+        "id",
+        "group",
+        "title",
+        "status",
+        "impact",
+        "description",
+        "period",
+        "priority",
+        "contact",
+        "customer",
+        "issuedBy",
+        "region",
+        "comment",
+        "createdAt",
+        "updatedAt"
+      ]
     },
     "Individual": {
       "description": "Describe the model of an  individual.",
@@ -685,11 +960,6 @@
     },
     "Customer": {
       "description": "Model of a Customer",
-      "required": [
-        "id",
-        "name",
-        "segment"
-      ],
       "type": "object",
       "properties": {
         "id": {
@@ -699,38 +969,36 @@
         "name": {
           "description": "Name of the Customer.",
           "type": "string"
-        },
-        "segment": {
-          "$ref": "#/definitions/Segments"
         }
-      }
-    },
-    "Device": {
-      "description": "Description of the Device Model",
+      },
       "required": [
         "id",
-        "externalReference",
-        "isDirectImpact",
-        "address"
-      ],
+        "name"
+      ]
+    },
+    "ConfigurationItems": {
+      "description": "The impacted element by the Maintenance event.",
       "type": "object",
+      "title": "Configuration Items",
       "properties": {
         "id": {
           "description": "Single identifier of a device",
           "type": "string"
         },
-        "externalReference": {
+        "customerReference": {
           "description": "Reference of the device set by the customer.",
           "type": "string"
         },
         "isDirectImpact": {
           "description": "flag indicating if the impact is direct or indirect",
           "type": "boolean"
-        },
-        "address": {
-          "$ref": "#/definitions/Address"
         }
-      }
+      },
+      "required": [
+        "id",
+        "customerReference",
+        "isDirectImpact"
+      ]
     },
     "Address": {
       "description": "Description of the Address model",
@@ -795,6 +1063,26 @@
         }
       }
     },
+    "GeoCoding - copy": {
+      "description": "Description of the geographical point model.",
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "description": "Latitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "description": "Longitude of the geographical point.",
+          "type": "number",
+          "format": "double"
+        },
+        "accuracy": {
+          "description": "Accuracy of the geographical point.",
+          "type": "string"
+        }
+      }
+    },
     "Period": {
       "description": "Description of the  maintenance period",
       "required": [
@@ -823,6 +1111,51 @@
           "format": "int32"
         }
       }
+    },
+    "Error": {
+      "description": "Information of the occured error.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Code of the error.."
+        },
+        "message": {
+          "type": "string",
+          "description": "Type of the error."
+        },
+        "description": {
+          "type": "string",
+          "description": "Details of the occured error."
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "Location": {
+      "title": "Location",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Version": {
+      "title": "Retrieve Version of the API",
+      "type": "object",
+      "properties": {
+        "version": {
+          "$ref": "#/definitions/VersionDetails"
+        },
+        "": {
+          "type": "string"
+        }
+      },
+      "description": "Return the current version of the API including Major Release number, Minor Release number and Patch number.\n\nThe Major Release number is present in the URI of the API. \n\nThe API Key is not required for accessing this end-point."
     }
   }
 }
