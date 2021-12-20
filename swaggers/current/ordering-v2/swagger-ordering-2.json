@@ -133,8 +133,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "description": "Returns Catalog Items  that match the exact value or formula about the creation date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           },
@@ -143,8 +142,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "description": "Returns Catalog Items  that match the exact value or formula about the last update date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           },
@@ -255,9 +253,8 @@
             "in": "query",
             "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
+              "type": "string",
+              "default": "status"
             }
           },
           {
@@ -299,8 +296,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "description": "Aggregates Catalog Items  that match the exact value or formula about the creation date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           },
@@ -309,8 +305,7 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "description": "Aggregates Catalog Items  that match the exact value or formula about the last update date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           }
@@ -1040,8 +1035,7 @@
           },
           {
             "schema": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
             "in": "query",
             "name": "keyDates.completedAt",
@@ -1057,8 +1051,7 @@
           },
           {
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "in": "query",
             "name": "updatedAt",
@@ -1575,8 +1568,7 @@
           },
           {
             "schema": {
-              "type": "string",
-              "format": "date"
+              "type": "string"
             },
             "in": "query",
             "name": "keyDates.completedAt",
@@ -1600,8 +1592,7 @@
           },
           {
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
             "in": "query",
             "name": "updatedAt",
@@ -2648,6 +2639,22 @@
             "in": "query",
             "name": "includes",
             "description": "Allow to includes extra data in the response"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt",
+            "description": "Returns Requests  that match the exact value or formula about the creation date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt",
+            "description": "Returns Requests  that match the exact value or formula about the last update date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           }
         ],
         "tags": [
@@ -2919,6 +2926,22 @@
             "in": "query",
             "name": "properties.servicePoint.customerReference",
             "description": "Filter by one or several Service Point references set by the Customer."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt",
+            "description": "Returns Requests  that match the exact value or formula about the creation date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt",
+            "description": "Returns Requests  that match the exact value or formula about the last update date of Access Line in API ecosystem. This filter allows more efficient synchronization mechanism."
           }
         ]
       }
@@ -4783,360 +4806,6 @@
         ],
         "title": "C_GENERIC_S1",
         "description": "This request type 'Generic Order' allows to send any request thru an attached file. The format of the file must be agreed between the Customer & Orange. \nIf no attached file is present, an error will be returned."
-      },
-      "REQ_RIE_CREATE_BVPN_SITE": {
-        "title": "C_EI_CATALOG",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/RequestPOST"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "profile": {
-                    "type": "string"
-                  },
-                  "voice": {
-                    "type": "integer"
-                  },
-                  "video": {
-                    "type": "integer"
-                  },
-                  "GTR": {
-                    "type": "string"
-                  },
-                  "network": {
-                    "type": "string"
-                  },
-                  "billingAccount": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "subAccount": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "location": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "customerReference": {
-                        "type": "string"
-                      },
-                      "building": {
-                        "type": "string"
-                      },
-                      "legalNumber": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "street": {
-                            "type": "string"
-                          },
-                          "extendedStreet": {
-                            "type": "string"
-                          },
-                          "postalCode": {
-                            "type": "string"
-                          },
-                          "city": {
-                            "type": "string"
-                          },
-                          "country": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "description": "",
-        "x-internal": true
-      },
-      "REQ_RIE_UPDATE_BVPN_SITE": {
-        "title": "U_EI_CATALOG",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/RequestPOST"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "profile": {
-                    "type": "string"
-                  },
-                  "voice": {
-                    "type": "integer"
-                  },
-                  "video": {
-                    "type": "integer"
-                  },
-                  "GTR": {
-                    "type": "string"
-                  },
-                  "network": {
-                    "type": "string"
-                  },
-                  "billingAccount": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "subAccount": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "location": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "customerReference": {
-                        "type": "string"
-                      },
-                      "building": {
-                        "type": "string"
-                      },
-                      "legalNumber": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "street": {
-                            "type": "string"
-                          },
-                          "extendedStreet": {
-                            "type": "string"
-                          },
-                          "postalCode": {
-                            "type": "string"
-                          },
-                          "city": {
-                            "type": "string"
-                          },
-                          "country": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "description": "",
-        "x-internal": true
-      },
-      "REQ_EI_CREATE_BVPN_SITE": {
-        "title": "C_EI_CATALOG",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/RequestPOST"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "profile": {
-                    "type": "string"
-                  },
-                  "voice": {
-                    "type": "string"
-                  },
-                  "video - copy": {
-                    "type": "string"
-                  },
-                  "GTR": {
-                    "type": "string"
-                  },
-                  "options": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "AVAILABILTY",
-                        "PERFORMANCE",
-                        "OTHER"
-                      ]
-                    }
-                  },
-                  "network": {
-                    "type": "string"
-                  },
-                  "billingAccount": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "subAccount": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "location": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "customerReference": {
-                        "type": "string"
-                      },
-                      "building": {
-                        "type": "string"
-                      },
-                      "legalNumber": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "street": {
-                            "type": "string"
-                          },
-                          "extendedStreet": {
-                            "type": "string"
-                          },
-                          "postalCode": {
-                            "type": "string"
-                          },
-                          "city": {
-                            "type": "string"
-                          },
-                          "country": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "description": "",
-        "x-internal": true
-      },
-      "REQ_EI_UPDATE_BVPN_SITE": {
-        "title": "U_EI_CATALOG",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/RequestPOST"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "profile": {
-                    "type": "string"
-                  },
-                  "video": {
-                    "type": "string"
-                  },
-                  "voice": {
-                    "type": "string"
-                  },
-                  "GTR": {
-                    "type": "string"
-                  },
-                  "options": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "AVAILABILTY",
-                        "PERFORMANCE",
-                        "OTHER"
-                      ]
-                    }
-                  },
-                  "network": {
-                    "type": "string"
-                  },
-                  "billingAccount": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "subAccount": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "location": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "customerReference": {
-                        "type": "string"
-                      },
-                      "building": {
-                        "type": "string"
-                      },
-                      "legalNumber": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "street": {
-                            "type": "string"
-                          },
-                          "extendedStreet": {
-                            "type": "string"
-                          },
-                          "postalCode": {
-                            "type": "string"
-                          },
-                          "city": {
-                            "type": "string"
-                          },
-                          "country": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "description": "",
-        "x-internal": true
       },
       "Order": {
         "title": "Order",
