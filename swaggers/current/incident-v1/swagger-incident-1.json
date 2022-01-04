@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "An Orange Business Service API for managing incidents.\n\n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **incidents** : A incident defines an event impacting the service.\n- **attachments** : Attachments defines all files associated to an incident.\n- **notes** :  notes are comments on the incident written by Orange or the Customer.\n- **freezePeriods** :  periods when the incident is frozen\n- **reports** : used to get reports. (Future version)\n- **snapshots** : used to determine the number of requests based on an attribute. (Future version)\n- **status** : used to know the status of API components.\n- **version** : provides the version of the API.\n- **doc** : allows to download the swagger file.\n\n### Incident API performs the following operations :\n- Create or update a incident, retrieve an incident or a collection of incidents.\n- Add a note, retrieve notes.\n- Upload a attachment/file, list or download attachments.\n- Generate statistics on incidents\n\n### OAuth 2.0 Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:incident | Grants access to list and have details of incidents and also to report new incidents |\n| b2b:incident:readonly | \tGrants access to list and have details of incidents |\n\n***\nCopyright © Orange Business Services 2020. All Rights Reserved.",
-    "version": "1.1.0",
-    "title": "Incident",
+    "description": "An Orange Business Service API for managing incidents.\n\n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **incidents** : A incident defines an event impacting the service.\n- **attachments** : Attachments defines all files associated to an incident.\n- **notes** :  notes are comments on the incident written by Orange or the Customer.\n- **freezePeriods** :  periods when the incident is frozen\n- **aggregation** : calculate counters based on grouped attribute values.\n- **status** : used to know the status of API components.\n- **version** : provides the version of the API.\n- **doc** : allows to download the swagger file.\n\n### Incident API performs the following operations :\n- Create or update a incident, retrieve an incident or a collection of incidents.\n- Add a note, retrieve notes.\n- Upload a attachment/file, list or download attachments.\n- Generate statistics on incidents\n\n### OAuth 2.0 Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:incident | Grants access to list and have details of incidents and also to report new incidents |\n| b2b:incident:readonly | \tGrants access to list and have details of incidents |\n\n***\nCopyright © Orange Business Services 2020. All Rights Reserved.",
+    "version": "1.2.0",
+    "title": "Incident API",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
       "backgroundColor": "#FFFFFF"
@@ -15,7 +15,7 @@
     }
   },
   "host": "api.orange.com",
-  "basePath": "/incident/b2b/v0",
+  "basePath": "/incident/b2b/v1",
   "schemes": [
     "https"
   ],
@@ -45,7 +45,7 @@
     },
     {
       "name": "Aggregation",
-      "description": "Provide counters of items grouped by an attribute."
+      "description": "Aggregate incidents grouped by one or several attribute values."
     },
     {
       "name": "Documentation",
@@ -87,7 +87,7 @@
             }
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -99,24 +99,24 @@
             "description": "Created",
             "schema": {
               "$ref": "#/definitions/IncidentPOSTResponse"
+            },
+            "headers": {
+              "Content-Location": {
+                "type": "string",
+                "description": "URI of the new Incident."
+              }
             }
           },
-          "422": {
-            "description": "Incident Management error\n\ncode = 2820 : Not autorized to report an incident on the device, service, product...",
+          "403": {
+            "description": "Forbidden",
             "schema": {
-              "oneOf": [
-                {
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              ],
-              "type": "object"
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -130,11 +130,11 @@
         ],
         "operationId": "ListIncidents",
         "summary": "List all Incidents",
-        "description": "This operation lists all incidents.\n\nFiltering, pagination, sorting and partial response are available.\n\nSpecific business errors for current operation will be encapsulated in HTTP Response 422 Unprocessable entity \n",
+        "description": "This operation lists all incidents.\n\nFiltering, pagination, sorting and partial response are available.\n\nSpecific business errors for current operation will be encapsulated in HTTP Response 422 Unprocessable entity.\n",
         "deprecated": false,
         "parameters": [
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -189,8 +189,18 @@
                 "-servicePoints.id",
                 "servicePoints.name",
                 "-servicePoints.name",
+                "servicePoints.reference",
+                "-servicePoints.reference",
                 "servicePoints.customerReference",
                 "-servicePoints.customerReference",
+                "configurationItems.id",
+                "-configurationItems.id",
+                "configurationItems.name",
+                "-configurationItems.name",
+                "configurationItems.reference",
+                "-configurationItems.reference",
+                "configurationItems.customerReference",
+                "-configurationItems.customerReference",
                 "escalationLevel",
                 "-escalationLevel",
                 "onHoldReason",
@@ -209,18 +219,18 @@
                 "-location.address.postalCode",
                 "location.address.country",
                 "-location.address.country",
-                "milestones.resolvedAt",
-                "-milestones.resolvedAt",
-                "milestones.restoredAt",
-                "-milestones.restoredAt",
-                "milestones.validatedAt",
-                "-milestones.validatedAt",
-                "milestones.closedAt",
-                "-milestones.closedAt",
-                "milestones.archivedAt",
-                "-milestones.archivedAt",
-                "milestones.escalatedAt",
-                "-milestones.escalatedAt",
+                "keyDates.resolvedAt",
+                "-keyDates.resolvedAt",
+                "keyDates.restoredAt",
+                "-keyDates.restoredAt",
+                "keyDates.validatedAt",
+                "-keyDates.validatedAt",
+                "keyDates.closedAt",
+                "-keyDates.closedAt",
+                "keyDates.archivedAt",
+                "-keyDates.archivedAt",
+                "keyDates.escalatedAt",
+                "-keyDates.escalatedAt",
                 "createdAt",
                 "-createdAt",
                 "updatedAt",
@@ -248,16 +258,14 @@
                 "origin",
                 "shortDescription",
                 "description",
-                "servicePoint.id",
-                "servicePoint.name",
-                "servicePoint.product.id",
-                "servicePoint.product.name",
-                "servicePoint.product.reference",
-                "servicePoint.product.customerReference",
-                "servicePoint.serviceLevelManagement.id",
-                "servicePoint.serviceLevelManagement.coverageTime",
-                "servicePoint.serviceLevelManagement.restoreTime",
-                "servicePoint.serviceLevelManagement.responseTime",
+                "servicePoints.id",
+                "servicePoints.name",
+                "servicePoints.reference",
+                "servicePoints.customerReference",
+                "configurationItems.id",
+                "configurationItems.name",
+                "configurationItems.reference",
+                "configurationItems.customerReference",
                 "isEscalated",
                 "onHoldReason",
                 "customer.id",
@@ -284,7 +292,6 @@
           },
           {
             "name": "displayLinks",
-            "required": false,
             "in": "query",
             "description": "Flag for displaying the HATEOS links of linked ressources.",
             "type": "boolean",
@@ -494,14 +501,44 @@
             }
           },
           {
-            "name": "servicePoint.product.id",
+            "type": "string",
+            "in": "query",
+            "name": "servicePoint.reference",
+            "description": "Filter by the reference of the Service Point"
+          },
+          {
+            "name": "servicePoint.customerReference",
             "required": false,
             "in": "query",
-            "description": "Filter by the identifier of the Product",
+            "description": "Filter by the customer reference of the Service Point.",
             "type": "string",
             "items": {
               "type": "string"
             }
+          },
+          {
+            "type": "string",
+            "in": "query",
+            "name": "configurationItems.id",
+            "description": "Filter by identifiers of Configuration Items impacted by the issue."
+          },
+          {
+            "type": "string",
+            "in": "query",
+            "name": "configurationItems.name",
+            "description": "Filter by the names of Configuration Items impacted by the issue."
+          },
+          {
+            "type": "string",
+            "in": "query",
+            "name": "configurationItems.reference",
+            "description": "Filter by references of the Customer Item Configuration Items impacted by the issue."
+          },
+          {
+            "type": "string",
+            "in": "query",
+            "name": "configurationItems.customerName",
+            "description": "Filter by Customer references of the Customer Item Configuration Items impacted by the issue."
           },
           {
             "name": "event.id",
@@ -551,6 +588,18 @@
                 "format": "int32"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
           }
         },
         "security": [
@@ -570,7 +619,20 @@
           "200": {
             "description": "OK",
             "schema": {
+              "description": "List of counters.",
               "type": "object"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         },
@@ -580,7 +642,7 @@
           {
             "type": "string",
             "in": "header",
-            "name": "X-API-Key",
+            "name": "X-API-KEY",
             "description": " The API Key required for using Orange Business Services API."
           },
           {
@@ -731,7 +793,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -759,10 +821,10 @@
                 "description",
                 "servicePoint.id",
                 "servicePoint.name",
-                "servicePoint.product.id",
-                "servicePoint.product.name",
-                "servicePoint.product.reference",
-                "servicePoint.product.customerReference",
+                "servicePoint.configurationItems.id",
+                "servicePoint.configurationItems.name",
+                "servicePoint.configurationItems.reference",
+                "servicePoint.configurationItems.customerReference",
                 "servicePoint.serviceLevelManagement.id",
                 "servicePoint.serviceLevelManagement.coverageTime",
                 "servicePoint.serviceLevelManagement.restoreTime",
@@ -829,6 +891,18 @@
             "schema": {
               "$ref": "#/definitions/Incident"
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
           }
         }
       },
@@ -855,7 +929,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -866,13 +940,7 @@
             "name": "body",
             "description": "Body of the request containing attributes to update.",
             "schema": {
-              "type": "object",
-              "properties": {
-                "customerReference": {
-                  "type": "string",
-                  "description": "Reference of the incident can be freely updated. Allow to indicate, the Incident number of a third party Incident Management system."
-                }
-              }
+              "$ref": "#/definitions/IncidentPath"
             }
           }
         ],
@@ -881,15 +949,25 @@
             "description": "OK",
             "schema": {
               "type": "object",
+              "description": "Response of the request",
               "properties": {
                 "id": {
                   "type": "string",
-                  "description": "Orange Single Identifier of the incident"
+                  "description": "Single Identifier of the Incident."
                 }
-              },
-              "required": [
-                "id"
-              ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -919,7 +997,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -930,36 +1008,7 @@
             "name": "body",
             "description": "Body of the request containing the note attributes.",
             "schema": {
-              "type": "object",
-              "properties": {
-                "note": {
-                  "type": "string",
-                  "description": "Note to add to the incident"
-                },
-                "author": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the Author (First name + Last Name)"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "description": "First name of the Author of the note"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "description": "Last name of the Author of the note"
-                    }
-                  },
-                  "required": [
-                    "name"
-                  ]
-                }
-              },
-              "required": [
-                "note"
-              ]
+              "$ref": "#/definitions/IncidentNotePOST"
             }
           }
         ],
@@ -967,16 +1016,25 @@
           "201": {
             "description": "Created",
             "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Orange Single Identifier of the incident"
-                }
-              },
-              "required": [
-                "id"
-              ]
+              "$ref": "#/definitions/IncidentNote"
+            },
+            "headers": {
+              "Content-Location": {
+                "type": "string",
+                "description": "URI of the new Incident Note"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -1001,7 +1059,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -1031,7 +1089,7 @@
             "name": "sort",
             "required": false,
             "in": "query",
-            "type": "array",
+            "type": "string",
             "items": {
               "type": "string",
               "enum": [
@@ -1110,6 +1168,18 @@
                 "format": "int32"
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
           }
         }
       }
@@ -1138,11 +1208,45 @@
             "required": true
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information require for upload a file.",
+            "schema": {
+              "type": "object",
+              "description": "Attributes on the file to upload.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the file."
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Content of the file encoded in Base64."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Mine Type of the file.",
+                  "enum": [
+                    "application/pdf",
+                    "text/plain",
+                    "text/html",
+                    "image/gif",
+                    "image/jpeg",
+                    "image/png",
+                    "application/zip",
+                    "text/csv",
+                    "application/xls"
+                  ]
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -1150,15 +1254,57 @@
             "description": "Created",
             "schema": {
               "type": "object",
+              "description": "Response of the request.",
               "properties": {
                 "id": {
                   "type": "string",
                   "description": "Orange Single Identifier of the incident"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Content of the file."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of the file."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Type of the file.",
+                  "enum": [
+                    "application/pdf",
+                    "text/plain",
+                    "text/html",
+                    "image/gif",
+                    "image/jpeg",
+                    "image/png",
+                    "application/zip",
+                    "text/csv",
+                    "application/xls"
+                  ]
                 }
               },
               "required": [
                 "id"
               ]
+            },
+            "headers": {
+              "Content-Location": {
+                "type": "string",
+                "description": "URI of the new Incident."
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -1183,7 +1329,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -1280,6 +1426,18 @@
                 "format": "int32"
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
           }
         }
       }
@@ -1303,7 +1461,7 @@
         ],
         "operationId": "GetAttachment",
         "summary": "Download an Attachement",
-        "description": "The method allows to download an attachment",
+        "description": "The method allows to download an attachment.",
         "deprecated": false,
         "parameters": [
           {
@@ -1321,7 +1479,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -1332,8 +1490,21 @@
           "200": {
             "description": "Ok",
             "schema": {
+              "description": "Content of the file in binary mode.",
               "type": "string",
               "format": "binary"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -1359,7 +1530,7 @@
             "type": "string"
           },
           {
-            "name": "x-api-key",
+            "name": "X-API-KEY",
             "required": false,
             "description": "The API Key required for using Orange Business Services API.",
             "in": "header",
@@ -1422,9 +1593,21 @@
                 "format": "int32"
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
           }
         },
-        "description": "List Freeze Periods of an incident"
+        "description": "List Freeze Periods of an incident."
       }
     },
     "/doc": {
@@ -1444,6 +1627,18 @@
             "description": "Ok",
             "schema": {
               "$ref": "#/definitions/Documentation"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -1465,7 +1660,19 @@
           "200": {
             "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Status"
+              "$ref": "#/definitions/APIStatus"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "$ref": "#/definitions/APIStatus"
             }
           }
         }
@@ -1487,7 +1694,54 @@
           "200": {
             "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Version"
+              "description": "Response to the request.",
+              "type": "object",
+              "properties": {
+                "version": {
+                  "description": "Version of the API",
+                  "type": "object",
+                  "required": [
+                    "major",
+                    "minor",
+                    "patch"
+                  ],
+                  "properties": {
+                    "major": {
+                      "description": "Major number of the API version",
+                      "type": "string"
+                    },
+                    "minor": {
+                      "description": "Minor number of the API version",
+                      "type": "string"
+                    },
+                    "patch": {
+                      "description": "Patch number of the API version",
+                      "type": "string"
+                    }
+                  }
+                },
+                "deprecated": {
+                  "description": "Flag indicating if the API is deprecated",
+                  "type": "boolean",
+                  "default": false
+                }
+              },
+              "required": [
+                "version",
+                "deprecated"
+              ]
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ZError"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ZError"
             }
           }
         }
@@ -1495,231 +1749,14 @@
     }
   },
   "definitions": {
-    "Statuts": {
-      "description": "Status of the incident",
-      "type": "string",
-      "enum": [
-        "NEW",
-        "ON_HOLD",
-        "INPROGRESS",
-        "CLOSED",
-        "RESTORED",
-        "RESOLVED",
-        "PENDING",
-        "VALIDATED"
-      ]
-    },
-    "ProductTypes": {
-      "type": "string",
-      "enum": [
-        "DEVICE",
-        "SERVICE"
-      ]
-    },
-    "ReportTypes": {
-      "description": "List the available reports on Incident Management",
-      "type": "string",
-      "enum": [
-        "CSV"
-      ]
-    },
-    "ReportStatus": {
-      "description": "List all available status on a report",
-      "type": "string",
-      "enum": [
-        "IN_PROGRESS",
-        "COMPLETED",
-        "ERROR"
-      ]
-    },
-    "IncidentStates": {
-      "description": "List values of the incident state field",
-      "type": "string",
-      "enum": [
-        "NEW",
-        "IN_PROGRESS",
-        "RESTORED",
-        "RESOLVED",
-        "CLOSED",
-        "ARCHIVED",
-        "ON_HOLD",
-        "VALIDATED",
-        "DISPATCHED"
-      ]
-    },
-    "InterventionTypes": {
-      "description": "List of type of intervention Orange planned to fix the incident",
-      "type": "string",
-      "enum": [
-        "IMMEDIATE",
-        "DEFERED",
-        "EMERGENCY",
-        "NONE"
-      ]
-    },
-    "onHoldReasons": {
-      "description": "List values of the 'on hold reason' field. This list can evolve continuously.",
-      "type": "string",
-      "enum": [
-        "09922",
-        "09911",
-        "09928",
-        "10006",
-        "09920",
-        "09913",
-        "09921",
-        "09927",
-        "09902",
-        "09905",
-        "10002",
-        "09917",
-        "09900",
-        "09903",
-        "09919",
-        "09908",
-        "09906",
-        "09999",
-        "09931",
-        "10004",
-        "10000",
-        "10001",
-        "09904",
-        "09901",
-        "09914",
-        "10003",
-        "09910",
-        "09924",
-        "09929",
-        "09909",
-        "09930",
-        "10005",
-        "09918",
-        "00001",
-        "09923",
-        "09912",
-        "09915",
-        "09916",
-        "09907",
-        "09926"
-      ]
-    },
-    "Granularities": {
-      "description": "Granulary for reports & snapshots",
-      "type": "string",
-      "enum": [
-        "hour",
-        "day",
-        "week",
-        "month",
-        "year"
-      ]
-    },
     "HyperlinkMethod": {
       "type": "string",
+      "description": "HTTP verb used for the link.",
       "enum": [
         "GET",
         "POST",
         "PATCH",
         "DELETE"
-      ]
-    },
-    "ProductType": {
-      "description": "Type of the product",
-      "type": "string",
-      "enum": [
-        "ROUTER",
-        "SWITCH",
-        "ACCESSPOINT",
-        "IP-PHONE",
-        "GATEWAY"
-      ]
-    },
-    "IncidentOrigin": {
-      "description": "Origin of the Incident",
-      "type": "string",
-      "enum": [
-        "PROACTIVE",
-        "INTERNAL",
-        "CUSTOMER"
-      ]
-    },
-    "IncidentType": {
-      "type": "string",
-      "enum": [
-        "FAILURE",
-        "MAINTENANCE",
-        "OTHER"
-      ]
-    },
-    "IncidentSort": {
-      "description": "Allow to sort the response via a parameter. For Desc order, the attribut must be prefixed with a '-'. ",
-      "type": "string",
-      "enum": [
-        "id",
-        "-id",
-        "createdAt",
-        "-createdAt",
-        "updatedAt",
-        "-updatedAt"
-      ]
-    },
-    "IncidentNoteSort": {
-      "type": "string",
-      "enum": [
-        "id",
-        "-id",
-        "author.name",
-        "-author.name",
-        "createdAt",
-        "-createdAt"
-      ]
-    },
-    "IncidentAttachmentFormat": {
-      "description": "Format of supported files",
-      "type": "string",
-      "enum": [
-        "application/pdf",
-        "text/plain",
-        "text/html",
-        "image/gif",
-        "image/jpeg",
-        "image/png",
-        "application/zip",
-        "text/csv",
-        "application/xls"
-      ]
-    },
-    "IncidentAttachmentSort": {
-      "description": "Allow to sort the response base on one or several attributes",
-      "type": "string",
-      "enum": [
-        "id",
-        "-id",
-        "name",
-        "-name",
-        "size",
-        "-size",
-        "type",
-        "-type",
-        "createdAt",
-        "-createdAt"
-      ]
-    },
-    "IncidentAttachmentFields": {
-      "type": "string",
-      "enum": [
-        "id",
-        "name",
-        "content",
-        "size",
-        "type",
-        "createdAt"
-      ]
-    },
-    "IncidentTypes": {
-      "type": "string",
-      "enum": [
-        "INCIDENT"
       ]
     },
     "ContactSupport": {
@@ -1729,65 +1766,42 @@
         "MOBILE",
         "EMAIL"
       ],
-      "description": "the prefered method to contact the individual",
+      "description": "the preferred method to contact the individual",
       "title": ""
-    },
-    "ZErrorDetail": {
-      "required": [
-        "code",
-        "message"
-      ],
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "infoURL": {
-          "type": "string"
-        }
-      }
     },
     "ZError": {
       "required": [
         "code",
         "message"
       ],
+      "description": "Information on the error.",
       "type": "object",
       "properties": {
         "code": {
           "type": "integer",
+          "description": "Internal Code of the error.",
           "format": "int32"
         },
         "message": {
-          "type": "string"
+          "type": "string",
+          "description": "Title of the error."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Details on the error."
         },
         "infoURL": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ZErrorDetail"
-          }
+          "type": "string",
+          "description": "URI on more information on the error"
         }
       }
     },
     "IncidentNote": {
-      "description": "This model describes notes associated to an Incident.",
+      "description": "List of Notes otes associated to the Incident.",
       "required": [
         "id",
         "origin",
-        "note"
+        "body"
       ],
       "type": "object",
       "properties": {
@@ -1796,29 +1810,29 @@
           "type": "string"
         },
         "author": {
-          "$ref": "#/definitions/Individual"
+          "$ref": "#/definitions/Author"
         },
         "origin": {
-          "description": "list of possible root of a note",
+          "description": "Origin of the Note.",
           "type": "string",
           "enum": [
             "CUSTOMER",
             "ORANGE"
           ]
         },
-        "note": {
-          "description": "comment of the note",
+        "body": {
+          "description": "The message of the Note.",
           "type": "string"
         },
         "createdAt": {
-          "description": "date of the creation of the note",
+          "description": "Date of the creation of the note",
           "type": "string",
           "format": "date-time"
         }
       }
     },
     "Attachment": {
-      "description": "Model describing the attachment item",
+      "description": "List of files attached to the Incident.",
       "required": [
         "name",
         "type",
@@ -1828,7 +1842,7 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Display name of the file",
+          "description": "Display name of the file.",
           "type": "string"
         },
         "type": {
@@ -1836,11 +1850,11 @@
           "type": "string"
         },
         "size": {
-          "description": "Size in octets of the file",
+          "description": "Size in octets of the file.",
           "type": "string"
         },
         "href": {
-          "description": "URI on the content of the file",
+          "description": "URI on the content of the file.",
           "type": "string"
         },
         "createdAt": {
@@ -1850,6 +1864,7 @@
         },
         "content": {
           "type": "string",
+          "description": "Content of the file in Base64",
           "format": "byte"
         }
       }
@@ -1943,7 +1958,7 @@
           "description": "Detailed description of the incident. Information provided at the opening of the Incident.",
           "type": "string"
         },
-        "servicePoints": {
+        "servicePoint": {
           "$ref": "#/definitions/ServicePoint"
         },
         "escalationLevel": {
@@ -1962,18 +1977,25 @@
         },
         "keyDates": {
           "type": "object",
-          "description": "Provide key dates of the ticket.\n",
+          "description": "Important dates of the Incident.\n",
           "properties": {
             "openedAt": {
-              "type": "string"
-            },
-            "detectedAt": {
-              "type": "string"
-            },
-            "commitedAt": {
               "type": "string",
               "format": "date-time",
-              "example": "2020-01-01T00:00:00Z"
+              "example": "2020-01-01T00:00:00Z",
+              "description": "Date when the ticket has been created. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
+            },
+            "detectedAt": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2020-01-01T00:00:00Z",
+              "description": "Date when the issue has been detected. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
+            },
+            "committedAt": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2020-01-01T00:00:00Z",
+              "description": "Date when the ticket must be fixed. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
             },
             "resolvedAt": {
               "type": "string",
@@ -2010,32 +2032,29 @@
               "format": "date-time",
               "example": "2020-01-01T00:00:00Z",
               "description": "Date of the current secalation. If no escalation in progress the attribute is null. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
-            },
-            "": {
-              "type": "string"
             }
           }
         },
-        "closeNotes": {
-          "description": "Note of Orange Staff set at the closure of the incident. This field is available only when the incident is closed.",
-          "type": "string"
-        },
-        "impactedServices": {
+        "configurationItems": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "description": "Orange Single Identifier of the Configuration Item."
               },
               "type": {
-                "type": "string"
-              },
-              "customerReference": {
-                "type": "string"
+                "type": "string",
+                "description": "Type of the Configuration Item."
               },
               "reference": {
-                "type": "string"
+                "type": "string",
+                "description": "Orange Reference of the Configuration Item."
+              },
+              "customerReference": {
+                "type": "string",
+                "description": "Customer Reference of the Configuration Item."
               }
             }
           }
@@ -2050,8 +2069,34 @@
           "type": "string",
           "format": "date-time"
         },
-        "events": {
+        "event": {
           "$ref": "#/definitions/Event"
+        },
+        "closeNotes": {
+          "description": "Note of Orange Staff set at the closure of the incident. This field is available only when the incident is closed.",
+          "type": "string"
+        },
+        "closureSummary": {
+          "type": "object",
+          "description": "Information on the closure of the Incident.",
+          "properties": {
+            "initialCategory": {
+              "type": "string",
+              "description": "Initial Category of the Incident."
+            },
+            "cause": {
+              "type": "string",
+              "description": "Cause of the Incident."
+            },
+            "details": {
+              "type": "string",
+              "description": "Detailed information on the Incident."
+            },
+            "responsible": {
+              "type": "string",
+              "description": "Indicate the responsible entity if Customer or Orange."
+            }
+          }
         },
         "attachments": {
           "type": "array",
@@ -2059,34 +2104,14 @@
             "$ref": "#/definitions/Attachment"
           }
         },
+        "notes": {
+          "$ref": "#/definitions/IncidentNote"
+        },
         "freezePeriods": {
           "$ref": "#/definitions/FreezePeriods"
         },
         "_links": {
           "$ref": "#/definitions/IncidentLinks"
-        },
-        "closureSummary": {
-          "type": "object",
-          "properties": {
-            "isRootCause": {
-              "type": "string"
-            },
-            "initialCategory": {
-              "type": "string"
-            },
-            "cause": {
-              "type": "string"
-            },
-            "details": {
-              "type": "string"
-            },
-            "closedAt": {
-              "type": "string"
-            },
-            "responsible": {
-              "type": "string"
-            }
-          }
         }
       },
       "required": [
@@ -2100,20 +2125,16 @@
         "origin",
         "shortDescription",
         "description",
-        "servicePoints",
         "onHoldReason",
         "customer",
         "location",
         "keyDates",
-        "impactedServices",
         "createdAt",
-        "updatedAt",
-        "attachments",
-        "freezePeriods"
+        "updatedAt"
       ]
     },
     "Location": {
-      "description": "Model of a location.",
+      "description": "Location where the issue has been detected.",
       "required": [
         "id",
         "name",
@@ -2131,6 +2152,7 @@
           "type": "string"
         },
         "customerReference": {
+          "description": "Customer Reference of the location.",
           "type": "string"
         },
         "address": {
@@ -2139,7 +2161,7 @@
       }
     },
     "Address": {
-      "description": "This model describes all attributes available on an address",
+      "description": "Information on the Address.",
       "required": [
         "street",
         "extendedStreet",
@@ -2159,105 +2181,25 @@
           "type": "string"
         },
         "postalCode": {
-          "description": "postalCode of the address",
+          "description": "postalCode of the address.",
           "type": "string"
         },
         "city": {
-          "description": "Name of the city",
+          "description": "Name of the city.",
           "type": "string"
         },
         "locality": {
-          "description": "locality, county",
+          "description": "Locality, county.",
           "type": "string"
         },
         "country": {
-          "description": "country of the address",
+          "description": "Country of the address.",
           "type": "string"
         }
       }
-    },
-    "GeoCoding": {
-      "description": "This model allows to locate a geographical point with coordinates.",
-      "required": [
-        "latitude",
-        "longitude"
-      ],
-      "type": "object",
-      "properties": {
-        "latitude": {
-          "description": "latitude of the location",
-          "type": "number",
-          "format": "double"
-        },
-        "longitude": {
-          "description": "longitude of the location",
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "Country": {
-      "description": "Object representing a country",
-      "required": [
-        "id",
-        "name",
-        "region",
-        "isCustomerPresent",
-        "isOrangePresent",
-        "currency"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The ISO code of the country based on the ISO-3166-1 alpha 2 norm.",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name of the country. The language is defined with the HTTP header \"Content-Language\" . Only 'en' and 'fr' are supported. By default the English name is returned.",
-          "type": "string"
-        },
-        "region": {
-          "description": "region of the country. <span style=\"background-color:red;color:white;padding-left:3px;padding-right:3px;\">Need to list regions",
-          "type": "string"
-        },
-        "isCustomerPresent": {
-          "description": "This flag indicates if the Customer have at least one offer deployed in the country",
-          "type": "string"
-        },
-        "isOrangePresent": {
-          "description": "If orange is present in the country.",
-          "type": "string"
-        },
-        "currency": {
-          "description": "Currency of the country.",
-          "type": "string"
-        }
-      }
-    },
-    "CountryRef": {
-      "required": [
-        "id",
-        "name",
-        "href"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The ISO code of the country based on the ISO-3166-1 alpha 2 norm.",
-          "type": "string"
-        },
-        "name": {
-          "description": "Name of the country. The language is defined with the HTTP header \"Content-Language\" . Only 'en' and 'fr' are supported. By default the English name is returned.",
-          "type": "string"
-        },
-        "href": {
-          "type": "string"
-        }
-      },
-      "title": ""
     },
     "Individual": {
-      "description": "Model describing a physical person.",
+      "description": "Person.",
       "type": "object",
       "properties": {
         "id": {
@@ -2296,7 +2238,7 @@
           "type": "string",
           "description": "Comment on the contact"
         },
-        "preferedContactSupport": {
+        "preferredContactSupport": {
           "$ref": "#/definitions/ContactSupport"
         }
       },
@@ -2304,125 +2246,37 @@
         "name"
       ]
     },
-    "ReportRequest": {
-      "description": "describe the type of reports.\nThe filters attribute allows to reduce the sample of incidents\nThe parameters attribute allows to set specific parameters following the type of reports",
-      "required": [
-        "type",
-        "format",
-        "filters",
-        "parameters"
-      ],
+    "Author": {
+      "description": "Person wrote the Note.",
       "type": "object",
       "properties": {
-        "type": {
-          "$ref": "#/definitions/ReportTypes"
-        },
-        "beginPeriod": {
-          "description": "Allow to filter on the period of the incident",
-          "type": "string",
-          "format": "date-time"
-        },
-        "endPeriod": {
-          "description": "Allow to filter on the period of the incident",
-          "type": "string",
-          "format": "date-time"
-        },
-        "format": {
-          "description": "Indicate the expected format for the result such as csv,pdf, xml.\nFor the phase 1, only the csv value is authorized",
+        "id": {
+          "description": "Orange Single identifier of a contact (Individual)",
           "type": "string"
         },
-        "filters": {
-          "description": "Describe in JSON format the filter to apply to reduce the sample",
-          "type": "object"
+        "title": {
+          "type": "string",
+          "description": "Title of the contact"
         },
-        "parameters": {
-          "description": "Specific parameters for the selected report. the format is JSON",
-          "type": "object"
-        }
-      }
-    },
-    "ReportResult": {
-      "description": "The model describes the result of a report",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ReportRequest"
+        "name": {
+          "type": "string",
+          "description": "Full name of the Author (First name + last name)"
         },
-        {
-          "required": [
-            "id",
-            "createdAt",
-            "endedAt",
-            "status"
-          ],
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "Single identifier of the report result.",
-              "type": "string"
-            },
-            "createdAt": {
-              "description": "Date when the report result was created. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
-              "type": "string",
-              "format": "date-time"
-            },
-            "endedAt": {
-              "description": "A date indicating when the report has been generated",
-              "type": "string",
-              "format": "date-time"
-            },
-            "status": {
-              "$ref": "#/definitions/ReportStatus"
-            },
-            "link": {
-              "description": "The link on the generated report. This attribute is only available when the report is available.",
-              "type": "string"
-            }
-          }
+        "lastName": {
+          "type": "string",
+          "description": "First name of the Author"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "Last name of the Author"
         }
+      },
+      "required": [
+        "name"
       ]
     },
-    "SnapshotsResult": {
-      "description": "This model describes the snapshot to display a summay in a dashboard for example",
-      "required": [
-        "groupBy",
-        "indicators"
-      ],
-      "type": "object",
-      "properties": {
-        "groupBy": {
-          "type": "string"
-        },
-        "indicators": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SnapshotsResultItems"
-          }
-        }
-      }
-    },
-    "SnapshotsResultItems": {
-      "description": "A line of result",
-      "required": [
-        "value",
-        "count"
-      ],
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "string"
-        },
-        "count": {
-          "type": "string"
-        }
-      }
-    },
-    "Status": {
+    "APIStatus": {
       "description": "Model of a status.",
-      "required": [
-        "name",
-        "status",
-        "version"
-      ],
       "type": "object",
       "properties": {
         "name": {
@@ -2430,31 +2284,42 @@
           "type": "string"
         },
         "status": {
+          "type": "string",
           "description": "\"ok\" if the service is functional (not taking into account the components health), \"ko\" if something is wrong (missing configuration data, database is down...)",
-          "type": "string"
+          "enum": [
+            "ok",
+            "ko"
+          ]
         },
         "version": {
           "description": "API version (major dot minor dot patch numbers).",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "name",
+        "status",
+        "version"
+      ]
     },
-    "Product": {
-      "description": "Model of a product ref.",
+    "ConfigurationItemPOST": {
+      "description": "If you want to report an incident on an Equipment, product, you must provide at least one of these attributes.",
       "type": "object",
       "properties": {
         "id": {
-          "description": "Single identifier of the product.",
+          "description": "Single identifier of the configurationItem.",
           "type": "string"
         },
         "name": {
-          "description": "Name of the product.",
+          "description": "Name of the configuration Item.",
           "type": "string"
         },
         "reference": {
+          "description": "Orange Reference of the configuration Item.",
           "type": "string"
         },
         "customerReference": {
+          "description": "Customer Reference of the configuration Item.",
           "type": "string"
         }
       }
@@ -2478,10 +2343,11 @@
       }
     },
     "IncidentNotePOST": {
+      "description": "Attributes required to post a new Incident Note.",
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "#/definitions/Individual"
+          "$ref": "#/definitions/Author"
         },
         "note": {
           "description": "comment of the note",
@@ -2494,6 +2360,7 @@
     },
     "IncidentPOST": {
       "type": "object",
+      "description": "Attributes to provide for reporting an incident.",
       "properties": {
         "customerReference": {
           "description": "Reference of the incident can be freely updated. Allow to indicate, the Incident number of a third party Incident Management system.",
@@ -2504,8 +2371,7 @@
           "enum": [
             "HIGH",
             "MEDIUM",
-            "LOW",
-            "UNKNWOWN"
+            "LOW"
           ],
           "description": "Level of the urgency of the trouble"
         },
@@ -2515,18 +2381,14 @@
           "enum": [
             "HIGH",
             "MEDIUM",
-            "LOW",
-            "UNKNOWN"
+            "LOW"
           ]
         },
-        "location": {
-          "$ref": "#/definitions/Location"
-        },
-        "product": {
-          "$ref": "#/definitions/Product"
+        "configurationItems": {
+          "$ref": "#/definitions/ConfigurationItemPOST"
         },
         "servicePoint": {
-          "$ref": "#/definitions/ServicePoint"
+          "$ref": "#/definitions/ServicePointPOST"
         },
         "shortDescription": {
           "description": "Short description of the incident. Information provided at the opening of the Incident.",
@@ -2554,7 +2416,7 @@
       ]
     },
     "FreezePeriods": {
-      "description": "Model for Freeze Period",
+      "description": "List of Freeze Periods declared on the Incident.",
       "required": [
         "id",
         "cause",
@@ -2567,7 +2429,7 @@
           "type": "string"
         },
         "cause": {
-          "description": "Cause of the freeze period",
+          "description": "Cause of the freeze period.",
           "type": "string"
         },
         "description": {
@@ -2575,104 +2437,48 @@
           "type": "string"
         },
         "startedAt": {
-          "description": "Start date fo the freeze period",
+          "description": "Start date fo the freeze period.",
           "type": "string",
           "format": "date-time"
         },
         "endedAt": {
-          "description": "End date of the freeze period",
+          "description": "End date of the freeze period.",
           "type": "string",
           "format": "date-time"
         },
         "duration": {
-          "description": "Duration in minutes of the freeze Period",
+          "description": "Duration in minutes of the freeze Period.",
           "type": "integer",
           "format": "int32"
         }
       }
     },
-    "Steps": {
-      "required": [
-        "id",
-        "type",
-        "status",
-        "createdAt"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "Version": {
-      "required": [
-        "version",
-        "deprecated"
-      ],
-      "type": "object",
-      "properties": {
-        "version": {
-          "required": [
-            "major",
-            "minor",
-            "patch"
-          ],
-          "description": "Version of the API",
-          "type": "object",
-          "properties": {
-            "major": {
-              "description": "Major number of the API version",
-              "type": "string"
-            },
-            "minor": {
-              "description": "Minor number of the API version",
-              "type": "string"
-            },
-            "patch": {
-              "description": "Patch number of the API version",
-              "type": "string"
-            }
-          }
-        },
-        "deprecated": {
-          "description": "Flag indicating if the API is deprecated",
-          "type": "string",
-          "default": "false"
-        }
-      }
-    },
     "Documentation": {
+      "description": "JSON format of the Swagger",
       "type": "object"
     },
     "Hyperlink": {
+      "description": "Information on the request.",
       "required": [
         "href"
       ],
       "type": "object",
       "properties": {
         "href": {
+          "description": "URI on the object.",
           "type": "string"
         },
         "method": {
           "$ref": "#/definitions/HyperlinkMethod"
         },
         "payload": {
+          "description": "Body of the request.",
           "type": "string"
         }
       }
     },
     "IncidentLinks": {
+      "description": "URIs on the associated objects.",
       "required": [
         "self"
       ],
@@ -2687,81 +2493,8 @@
         "servicePoint": {
           "$ref": "#/definitions/Hyperlink"
         },
-        "product": {
+        "configurationItems": {
           "$ref": "#/definitions/Hyperlink"
-        }
-      }
-    },
-    "IncidentMilestones": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "openedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "resolvedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "restoredAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "validatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "closedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "archivedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        },
-        "escalatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "example": "2020-01-01T00:00:00Z"
-        }
-      },
-      "required": [
-        "openedAt",
-        "validatedAt",
-        "closedAt",
-        "resolvedAt",
-        "restoredAt",
-        "escalatedAt"
-      ]
-    },
-    "IncidentImpact": {
-      "description": "List of other impacted services, products",
-      "required": [
-        "id",
-        "type",
-        "name",
-        "customerReference"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "customerReference": {
-          "type": "string"
         }
       }
     },
@@ -2775,13 +2508,36 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "description": "Orange Single Identifier of the Event."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the Event."
         },
         "createdAt": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the event has been trigged.  Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_."
+        }
+      }
+    },
+    "ServicePointPOST": {
+      "description": "Service Point where the incident is detected. If you want to report an incident on a Service Point, you must specified one of these attributes.",
+      "title": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Orange Single Identifier of the Service Point."
+        },
+        "customerReference": {
+          "type": "string",
+          "description": "Customer Reference of the Service Point."
+        },
+        "reference": {
+          "type": "string",
+          "description": "Reference of the Service Point."
         }
       }
     },
@@ -2790,53 +2546,65 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "description": "Orange Single Identifier of the Service Point."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name of the Service Point."
         },
-        "product": {
-          "$ref": "#/definitions/Product"
+        "customerReference": {
+          "type": "string",
+          "description": "Customer Reference of the Service Point."
         },
         "serviceLevelManagement": {
           "$ref": "#/definitions/ServiceLevelManagement"
         }
-      }
+      },
+      "title": ""
     },
     "ServiceLevelManagement": {
       "required": [
         "id"
       ],
+      "description": "Information on the Service Level Management.",
       "type": "object",
       "properties": {
         "id": {
+          "description": "Single Identifier of the Service Level Management.",
           "type": "string"
         },
         "coverageTime": {
+          "description": "Coverage Time of the Service Level Management.",
           "type": "string"
         },
         "restoreTime": {
+          "description": "Restore Time of the Service Level Management.",
           "type": "integer",
           "format": "int32"
         },
         "responseTime": {
+          "description": "Response Time of the Service Level Management.",
           "type": "integer",
           "format": "int32"
         }
       }
     },
     "IncidentPath": {
-      "required": [
-        "status"
-      ],
       "type": "object",
+      "description": "Only the Customer Reference can be updated on an Incident Object.",
       "properties": {
-        "status": {
-          "$ref": "#/definitions/Statuts"
+        "customerReference": {
+          "type": "string",
+          "description": "Customer Reference of the Incident."
         }
-      }
+      },
+      "required": [
+        "customerReference"
+      ]
     },
     "IncidentPOSTResponse": {
+      "description": "Response of the request.",
       "required": [
         "id"
       ],
