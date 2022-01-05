@@ -1,0 +1,4501 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mobile API",
+    "version": "1.1",
+    "description": "Manage your Mobile fleet.",
+    "contact": {
+      "name": "Orange Developer Support",
+      "url": "https://developer.orange.com/resources/contact-us/",
+      "email": "frederic.favier@orange.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.orange.com/mobile/b2b/preview/v1"
+    }
+  ],
+  "paths": {
+    "/mobileLines": {
+      "get": {
+        "operationId": "FindMobilesLines",
+        "description": "Retrieve mobiles lines matching search criteria.",
+        "summary": "Find mobile lines.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of total items matching the request."
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of returned items matching the request."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobileLine"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 25
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "name",
+                "-name",
+                "status",
+                "-status",
+                "type",
+                "-type",
+                "customer.id",
+                "-customer.id",
+                "billingAccount.id",
+                "simCard.id",
+                "device.id",
+                "-device.id",
+                "device.name",
+                "-device.name",
+                "device.brand",
+                "-device.brand",
+                "subscription.name",
+                "-subscription.name",
+                "service.name",
+                "-service.name",
+                "service.portfolio",
+                "-service.portfolio",
+                "profile.name",
+                "-profile.name",
+                "subscriber.name",
+                "-subscriber.name",
+                "lastORTDate",
+                "-lastORTDate",
+                "startedAt",
+                "-startedAt",
+                "terminatedAt",
+                "-terminatedAt",
+                "eligibilityTestAt",
+                "-eligibilityTestAt",
+                "createdAt",
+                "-createdAt",
+                "updatedAt",
+                "-updatedAt"
+              ]
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by Orange Single Identifier\n"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "name",
+            "description": "Filter by the phone number"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUSPENDED",
+                "TERMINATED",
+                "INSTALLING",
+                "OPERATIONAL",
+                "ACTIVATING",
+                "UNKNOWN"
+              ]
+            },
+            "in": "query",
+            "name": "status",
+            "description": "Filter by the status of a mobile line."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "type",
+            "description": "Filter by the type of a mobile line."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filter by the customer identifier."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filter by the customer name."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "billingAccount.id",
+            "description": "Filter by the billing account."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "simCard.id",
+            "description": "Filter by the SIM card number."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "device.id",
+            "description": "Filter by the device identifier."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "device.name",
+            "description": "Filter By the device name."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "device.brand",
+            "description": "Filter by the device brand."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "device.type",
+            "description": "Filter by device type."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "subscription.id",
+            "description": "Filter by a subscription identifier."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "subscription.type",
+            "description": "Filter by a subscription type."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "service.id",
+            "description": "Filter by a service identifier."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "service.name",
+            "description": "Filter by a service name."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "profile.id",
+            "description": "Filter by a profile identifier."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "profile.name",
+            "description": "Filter by a profile name."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "subscriber.name",
+            "description": "Filter by a subscriber name."
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                true,
+                false
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                true,
+                false
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls"
+          }
+        ],
+        "tags": [
+          "Mobile Lines"
+        ]
+      },
+      "parameters": []
+    },
+    "/mobileLines/{mobileLineId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "mobileLineId",
+          "in": "path",
+          "required": true,
+          "description": "Identifier of a mobile line."
+        }
+      ],
+      "get": {
+        "operationId": "GetLineDetail",
+        "description": "Retrieve detail of a mobile line.",
+        "summary": "Get detail of a mobile line.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "number"
+                }
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileLine"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "description": "Length Required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                true,
+                false
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls"
+          }
+        ],
+        "tags": [
+          "Mobile Lines"
+        ]
+      }
+    },
+    "/mobileLines/aggregate": {
+      "parameters": [],
+      "get": {
+        "description": "This method allows to count mobile lines grouped by one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.\n\nFor example, the call `GET /mobileLines/aggregate?groupBy=status`\n\nwill return\n\n`\n{\n   'OPERATIONAL': 30763,\n   'TERMINATED' : 252,\n   'UNKNOWN' : 9\n}\n`\n\nThe _groupBy_ Query Parameter supports several attributes ex:  ` GET /mobileLines/aggregate?groupBy=subscription.id,status",
+        "operationId": "AggregateMobilesLines",
+        "summary": "Aggregate mobile lines",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "description": "The API Key required for using Orange Business Services API.",
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Indicators based on your aggregation."
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "tags": [
+          "Mobile Lines"
+        ]
+      }
+    },
+    "/simCards": {
+      "get": {
+        "operationId": "FindSimCards",
+        "description": "Retrieve SIM cards matching search criteria.",
+        "summary": "Find SIM Cards.",
+        "tags": [
+          "SIM Cards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of total items matching the request."
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of returned items matching the request."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimCard"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 25
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "$ref": "#/components/schemas/SimCardSort"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by Orange Single Identifiers."
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks"
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/simCards/aggregate": {
+      "get": {
+        "description": "This method allows to count SIM cards grouped by one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.",
+        "operationId": "AggregateSimCards",
+        "summary": "Aggregate SIM cards",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "description": "The API key required for using Orange Business Services API.",
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Indicators based on your Aggregation."
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "tags": [
+          "SIM Cards"
+        ]
+      },
+      "parameters": []
+    },
+    "/simCards/{simCardId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "simCardId",
+          "in": "path",
+          "required": true,
+          "description": "Identifier of a SIM card."
+        }
+      ],
+      "get": {
+        "operationId": "GetSimCard",
+        "description": "Retrieve detail of a SIM Card.",
+        "summary": "Get detail of a SIM Card.",
+        "tags": [
+          "SIM Cards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimCard"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields"
+          }
+        ]
+      }
+    },
+    "/subscribers": {
+      "get": {
+        "operationId": "FindSubscribers",
+        "description": "Retrieve subscribers matching search criteria.",
+        "summary": "Find subscribers.",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subscriber"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status"
+          }
+        ]
+      }
+    },
+    "/subscribers/aggregate": {
+      "get": {
+        "operationId": "AggregateSubscribers",
+        "description": "This method allows to count subscribers grouped by one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.",
+        "summary": "Aggregate subscribers",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Indicators based on your Aggregation."
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy"
+          }
+        ]
+      },
+      "parameters": []
+    },
+    "/subscribers/{subscriberId}": {
+      "get": {
+        "operationId": "GetSubscriber",
+        "description": "Retrieve detail of a subscriber.",
+        "summary": "Get detail of a subscriber.",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "subscriberId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/requests": {
+      "get": {
+        "operationId": "GetRequests",
+        "description": "Retrieve all requests matching search criteria.",
+        "summary": "Find Requests",
+        "tags": [
+          "Requests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Request"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of total items matching the request."
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Number of returned items matching the request."
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "414": {
+            "$ref": "#/components/responses/RequestURITooLong"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "default": 25
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by Orange Single Identifiers"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customerReference",
+            "description": "Filter per the Customer Reference"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IN_PROGRESS",
+                "NEW",
+                "COMPLETED"
+              ]
+            },
+            "in": "query",
+            "name": "status",
+            "description": "Filter by status if the request"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filter by Customer Identifiers"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "type",
+            "description": "Filter per the Type of Requests"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                true,
+                false
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "SendRequest",
+        "description": "Send a new request to Orange Business Services.",
+        "summary": "Send a Request",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Request"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "413": {
+            "$ref": "#/components/responses/RequestEntityTooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ACTIVATE_SIM"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SUSPEND_SIM"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CHANGE_SIM"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ORDER_NEW_LINE"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ADD_NEW_PRODUCTS"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ORDER_EQUIPMENTS"
+                  },
+                  {
+                    "$ref": "#/components/schemas/TERMINATE_SERVICES"
+                  },
+                  {
+                    "$ref": "#/components/schemas/TERMINATE_LINE"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ACTIVATE_LINE"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type"
+                }
+              },
+              "examples": {
+                "Order new line": {
+                  "value": {
+                    "catalog": "MOBILE",
+                    "type": "ORDER_NEW_LINE",
+                    "customerReference": "<YOUR_REFERENCE>",
+                    "contact": "<YOUR_CONTACT_EMAIL>",
+                    "comment": "<COMMENT>",
+                    "properties": {
+                      "billingAccount": "<BILL_ACC>",
+                      "subscriber": {
+                        "firstname": "<FIRSTNAME>",
+                        "lastname": "<LASTNAME>",
+                        "email": "<SUBSCRIBER_EMAIL>"
+                      },
+                      "delivery": {
+                        "name": "<ADDRESS_NAME>",
+                        "localCompany": "<YOUR_COMPANY>",
+                        "email": "<DELIVERY_EMAIL>",
+                        "address": {
+                          "street": "<STREET>",
+                          "extendedStreet": null,
+                          "postalCode": "<POSTAL_CODE>",
+                          "locality": null,
+                          "state": null,
+                          "city": "<CITY>",
+                          "country": "FR"
+                        },
+                        "phoneNumber": "0123456789"
+                      },
+                      "subscription": {
+                        "id": "<SUBSCRIPTION_ID>"
+                      },
+                      "profile": {
+                        "id": "<PROFILE_ID>"
+                      },
+                      "services": [
+                        {
+                          "id": "<SERVICE_ID>"
+                        }
+                      ],
+                      "device": {
+                        "id": "<DEVICE_ID>"
+                      }
+                    }
+                  }
+                },
+                "Activate line": {
+                  "value": {
+                    "customerReference": "<YOUR_REFERENCE>",
+                    "catalog": "MOBILE",
+                    "type": "ACTIVATE_LINE",
+                    "contact": "<YOUR_CONTACT_EMAIL>",
+                    "properties": {
+                      "subscriber": {
+                        "id": "<SUBSCRIBER_ID>"
+                      }
+                    }
+                  }
+                },
+                "Suspend SIM": {
+                  "value": {
+                    "customerReference": "<YOUR_REFERENCE>",
+                    "catalog": "MOBILE",
+                    "type": "SUSPEND_SIM",
+                    "contact": "<YOUR_CONTACT_EMAIL>",
+                    "properties": {
+                      "reason": "PERSONAL",
+                      "mobileLine": {
+                        "id": "<MOBILE_LINE_ID>"
+                      }
+                    }
+                  }
+                },
+                "Re-activate SIM": {
+                  "value": {
+                    "customerReference": "<YOUR_REFERENCE>",
+                    "catalog": "MOBILE",
+                    "type": "ACTIVATE_SIM",
+                    "contact": "<YOUR_CONTACT_EMAIL>",
+                    "properties": {
+                      "reason": "PERSONAL",
+                      "mobileLine": {
+                        "id": "<MOBILE_LINE_ID>"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": "The content of the body depends on the type of request."
+        },
+        "tags": [
+          "Requests"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "The OAuth 2.0 access token.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/requests/aggregate": {
+      "get": {
+        "operationId": "AggregateRequests",
+        "description": "This method allows to count requests grouped by one or several attributes and matching criterias.\n\nThis feature is useful for building dashboards.",
+        "summary": "Aggregate requests",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "description": "The API Key required for using Orange Business Services API.",
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "groupBy"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Indicators after Aggragation."
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Requests"
+        ]
+      }
+    },
+    "/requests/{requestId}": {
+      "get": {
+        "operationId": "GetRequest",
+        "description": "Return the detail of a specific request",
+        "summary": "Get a Request",
+        "tags": [
+          "Requests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Request"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Denied"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "411": {
+            "$ref": "#/components/responses/LengthRequired"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          },
+          "502": {
+            "$ref": "#/components/responses/BadGateway"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/GatewayTimeout"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "enum": [
+                false,
+                true
+              ]
+            },
+            "in": "query",
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "requestId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/doc": {
+      "get": {
+        "operationId": "DownloadSwagger",
+        "description": "Provide the current version of the Swagger File. \nThe API key is not required for this end-point.",
+        "summary": "Download Swagger",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "operationId": "GetStatus",
+        "description": "This method provides the current status of the API.",
+        "summary": "Get API Status",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the API."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of the API.",
+                      "enum": [
+                        "ok",
+                        "ko"
+                      ]
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "The version of the API (major dot minor dot patch numbers)."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "operationId": "GetVersion",
+        "description": "Return the current version of the API including Major Release number, Minor Release number and patch number",
+        "summary": "Get API Version",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "string",
+                          "description": "Major number of the API version"
+                        },
+                        "minor": {
+                          "type": "string",
+                          "description": "Minor number of the API version"
+                        },
+                        "patch": {
+                          "type": "string",
+                          "description": "Patch number of the API version"
+                        }
+                      },
+                      "required": [
+                        "major",
+                        "minor"
+                      ]
+                    },
+                    "deprecated": {
+                      "type": "boolean",
+                      "description": "Flag indicating if the API is deprecated"
+                    }
+                  },
+                  "required": [
+                    "deprecated"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MobileLine": {
+        "title": "MobileLine",
+        "type": "object",
+        "description": "Information on the mobile line.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifier of the mobile line."
+          },
+          "name": {
+            "type": "string",
+            "description": "Phone number of the mobile line."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "TERMINATED",
+              "OPERATIONAL",
+              "SUSPENDED",
+              "INSTALLING",
+              "ACTIVATING",
+              "NOT_LISTED",
+              "UNKNOWN"
+            ],
+            "description": "Status of the mobile line."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "GSM",
+              "DATA",
+              "OTHER",
+              "UNKNOWN"
+            ]
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "billingAccount": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            }
+          },
+          "simCard": {
+            "type": "object",
+            "description": "Information on the SIM card associated to the mobile line.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Number of the SIM card."
+              },
+              "pukCode": {
+                "type": "string",
+                "description": "Code PUK of the SIM card."
+              }
+            }
+          },
+          "device": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "description": "Model of the device associated with the mobile line."
+              },
+              "brand": {
+                "type": "string",
+                "description": "Brand of the device associated with the mobile line."
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          },
+          "subscription": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "lineThreshold": {
+                "type": "string",
+                "description": "A threshold value when the mobile is limited. Otherwise, the value is null."
+              },
+              "startedAt": {
+                "type": "string",
+                "description": "Date when the subscription was activated. Use the ISO-8601 format. Example: 2015-04-09T12:07:56Z",
+                "format": "date-time"
+              },
+              "terminatedAt": {
+                "type": "string",
+                "description": "Date when the subscription was terminated. Use the ISO-8601 format. Example: 2015-04-09T12:07:56Z",
+                "format": "date-time"
+              },
+              "term": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "termination": {
+                    "type": "string",
+                    "enum": [
+                      "END_OF_MONTH",
+                      "IMMEDIATE"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "service": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "portfolio": {
+                "type": "string"
+              },
+              "startedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "terminatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "term": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "termination": {
+                    "type": "string",
+                    "enum": [
+                      "END_OF_MONTH",
+                      "IMMEDIATE"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "startedAt": {
+                "type": "string"
+              },
+              "terminatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "term": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "termination": {
+                    "type": "string",
+                    "enum": [
+                      "END_OF_MONTH",
+                      "IMMEDIATE"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "subscriber": {
+            "$ref": "#/components/schemas/Subscriber"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "TODO"
+            }
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": "string",
+            "description": "Date when the Mobile Line will be terminated. Use the ISO-8601 format. Example: _2015-04-09T12:07:56Z_",
+            "format": "date-time"
+          },
+          "activatedAt": {
+            "type": "string",
+            "description": "Date when the Mobile Line has been activated.",
+            "format": "date-time"
+          },
+          "lastORTDate": {
+            "type": "string",
+            "description": "Date of the last ORT request. Use the ISO-8601 format. Example: 2015-04-09T12:07:56Z",
+            "format": "date-time"
+          },
+          "eligibilityTestedAt": {
+            "type": "string",
+            "description": "Data when a new ORT request will be possible . Use the ISO-8601 format. Example: 2015-04-09T12:07:56Z ",
+            "format": "date-time"
+          },
+          "terminatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation date of the record in Orange Database.  Use the ISO-8601 format. Example: _2015-04-09T12:07:56Z_",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date of the record in Orange Databases.  Use the ISO-8601 format. Example: _2015-04-09T12:07:56Z_",
+            "format": "date-time"
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              },
+              "device": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              },
+              "subscription": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              },
+              "profile": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "SimCard": {
+        "title": "SIM card",
+        "type": "object",
+        "description": "Information on the SIM card.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Number of the SIM card."
+          },
+          "pukCode": {
+            "type": "string",
+            "description": "Code PUK of the SIM card."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the SIM Card.",
+            "enum": [
+              "GSM",
+              "DATA"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date of the record in Orange Database.  Use the ISO-8601 format. Example: _2015-04-09T12:07:56Z_"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date of the record in Orange Databases.  Use the ISO-8601 format. Example: _2015-04-09T12:07:56Z_"
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              },
+              "mobileLine": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              },
+              "device": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RequestPost": {
+        "type": "object",
+        "properties": {
+          "customerReference": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment on the Request"
+          },
+          "catalog": {
+            "type": "string",
+            "enum": [
+              "MOBILE"
+            ]
+          }
+        },
+        "required": [
+          "contact"
+        ]
+      },
+      "ACTIVATE_SIM": {
+        "title": "Request body to (re)activate a SIM card.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ACTIVATE_SIM"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesActivateSim"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesActivateSim": {
+        "title": "Additional properties to (re)activate a SIM card.",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Reason of the (re)activation.",
+            "enum": [
+              "PERSONAL",
+              "LOST",
+              "STOLEN"
+            ]
+          },
+          "mobileLine": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifier of the Mobile Line"
+              }
+            }
+          }
+        }
+      },
+      "SUSPEND_SIM": {
+        "title": "Request body to suspend a SIM card.",
+        "type": "object",
+        "properties": {
+          "customerReference": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment on the Request"
+          },
+          "catalog": {
+            "type": "string",
+            "enum": [
+              "MOBILE"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SUSPEND_SIM"
+            ]
+          },
+          "properties": {
+            "$ref": "#/components/schemas/RequestPropertiesSuspendSim"
+          }
+        },
+        "required": [
+          "contact",
+          "type"
+        ]
+      },
+      "RequestPropertiesSuspendSim": {
+        "title": "Additional properties to suspend a SIM card.",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "PERSONAL",
+              "STOLEN",
+              "LOST"
+            ],
+            "description": "Reason of the suspension."
+          },
+          "mobileLine": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifier of the Mobile Line"
+              }
+            }
+          }
+        }
+      },
+      "CHANGE_SIM": {
+        "title": "Request body to change a SIM card.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CHANGE_SIM"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesChangeSim"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesChangeSim": {
+        "title": "Additional properties to change a SIM card.",
+        "type": "object",
+        "description": "",
+        "properties": {
+          "location": {
+            "type": "object",
+            "required": [
+              "name",
+              "address"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the location"
+              },
+              "customerReference": {
+                "type": "string",
+                "description": "Reference of the location set by the Customer"
+              },
+              "company": {
+                "type": "string",
+                "description": "Name of the company"
+              },
+              "building": {
+                "type": "string",
+                "description": "Building name"
+              },
+              "residence": {
+                "type": "string",
+                "description": "Name of the residence"
+              },
+              "address": {
+                "type": "object",
+                "required": [
+                  "street",
+                  "postalCode",
+                  "city",
+                  "country"
+                ],
+                "properties": {
+                  "street": {
+                    "type": "string",
+                    "description": "Street of the location"
+                  },
+                  "extendedStreet": {
+                    "type": "string",
+                    "description": "Additional information on the street"
+                  },
+                  "postalCode": {
+                    "type": "string",
+                    "description": "Postal code of the location"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "Name of the City, must match with the Postal Code"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "Country of the location in ISO2 format, only FR is accepted"
+                  }
+                }
+              },
+              "floor": {
+                "type": "string",
+                "description": "Number of the floor of the Office, Romm"
+              },
+              "stairCase": {
+                "type": "string",
+                "description": "Number or letter of the stair"
+              },
+              "room": {
+                "type": "string",
+                "description": "Romm Number for Office"
+              },
+              "digitalCode": {
+                "type": "string",
+                "description": "Information on the Digital Code "
+              },
+              "intercom": {
+                "type": "string",
+                "description": "Name indicated on the Intercom"
+              },
+              "comment": {
+                "type": "string"
+              }
+            }
+          },
+          "contact": {
+            "type": "object",
+            "required": [
+              "name",
+              "email",
+              "phone"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Ful name of the Contact that received the SIM card"
+              },
+              "email": {
+                "type": "string",
+                "description": "Email of the Contact"
+              },
+              "phone": {
+                "type": "string",
+                "description": "Phone Number of the Contact"
+              },
+              "mobile": {
+                "type": "string",
+                "description": "Mobile Number of the Contact"
+              }
+            }
+          },
+          "mobileLineId": {
+            "type": "string",
+            "description": "Orange Single Identifier of the Mobile Line"
+          },
+          "isFromStock": {
+            "type": "boolean",
+            "description": "Flag indicating if the SIM comes from the stock or need to be shipped."
+          },
+          "isMainSim": {
+            "type": "boolean",
+            "description": "Flag indicating that the SIM is the Main SIM or secondary"
+          }
+        },
+        "required": [
+          "location",
+          "contact"
+        ]
+      },
+      "ORDER_NEW_LINE": {
+        "title": "Request body to order a new line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ORDER_NEW_LINE"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesOrderNewLine"
+              }
+            },
+            "required": [
+              "type",
+              "properties"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesOrderNewLine": {
+        "title": "Additional properties to order a new line.",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BillingAccounts"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "subscriber": {
+                "type": "object",
+                "properties": {
+                  "firstname": {
+                    "type": "string",
+                    "description": "Firstname of the end user.",
+                    "maxLength": 30
+                  },
+                  "lastname": {
+                    "type": "string",
+                    "description": "Lastname of the end user.",
+                    "maxLength": 30
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email of the end user.",
+                    "maxLength": 100
+                  }
+                },
+                "required": [
+                  "firstname",
+                  "lastname",
+                  "email"
+                ]
+              },
+              "delivery": {
+                "$ref": "#/components/schemas/Delivery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "portability": {
+                "type": "object",
+                "description": "Properties used to port a number.",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Desired date for the portability of the given number."
+                  },
+                  "RIOCode": {
+                    "type": "string",
+                    "description": "RIO code associated to the given number.",
+                    "maxLength": 12
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number to port.",
+                    "maxLength": 14
+                  }
+                },
+                "required": [
+                  "date",
+                  "RIOCode",
+                  "phoneNumber"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "subscription": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the subscription."
+                  }
+                }
+              },
+              "sim": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "description": "For SIM card in stock.",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Use a SIM card in stock.",
+                        "enum": [
+                          "simcard"
+                        ]
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "Identifier of the SIM card in stock.",
+                        "maxLength": 13
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "description": "For e-SIM.",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Use an eSIM.",
+                        "enum": [
+                          "e-sim"
+                        ]
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Email that will receive the QR code to activate the eSIM.",
+                        "maxLength": 150
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "email"
+                    ]
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProductsOffering"
+          }
+        ],
+        "required": [
+          "billingAccount",
+          "subscriber",
+          "delivery",
+          "subscription",
+          "profile"
+        ]
+      },
+      "ADD_NEW_PRODUCTS": {
+        "title": "Request body to order additional products for an existing mobile line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ADD_NEW_PRODUCTS"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesAddNewProducts"
+              }
+            },
+            "required": [
+              "type",
+              "properties"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesAddNewProducts": {
+        "title": "Additional properties to order products for an existing mobile line.",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BillingAccounts"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "mobileLine": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the existing mobile line.",
+                    "maxLength": 11
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              },
+              "delivery": {
+                "$ref": "#/components/schemas/Delivery"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProductsOffering"
+          },
+          {
+            "type": "object",
+            "description": "The products to order.",
+            "properties": {
+              "device": {
+                "type": "object",
+                "properties": {
+                  "isSimCardExpedited": {
+                    "type": "boolean",
+                    "description": "A value that indicates whether a SIM card should be sent with this device.",
+                    "default": false
+                  }
+                }
+              },
+              "accessories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Quantity"
+                }
+              }
+            }
+          }
+        ],
+        "required": [
+          "billingAccount",
+          "mobileLine"
+        ]
+      },
+      "ORDER_EQUIPMENTS": {
+        "title": "Request body to order additional devices or accessories without an existing mobile line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ORDER_EQUIPMENTS"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesOrderEquipments"
+              }
+            },
+            "required": [
+              "type",
+              "properties"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesOrderEquipments": {
+        "title": "Additional properties to order devices or accessories without an existing mobile line.",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BillingAccount"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "delivery": {
+                "$ref": "#/components/schemas/Delivery"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "The equipments to order.",
+            "properties": {
+              "devices": {
+                "type": "array",
+                "description": "The devices to order.",
+                "items": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Device"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Quantity"
+                    }
+                  ]
+                }
+              },
+              "accessories": {
+                "type": "array",
+                "description": "The accessories to order.",
+                "items": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Accessory"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Quantity"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "required": [
+          "billingAccount",
+          "delivery"
+        ]
+      },
+      "ACTIVATE_LINE": {
+        "title": "Request body to activate a mobile line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ACTIVATE_LINE"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesActivateLine"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesActivateLine": {
+        "title": "Additional properties to activate a mobile line.",
+        "type": "object",
+        "properties": {
+          "subscriber": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identifier of the subscriber."
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "required": [
+          "subscriber"
+        ]
+      },
+      "TERMINATE_SERVICES": {
+        "title": "Request body to terminate a profile and/or options on an existing mobile line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TERMINATE_SERVICES"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesTerminateServices"
+              }
+            },
+            "required": [
+              "type",
+              "properties"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesTerminateServices": {
+        "title": "Additional properties to terminate a profile and/or options on an existing mobile line.",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BillingAccount"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "mobileLine": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the existing mobile line.",
+                    "maxLength": 11
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              },
+              "profile": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Desired date for the termination of the given profile."
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ServicesOffering"
+          }
+        ],
+        "required": [
+          "billingAccount",
+          "mobileLine"
+        ]
+      },
+      "TERMINATE_LINE": {
+        "title": "Request body to terminate an existing mobile line.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "TERMINATE_LINE"
+                ]
+              },
+              "properties": {
+                "$ref": "#/components/schemas/RequestPropertiesTerminateLine"
+              }
+            },
+            "required": [
+              "type",
+              "properties"
+            ]
+          }
+        ]
+      },
+      "RequestPropertiesTerminateLine": {
+        "title": "Additional properties to terminate an existing mobile line.",
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "mobileLine": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the existing mobile line.",
+                    "maxLength": 11
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Desired date for the termination of the given line."
+              }
+            }
+          }
+        ],
+        "required": [
+          "mobileLine"
+        ]
+      },
+      "BillingAccount": {
+        "type": "object",
+        "properties": {
+          "billingAccount": {
+            "type": "string",
+            "description": "Identifier of the customer account.",
+            "maxLength": 10
+          }
+        }
+      },
+      "BillingAccounts": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BillingAccount"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "equipmentsBillingAccount": {
+                "type": "string",
+                "description": "Identifier of the customer account that will be charged for the devices and accessories.",
+                "maxLength": 10
+              }
+            }
+          }
+        ]
+      },
+      "ProductsOffering": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ServicesOffering"
+          },
+          {
+            "$ref": "#/components/schemas/EquipmentsOffering"
+          }
+        ]
+      },
+      "ServicesOffering": {
+        "type": "object",
+        "description": "A profile and its services.",
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Service"
+            }
+          }
+        }
+      },
+      "Profile": {
+        "type": "object",
+        "description": "A profile.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifier of the profile."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Service": {
+        "type": "object",
+        "description": "A service.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifier of the service."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "EquipmentsOffering": {
+        "type": "object",
+        "description": "A device and its accessories.",
+        "properties": {
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "accessories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Accessory"
+            }
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "description": "A device.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifier of the device."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Accessory": {
+        "type": "object",
+        "description": "An accessory.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifier of the accessory."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "Quantity": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "description": "Number of products to order.",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 1
+          }
+        }
+      },
+      "Delivery": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the entity.",
+            "maxLength": 30
+          },
+          "localCompany": {
+            "type": "string",
+            "description": "Trading or business name.",
+            "maxLength": 30
+          },
+          "email": {
+            "type": "string",
+            "description": "Email.",
+            "maxLength": 100
+          },
+          "address ": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Phone number.",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "address",
+          "phoneNumber"
+        ]
+      },
+      "Request": {
+        "title": "Request",
+        "type": "object",
+        "description": "D",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Orange Single Identifiers of a Request"
+          },
+          "customerReference": {
+            "type": "string",
+            "description": "Reference set by the Customer for the request"
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Customer Identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Customer Name"
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NEW",
+              "VALIDATED",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "FAILED"
+            ],
+            "description": "Status of the request"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of Request"
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of submission of the request"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date of the record in Orange Systems"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the last update on the record in Orange Systems"
+          },
+          "_links": {
+            "type": "object",
+            "properties": {
+              "self": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "description": "Link on the Request"
+                  }
+                }
+              }
+            }
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment on the Request"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "Address": {
+        "description": "Model of an address.",
+        "required": [
+          "street",
+          "postalCode",
+          "city"
+        ],
+        "type": "object",
+        "properties": {
+          "street": {
+            "description": "Name of the street.",
+            "type": "string"
+          },
+          "extendedStreet": {
+            "description": "Additional information on the  street.",
+            "type": "string"
+          },
+          "locality": {
+            "description": "Locality of the address.\n_Example: Sophia-Antipolis_",
+            "type": "string"
+          },
+          "postalCode": {
+            "description": "PostalCode (ZipCode) of the address.",
+            "type": "string"
+          },
+          "city": {
+            "description": "City or town of the address",
+            "type": "string"
+          },
+          "state": {
+            "description": "Federated entity of the address (State, Canton, Province, Bundesland,etc)",
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "FR"
+            ]
+          }
+        }
+      },
+      "Subscriber": {
+        "title": "Subscriber",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the Subscriber."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Subscriber."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name of the Subscribers."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name of the Subcriber."
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "mobile": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "description": "Information on the Subcriber."
+      },
+      "InternalError": {
+        "title": "Internal error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Internal error"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "BadGatewayError": {
+        "title": "Bad gateway error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              3
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Bad gateway"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "ServiceUnavailableError": {
+        "title": "Service unavailable error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              5
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "The service is temporarily unavailable"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "OverCapacityError": {
+        "title": "Over capacity error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              6
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Orange API is over capacity, retry later !"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "GatewayTimeoutError": {
+        "title": "Gateway timeout error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              6
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Gateway timeout"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidURLParamError": {
+        "title": "Invalid URL parameter value error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              20
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid URL parameter value"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MissingBodyError": {
+        "title": "Missing body error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              21
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Missing body"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidBodyError": {
+        "title": "Invalid body error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              22
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid body"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MissingBodyFieldError": {
+        "title": "Missing body field error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              23
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Missing body field"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidBodyFieldError": {
+        "title": "Invalid body field error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              24
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid body field"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MissingHeaderError": {
+        "title": "Missing header error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              25
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Missing header"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidHeaderError": {
+        "title": "Invalid header value error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              26
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid header value"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MissingQueryStringParamError": {
+        "title": "Missing query-string parameter error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              27
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Missing query-string parameter"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidQueryStringParamError": {
+        "title": "Invalid query-string parameter value error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              28
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid query-string parameter value"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MissingCredentialsError": {
+        "title": "Missing credentials error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              40
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Missing or invalid credentials"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "enum": [
+              "The requested service needs credentials, but the ones provided were invalid or missing."
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "InvalidCredentialsError": {
+        "title": "Invalid credentials error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              41
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Invalid credentials"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "enum": [
+              "The requested service needs credentials, but the ones provided were invalid."
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "ExpiredCredentialsError": {
+        "title": "Expired credentials error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              42
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Expired credentials"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "enum": [
+              "The requested service needs credentials, and the ones provided were out-of-date."
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "AccessDeniedError": {
+        "title": "Access denied error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              50
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Access denied"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "enum": [
+              "The application that makes the request is not authorized to access this endpoint (ex: not a subscribed service).\nAPI key not provided"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "ForbiddenRequesterError": {
+        "title": "Forbidden requester error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              51
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Forbidden requester"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "ForbiddenUserError": {
+        "title": "Forbidden user error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              52
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Forbidden user"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "TooManyRequestsError": {
+        "title": "Too many requests error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              53
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Too many requests"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "NotFoundError": {
+        "title": "Not found error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              60
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Resource not found"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "MethodNotAllowedError": {
+        "title": "Method not allowed error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              61
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Method not allowed"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "NotAcceptableError": {
+        "title": "Not acceptable error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              62
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Not acceptable"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "RequestTimeoutError": {
+        "title": "Request time-out error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              63
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request time-out"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "ConflictError": {
+        "title": "Conflict error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              69
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Conflict"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "LengthRequiredError": {
+        "title": "Length required error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              64
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Length required"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "PreconditionFailedError": {
+        "title": "Precondition failed error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              65
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Precondition failed"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "RequestEntityTooLargeError": {
+        "title": "Request entity too large error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              66
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request entity too large"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "RequestURITooLongError": {
+        "title": "Request-URI too long error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              67
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Request-URI too long"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "UnsupportedMediaTypeError": {
+        "title": "Unsupported media type error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              68
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "Unsupported Media Type"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "description"
+        ]
+      },
+      "UnprocessableEntityError": {
+        "title": "Unprocessable entity error",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "subcode": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "subcode",
+          "message",
+          "description"
+        ]
+      },
+      "SimCardSort": {
+        "title": "SimCardSort",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Fields for the sort. ",
+            "enum": [
+              "id",
+              "-id",
+              "pukCode",
+              "-pukCode",
+              "createdAt",
+              "updatedAt",
+              "-createdAt",
+              "-updatedAt"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "400 Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvalidURLParamError"
+                },
+                {
+                  "$ref": "#/components/schemas/MissingBodyError"
+                },
+                {
+                  "$ref": "#/components/schemas/InvalidBodyError"
+                },
+                {
+                  "$ref": "#/components/schemas/MissingBodyFieldError"
+                },
+                {
+                  "$ref": "#/components/schemas/InvalidBodyFieldError"
+                },
+                {
+                  "$ref": "#/components/schemas/MissingHeaderError"
+                },
+                {
+                  "$ref": "#/components/schemas/InvalidHeaderError"
+                },
+                {
+                  "$ref": "#/components/schemas/MissingQueryStringParamError"
+                },
+                {
+                  "$ref": "#/components/schemas/InvalidQueryStringParamError"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "401 Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/MissingCredentialsError"
+                },
+                {
+                  "$ref": "#/components/schemas/InvalidCredentialsError"
+                },
+                {
+                  "$ref": "#/components/schemas/ExpiredCredentialsError"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Denied": {
+        "description": "403 Denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AccessDeniedError"
+                },
+                {
+                  "$ref": "#/components/schemas/ForbiddenRequesterError"
+                },
+                {
+                  "$ref": "#/components/schemas/ForbiddenUserError"
+                },
+                {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The specified resource was not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotFoundError"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "405 Method not allowed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MethodNotAllowedError"
+            }
+          }
+        }
+      },
+      "NotAcceptable": {
+        "description": "406 Not acceptable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotAcceptableError"
+            }
+          }
+        }
+      },
+      "RequestTimeout": {
+        "description": "408 Request time-out",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RequestTimeoutError"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "409 Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ConflictError"
+            }
+          }
+        }
+      },
+      "LengthRequired": {
+        "description": "411 Length required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LengthRequiredError"
+            }
+          }
+        }
+      },
+      "PreconditionFailed": {
+        "description": "412 Precondition failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PreconditionFailedError"
+            }
+          }
+        }
+      },
+      "RequestEntityTooLarge": {
+        "description": "413 Request entity too large",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RequestEntityTooLargeError"
+            }
+          }
+        }
+      },
+      "RequestURITooLong": {
+        "description": "414 Request-URI too long",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RequestURITooLongError"
+            }
+          }
+        }
+      },
+      "UnsupportedMediaType": {
+        "description": "415 Unsupported media type",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnsupportedMediaTypeError"
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "422 Unprocessable entity",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UnprocessableEntityError"
+            }
+          }
+        }
+      },
+      "TooManyRequests": {
+        "description": "429 Too many requests",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TooManyRequestsError"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "500 Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InternalError"
+            }
+          }
+        }
+      },
+      "BadGateway": {
+        "description": "502 Bad Gateway",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InternalError"
+                },
+                {
+                  "$ref": "#/components/schemas/BadGatewayError"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "description": "503 Service Unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ServiceUnavailableError"
+                },
+                {
+                  "$ref": "#/components/schemas/OverCapacityError"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "GatewayTimeout": {
+        "description": "504 Gateway Timeout",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GatewayTimeoutError"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "API Key": {
+        "name": "X-API-KEY",
+        "type": "apiKey",
+        "in": "query"
+      },
+      "OAuth 2.0 Access Token": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Mobile Lines",
+      "description": "Find mobile lines matching search criteria and retrieve detail of a specific mobile line."
+    },
+    {
+      "name": "SIM Cards",
+      "description": "Find SIM cards matching search criteria and retrieve detail of a specific SIM card."
+    },
+    {
+      "name": "Devices",
+      "description": "Find devices matching search criteria and retrieve detail of a specific mobile."
+    },
+    {
+      "name": "Requests",
+      "description": "Find requests matching search criteria and retrieve detail of a specific request."
+    },
+    {
+      "name": "Miscellaneous",
+      "description": "Get detail about the API (documentation, version, status)."
+    }
+  ]
+}
