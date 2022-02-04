@@ -3039,17 +3039,13 @@
           "customer": {
             "$ref": "#/components/schemas/Customer"
           },
-          "company": {
+          "localCompany": {
             "description": "Name of the local company. It is not the Customer Account.",
             "type": "string"
           },
           "building": {
             "description": "Name of the building",
             "type": "string"
-          },
-          "residence": {
-            "type": "string",
-            "description": "Name of the Residence."
           },
           "address": {
             "$ref": "#/components/schemas/Address"
@@ -3078,6 +3074,21 @@
             "description": "Free text for describing the Opening Hours",
             "type": "string"
           },
+          "legalNumber": {
+            "type": "string",
+            "description": "National number of the location such as SIRET for France."
+          },
+          "contacts": {
+            "type": "object",
+            "properties": {
+              "primary": {
+                "$ref": "#/components/schemas/Contact"
+              },
+              "secondary": {
+                "$ref": "#/components/schemas/Contact"
+              }
+            }
+          },
           "timeZone": {
             "$ref": "#/components/schemas/TimeZone"
           },
@@ -3091,7 +3102,7 @@
             "example": "2021-03-05T13:15:30Z"
           },
           "updatedAt": {
-            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "description": "Date when the record was updated in the API. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_.",
             "type": "string",
             "format": "date-time",
             "example": "2021-03-05T13:15:30Z"
@@ -3143,6 +3154,10 @@
             "example": "FR",
             "maxLength": 2,
             "minLength": 2
+          },
+          "region": {
+            "type": "string",
+            "description": "Code of the Region for Europe, Asia, etc.."
           }
         },
         "required": [
@@ -3381,46 +3396,10 @@
           "customerReference": {
             "type": "string",
             "description": "Reference of the Location set by the Customer."
-          },
-          "company": {
-            "description": "Name of the local company. It is not the Customer Account.",
-            "type": "string"
-          },
-          "building": {
-            "description": "Name of the building.",
-            "type": "string"
-          },
-          "residence": {
-            "type": "string",
-            "description": "Name of the residence."
-          },
-          "address": {
-            "$ref": "#/components/schemas/Address"
-          },
-          "formattedAddress": {
-            "description": "Complete address with street, postal code, city and country.",
-            "type": "string"
-          },
-          "floor": {
-            "type": "string",
-            "description": "Number of the floor."
-          },
-          "room": {
-            "type": "string",
-            "description": "Number or reference of the Room."
-          },
-          "stair": {
-            "type": "string",
-            "description": "Stair information."
-          },
-          "phone": {
-            "type": "string",
-            "description": "Phone Number of the location."
           }
         },
         "required": [
-          "name",
-          "address"
+          "name"
         ]
       },
       "ConfigurationItem": {
@@ -3593,10 +3572,21 @@
                 "enum": [
                   "PRIMARY",
                   "SECONDARY",
-                  "SINGLE",
-                  "UNKNOWN"
+                  "UNKNOWN",
+                  "STANDALONE"
                 ],
                 "description": "Role of the Configuration Item. The Equipment or Access Line can be a main (Primary) or not (secondary) equipment, access line."
+              },
+              "layer": {
+                "type": "string",
+                "description": "Layer where the device is operating.",
+                "enum": [
+                  "MPLS",
+                  "SDWAN",
+                  "LAN",
+                  "UNKNOWN",
+                  "OTHER"
+                ]
               },
               "hardware": {
                 "type": "object",
@@ -3604,15 +3594,15 @@
                 "properties": {
                   "manufacturer": {
                     "type": "string",
-                    "description": "Manufacturer of the Configuration Item."
+                    "description": "Manufacturer of the Equipment."
                   },
                   "model": {
                     "type": "string",
-                    "description": "Model of the Configuration Item."
+                    "description": "Model of the  Equipment."
                   },
                   "family": {
                     "type": "string",
-                    "description": "Family of the device such as _NETWORK_."
+                    "description": "Family,Product line of the device."
                   },
                   "chassis": {
                     "type": "string",
@@ -3621,6 +3611,10 @@
                   "serialNumber": {
                     "type": "string",
                     "description": "Serial Number of the Configuration Item."
+                  },
+                  "firmwareVersion": {
+                    "type": "string",
+                    "description": "Version of the Firmware"
                   }
                 }
               },
@@ -3648,17 +3642,21 @@
                 "type": "object",
                 "description": "Information on the Bandwidth of an Access Line. Available only on Access Lines.",
                 "properties": {
-                  "rx": {
-                    "type": "string",
-                    "description": "Bandwith of received data"
-                  },
                   "tx": {
                     "type": "string",
                     "description": "Bandwith of sent data."
                   },
+                  "rx": {
+                    "type": "string",
+                    "description": "Bandwith of received data."
+                  },
                   "unit": {
                     "type": "string",
                     "description": "Unit of the bandwidh values."
+                  },
+                  "isGuaranteed": {
+                    "type": "string",
+                    "description": "Flag indicating that the bandwidth is guaranteed"
                   }
                 }
               }
@@ -3673,7 +3671,7 @@
           "updatedAt": {
             "type": "string",
             "example": "2021-03-05T13:15:30Z",
-            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "description": "Date when the record was updated in the API. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_.",
             "format": "date-time"
           },
           "_link": {
@@ -3757,31 +3755,31 @@
                 "type": "string",
                 "format": "date",
                 "example": "2021-01-01",
-                "description": "Date when the item has been ordered by the Customer."
+                "description": "Date when the service has been ordered by the Customer."
               },
               "startedAt": {
                 "type": "string",
                 "example": "2021-01-01",
                 "format": "date",
-                "description": "Date when the item has been installed and Ready for Service."
+                "description": "Date when the service has been installed and Ready for Service."
               },
               "terminatedAt": {
                 "type": "string",
                 "example": "2021-01-01",
                 "format": "date",
-                "description": "Date when the item has been disconnected."
+                "description": "Date when the service has been disconnected."
               },
               "billingStartedAt": {
                 "type": "string",
                 "format": "date",
                 "example": "2021-01-01",
-                "description": "Date when the billing started for this item."
+                "description": "Date when the billing started for this service."
               },
               "billingEndedAt": {
                 "type": "string",
                 "format": "date",
                 "example": "2021-01-01",
-                "description": "Date when the billing started for this item."
+                "description": "Date when the billing started for this service."
               }
             }
           },
@@ -3797,7 +3795,7 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time",
-            "description": "The date and time of the object's creation in Orange Business Services systems",
+            "description": "Date when the record was updated in the API. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_.",
             "example": "2021-03-05T13:15:30Z"
           },
           "_links": {
@@ -3858,12 +3856,16 @@
         ]
       },
       "ConfigurationItemType": {
-        "title": "ConfigurationItemType",
         "type": "string",
+        "title": "ConfigurationItemType",
         "enum": [
           "ROUTER",
           "IP_SWITCH",
-          "ETHERNET_SWITCH"
+          "ETHERNET_SWITCH",
+          "OPTICAL_FIBER",
+          "DSL",
+          "OTHER",
+          "UNKNOWN"
         ],
         "description": "List of Configuration Item Types."
       },
@@ -3897,9 +3899,9 @@
             "type": "string",
             "description": "Single Identifier of a Billing Account."
           },
-          "code": {
+          "division": {
             "type": "string",
-            "description": "Sub code of the Billing Account."
+            "description": "Sub code / division of the Billing Account."
           },
           "name": {
             "type": "string",
@@ -3913,7 +3915,8 @@
         "description": "Properties of a Service Point.",
         "properties": {
           "option": {
-            "type": "string"
+            "type": "string",
+            "description": "Options of the subscribed Offer."
           },
           "voip": {
             "$ref": "#/components/schemas/ServicePointPropertiesVoiceIP"
@@ -3930,8 +3933,12 @@
           "dsl": {
             "$ref": "#/components/schemas/ServicePointPropertiesDsl"
           },
-          "community": {
+          "vpn": {
             "$ref": "#/components/schemas/ServicePointPropertiesCommunity"
+          },
+          "isSCCActivated": {
+            "type": "boolean",
+            "description": "Flag indicating if the SCC option has been subscribed."
           }
         }
       },
@@ -4024,7 +4031,7 @@
         }
       },
       "ServicePointPropertiesCommunity": {
-        "title": "ServicePointPropertiesCommunity",
+        "title": "ServicePointPropertiesVPN",
         "type": "object",
         "properties": {
           "id": {
@@ -4036,7 +4043,38 @@
             "description": "Name of the community, or Network."
           }
         },
-        "description": "Properties of the community."
+        "description": "Properties of the VPN."
+      },
+      "Contact": {
+        "title": "Contact",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Full Name of the contact."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name of the contact."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name of the contact."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phonenumber of the contact."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the contact.",
+            "format": "email"
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Mobile number of the contact."
+          }
+        }
       }
     },
     "securitySchemes": {
