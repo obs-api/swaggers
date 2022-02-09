@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "description": "The Network API allows to provide a clear visibility on the deployed Network solutions and Equipements. This API provides the full inventory, QoS and usage reports.  \nMost of Network Offers are supported.\n  \n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **accessLines** : An Access Line (or Circuit) is the physical line supporting the service such as Optical Fiber or DSL.\n- **devices** : A device is an equipement of the WAN or LAN network for example a Router. Devices can be also virtual.\n- **interfaces** : An Interface is a physical port of a device.\n- **locations** : A location is a Geographical place like a building.\n- **pointOfPresences** : Point of Presence is a Orangecenter containing Network Equipments.\n- **servicePoints** : Service Point is an installed Offer such as a BVPN site. You will find Commercial information on this object.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:network| Full access of the API. |\n| b2b:network:readonly | API limited to read actions |  \n\n\n# Authentication\n\nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services",
-    "version": "2.0.2",
+    "version": "2.2.0",
     "title": "Network",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -1139,28 +1139,10 @@
             }
           },
           {
-            "name": "location.address.postalCode",
-            "required": false,
-            "in": "query",
-            "description": "Returns Devices that match the exact value or formula about the Orange Postal Code of the Location where the Device has been deployed.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "location.customerReference",
             "required": false,
             "in": "query",
             "description": "Returns Devices that match the exact value or formula about the Customer Reference of the Location where the Device has been deployed.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "location.address.city",
-            "required": false,
-            "in": "query",
-            "description": "Returns Devices that match the exact value or formula about the City of the Location where the Device has been deployed.",
             "schema": {
               "type": "string"
             }
@@ -5189,6 +5171,18 @@
           },
           "role": {
             "$ref": "#/components/schemas/DeviceTopologyRole"
+          },
+          "mainIpAddress": {
+            "type": "string",
+            "description": "The Main WAN IP address of the device."
+          },
+          "isHub": {
+            "type": "boolean",
+            "description": "Flag indicating that the Device is a Hub."
+          },
+          "mplsUnderlaySiteName": {
+            "type": "string",
+            "description": "Name of the Topology site composed of installed equipments on the location."
           }
         },
         "required": [
@@ -5439,18 +5433,13 @@
             "description": "Family,Product line of the device",
             "type": "string"
           },
-          "memorySize": {
-            "description": "Size of the installed memory in the device. Value in kOctets",
-            "type": "integer",
-            "format": "int32"
+          "chassis": {
+            "type": "string",
+            "description": "Chassis name of the device"
           },
-          "cpuType": {
-            "description": "CPU type of the device provided by the Manufacturer.",
-            "type": "string"
-          },
-          "cpuReference": {
-            "description": "CPU reference of the device provided by the Manufacturer.",
-            "type": "string"
+          "serialNumber": {
+            "type": "string",
+            "description": "Serial Number of the device"
           },
           "cpuCount": {
             "description": "Indicate the number of cpu installed in the Device",
@@ -5459,6 +5448,19 @@
           },
           "cpuSpeed": {
             "description": "Indicate the speed of the Processor of the Device in Ghz",
+            "type": "string"
+          },
+          "cpuReference": {
+            "description": "CPU reference of the device provided by the Manufacturer.",
+            "type": "string"
+          },
+          "memorySize": {
+            "description": "Size of the installed memory in the device. Value in kOctets",
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpuType": {
+            "description": "CPU type of the device provided by the Manufacturer.",
             "type": "string"
           },
           "diskSize": {
@@ -5470,14 +5472,6 @@
             "type": "integer",
             "format": "int32",
             "description": "Number of port on the device."
-          },
-          "serialNumber": {
-            "type": "string",
-            "description": "Serial Number of the device"
-          },
-          "chassis": {
-            "type": "string",
-            "description": "Chassis name of the device"
           }
         }
       },
@@ -5491,11 +5485,6 @@
           "hostname": {
             "type": "string",
             "description": "hostname defined in the device configuration"
-          },
-          "countControlConnections": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Number of connections for a SDWAN device"
           }
         }
       },
@@ -5946,6 +5935,10 @@
           },
           "_links": {
             "$ref": "#/components/schemas/AccessLineLinks"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Orange Reference of the Access Line."
           }
         },
         "required": [
@@ -6038,7 +6031,15 @@
           },
           "type": {
             "type": "string",
-            "description": "Type of the Interface"
+            "description": "Type of the Interface",
+            "enum": [
+              "DEDICATED",
+              "OTHER"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference of the Interface."
           }
         },
         "required": [
@@ -6049,9 +6050,6 @@
         "description": "Information on the Access Lines",
         "type": "object",
         "properties": {
-          "type": {
-            "$ref": "#/components/schemas/AccessLineType"
-          },
           "role": {
             "$ref": "#/components/schemas/AccessLineRole"
           },
@@ -6062,10 +6060,6 @@
           "isQuickStart": {
             "description": "Flag indicating that the line is a temporary Line deployed for starting the service (often a mobile 4G access line).",
             "type": "boolean"
-          },
-          "connectionType": {
-            "type": "string",
-            "description": "Type of Connection."
           },
           "bandwidth": {
             "description": "Access bandwidth  for the Access Line  (value in kB).",
@@ -6085,14 +6079,6 @@
               }
             }
           },
-          "phoneNumber": {
-            "type": "string",
-            "description": "Phonenumber of the Access Line in case of DSL for example. The value can be null if not relevant for the support."
-          },
-          "reference": {
-            "type": "string",
-            "description": "Internal Reference for identying the Access Line."
-          },
           "dslParameters": {
             "type": "object",
             "description": "Information on the DSL Service.",
@@ -6104,6 +6090,10 @@
               "vpi": {
                 "type": "number",
                 "description": "Contains the Virtual Path Identifier. Used only for DSL Line."
+              },
+              "phoneNumber": {
+                "type": "string",
+                "description": "Phonenumber of the Access Line in case of DSL for example. The value can be null if not relevant for the support."
               }
             }
           }
@@ -6124,6 +6114,10 @@
           "customerReference": {
             "type": "string",
             "description": "Reference of the Service Point set by the Customer."
+          },
+          "reference": {
+            "type": "string",
+            "description": "Orange reference of the Service Point."
           },
           "state": {
             "$ref": "#/components/schemas/ServicePointState"
@@ -6189,8 +6183,11 @@
             "description": "Date when the record was updated. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
             "format": "date-time"
           },
-          "billingAccount": {
-            "$ref": "#/components/schemas/BillingAccount"
+          "billingAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillingAccount"
+            }
           },
           "agreement": {
             "$ref": "#/components/schemas/Agreement"
@@ -6553,7 +6550,7 @@
             "type": "string",
             "description": "Flag indicating if there is a subscription to _'Service Client Conseil'_. This service is available on the France Market."
           },
-          "community": {
+          "vpn": {
             "type": "object",
             "description": "Information on the Community.",
             "properties": {
@@ -6608,22 +6605,12 @@
             "description": "Information on the Intranet Service.",
             "properties": {
               "bandwidth": {
-                "type": "string"
-              }
-            }
-          },
-          "wan": {
-            "type": "object",
-            "description": "Information on the WAN Service.",
-            "properties": {
-              "mode": {
-                "type": "string"
+                "type": "string",
+                "description": "Bandwidth of the Service."
               },
-              "isInternet": {
-                "type": "boolean"
-              },
-              "isStandard": {
-                "type": "boolean"
+              "unit": {
+                "type": "string",
+                "description": "Unit of the the bandwidth."
               }
             }
           },
