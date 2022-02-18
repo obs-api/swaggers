@@ -740,7 +740,7 @@
     },
     "/me": {
       "get": {
-        "summary": "Get Logged User Information",
+        "summary": "Get User Information",
         "tags": [
           "Miscellaneous"
         ],
@@ -777,7 +777,7 @@
           }
         },
         "operationId": "GetMe",
-        "description": "This endpoint provide information on the connected user.",
+        "description": "This endpoint provides information on the connected user.",
         "security": [
           {
             "Orange": [
