@@ -737,6 +737,66 @@
         ],
         "description": "This endpoint allows to download the current Swagger file of the API.\n\n "
       }
+    },
+    "/me": {
+      "get": {
+        "summary": "Get Logged User Information",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ME"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetMe",
+        "description": "This endpoint provide information on the connected user.",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-Key",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1102,6 +1162,57 @@
           "infoURL": {
             "type": "string",
             "description": "URL for additional information on the error."
+          }
+        }
+      },
+      "ME": {
+        "title": "Me",
+        "type": "object",
+        "description": "Information on the connected user and the API Key.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the API key."
+          },
+          "login": {
+            "type": "string",
+            "description": "Login of the associated user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the associated user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the associated user."
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Mobile number of the associated user."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the associated user."
+          },
+          "scopes": {
+            "type": "string",
+            "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SANDBOX",
+              "PRODUCTION"
+            ],
+            "description": "Type of the environment (Sandbox or Production)"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of the creation of the API Key."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date of the API Key."
           }
         }
       },
