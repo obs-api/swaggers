@@ -1,18 +1,28 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Webhook API",
+    "title": "Orange Business Service Webhook API",
     "version": "1.0",
     "contact": {
       "name": "Philippe VALETTE",
       "url": "http://developer.orange.com",
-      "email": "api-support@orange.com"
+      "email": "philippe.valette@orange.com"
     },
-    "description": "This API allows to subcribe to notifications due to a change in the following APIs:\n- Network\n- Incident\n- Change (future)\n- Core Information\n- Maintenance\n- Billing (future)\n\n"
+    "description": "\n\n[Webhooks](https://en.wikipedia.org/wiki/Webhook) are a way for applications to receive real-time information when an item in Orange Business Services API is created or updated. This mechanism avoid to put in place none efficient polling scripts.\n\nThe principle is that a subcription is required for each event in order to activate the notification. For this subcription, a callback url must be provided and also the type of authentication (no authentication, basic authentication or OAuth 2.0). The callback URL (or an API) must be accessible on Internet or in your intranet if you have the option BVPN Gallery.\nOnce the subscription is completed, Orange's servers will sent an HTTP POST based on subcribed events. \n\nObviously,it is possible to be notified on several applications for the same event.\n\nThis Webhook API allows also to customize the body of the event in order to use an API protected by Basic Authentication or OAuth 2.0\n\n\nA step by step [tutorial](http://) will help you to put in place Webhooks.\n\n\n>Webhook events can be sent more than once and the delivery is not guaranteed to be in order. To defend against this behavior a `timestamp`  in included in the body so for the same event on the same object, the state can be managed on the client side.\n\n## Event Object\nThe list of available events is available [here](http://#). The standard format of the received payload is\n```\n {\n     \"id\": \"\",\n     \"type\":\"\",\n     \"createdAt\":\"\"\n     \"payload\":\n     {\n         \"id\": \"123456788\",\n         . . . \n\n     }\n }\n```\n\n\n\n\n"
   },
   "servers": [
     {
-      "url": "https://api.orange.com/webhook/b2b/v1"
+      "url": "https://api.orange.com/webhook/b2b/preview/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Webhook Rules",
+      "description": "Webhook rules allows to subscribe to event on the following APIs: Core Information, Incident, Network, Ordering."
+    },
+    {
+      "name": "Miscellaneous",
+      "description": "Methods for having information on the API such as the version, status or for downloading the Swagger."
     }
   ],
   "paths": {
@@ -20,7 +30,7 @@
       "get": {
         "summary": "Find Webhooks",
         "tags": [
-          "Webhooks"
+          "Webhook Rules"
         ],
         "responses": {
           "200": {
@@ -39,11 +49,33 @@
               "X-Total-Count": {
                 "schema": {
                   "type": "integer"
-                }
+                },
+                "description": "The total number of items matching criterias."
               },
               "X-Result-Count": {
                 "schema": {
                   "type": "integer"
+                },
+                "description": "The actual number of items returned in the response body."
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -56,63 +88,95 @@
               "type": "string"
             },
             "in": "header",
-            "name": "X-API-KEY"
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
           },
           {
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 0,
+              "format": "int32",
+              "default": 0
             },
             "in": "query",
-            "name": "offset"
+            "name": "offset",
+            "description": "The index of the first Webhook rule to retrieve. Zero is the first item of the collection."
           },
           {
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "maximum": 250,
+              "default": 250
             },
             "in": "query",
-            "name": "limit"
+            "name": "limit",
+            "description": "The maximum number of Webhook rules to return."
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "sort"
+            "name": "sort",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign indicates a descending order. __Example: sort=-name"
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "fields"
+            "name": "fields",
+            "description": "Allow to reduce the response by specifying only necessary fields. Attributes are separated by a comma."
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "id"
+            "name": "id",
+            "description": "Returns Webhook rules that match the exact value or advanced search formula for the Orange Single Identifier. "
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "name"
+            "name": "name",
+            "description": " Returns Webhook rules that match the exact value or advanced search formula for the Name. "
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "events.id"
+            "name": "events.id",
+            "description": " Returns Webhook rules that match the exact value or advanced search formula for the Event Id. "
           },
           {
             "schema": {
-              "type": "array"
+              "type": "string"
             },
             "in": "query",
-            "name": "authentication.type"
+            "name": "authentication.type",
+            "description": " Returns Webhook rules that match the exact value or advanced search formula for the Authentication Type "
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "callback.url",
+            "description": "Returns Webhook rules that match the exact value or advanced search formula for the URL of the callback."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "callback.method",
+            "description": "Returns Webhook rules that match the exact value or advanced search formula for the method of the callback."
           },
           {
             "schema": {
@@ -120,31 +184,51 @@
               "format": "date-time"
             },
             "in": "query",
-            "name": "createdAt"
+            "name": "createdAt",
+            "description": "Returns Webhook rules that match the exact value or advanced search formula based on the creation date of the record."
           },
           {
             "schema": {
               "type": "string"
             },
             "in": "query",
-            "name": "updatedAt"
+            "name": "updatedAt",
+            "description": "Returns Webhook rules that match the exact value or advanced search formula based on the last update date of the record."
           },
           {
             "schema": {
-              "type": "boolean"
+              "type": "string",
+              "enum": [
+                "0",
+                "1"
+              ]
             },
             "in": "query",
-            "name": "displayNulls"
+            "name": "displayNulls",
+            "description": "Flag for displaying all fields even if the value is null."
           },
           {
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "0",
+                "1"
+              ]
             },
             "in": "query",
-            "name": "displayLinks"
+            "name": "displayLinks",
+            "description": "Flag for displaying the HATEOS links of linked ressources."
           }
         ],
-        "description": "This method allows to find all Webhook rules matching criterias."
+        "description": "This endpoint returns a Webhook rules that matching criterias defined in the Query Parameters. ",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ]
       },
       "parameters": [],
       "post": {
@@ -152,7 +236,35 @@
         "operationId": "AddWebhook",
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "URI of the new Webhook Rule"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -161,11 +273,12 @@
               "type": "string"
             },
             "in": "header",
-            "name": "X-API-KEY"
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
           }
         ],
         "tags": [
-          "Webhooks"
+          "Webhook Rules"
         ],
         "requestBody": {
           "content": {
@@ -176,7 +289,15 @@
             }
           },
           "description": "Information to send for creating a Webhook Rule."
-        }
+        },
+        "description": "This endpoint allows to add a new Webhook rules that will be activated in the Customer perimeter. ",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook"
+            ]
+          }
+        ]
       }
     },
     "/webhooks/{webhooksId}": {
@@ -186,15 +307,13 @@
             "type": "string"
           },
           "name": "webhooksId",
+          "description": "Single Identifier of the Webhook.",
           "in": "path",
           "required": true
         }
       ],
       "get": {
         "summary": "Get Webhook Details",
-        "tags": [
-          "Webhooks"
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -202,6 +321,36 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -215,41 +364,94 @@
               "type": "string"
             },
             "in": "header",
-            "name": "X-API-KEY"
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
           },
           {
             "schema": {
               "type": "string"
             },
             "in": "query",
-            "name": "fields"
+            "name": "fields",
+            "description": "Allow to reduce the response by specifying only necessary fields. Attributes are separated by a comma."
           },
           {
             "schema": {
-              "type": "boolean"
+              "type": "string",
+              "enum": [
+                "0",
+                "1"
+              ]
             },
             "in": "query",
-            "name": "displayNulls"
+            "name": "displayNulls",
+            "description": "Flag for displaying all fields even if the value is null."
           },
           {
             "schema": {
-              "type": "boolean"
+              "type": "string",
+              "enum": [
+                "0",
+                "1"
+              ]
             },
             "in": "query",
-            "name": "displayLinks"
+            "name": "displayLinks",
+            "description": "Flag for displaying the HATEOS links of linked ressources."
           }
+        ],
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ],
+        "tags": [
+          "Webhook Rules"
         ]
       },
       "patch": {
         "summary": "Modify Webhook",
         "operationId": "ModifyWebhook",
         "responses": {
-          "206": {
-            "description": "Partial Content",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Webhook-API_Webhook"
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -262,11 +464,12 @@
               "type": "string"
             },
             "in": "header",
-            "name": "X-API-KEY"
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
           }
         ],
         "tags": [
-          "Webhooks"
+          "Webhook Rules"
         ],
         "requestBody": {
           "content": {
@@ -277,7 +480,262 @@
             }
           },
           "description": "Information that can be changed"
-        }
+        },
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a Webhook Rules",
+        "operationId": "DeleteWebhook",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "The endpoint allows cancellation of an existing Webhook rule.",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook"
+            ]
+          }
+        ],
+        "tags": [
+          "Webhook Rules"
+        ]
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Get API Status",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Information of the Status.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the API."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "ko"
+                      ],
+                      "description": "Status of the API. 'ok' indicates that the API is available without problems. 'ko' indicates that the API is facing some issues."
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of the API in the format Major, Minor and patch number."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Information of the Status.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the API."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Status of the API. 'ok' indicates that the API is available without problems. 'ko' indicates that the API is facing some issues.",
+                      "enum": [
+                        "ok",
+                        "ko"
+                      ]
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of the API in the format Major, Minor and patch number."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetStatus",
+        "description": "This endpoint returns the status of the API and the version number.",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ]
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get API Version",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Information on the version of the API.",
+                  "properties": {
+                    "version": {
+                      "$ref": "#/components/schemas/VersionStruct"
+                    },
+                    "deprecated": {
+                      "type": "boolean",
+                      "description": "Flag indicating that API is deprecated."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetVersion",
+        "description": "Return the current version of the API including Major Release number, Minor Release number and Patch number.\n\nThe Major Release number is present in the URI of the API. ",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ]
+      }
+    },
+    "/doc": {
+      "get": {
+        "summary": "Download the API Swagger",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Documentation"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Network-for-business-2_0_Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "DownloadSwagger",
+        "security": [
+          {
+            "Orange": [
+              "b2b:webhook",
+              "b2b:webhook:readonly"
+            ]
+          }
+        ],
+        "description": "This endpoint allows to download the current Swagger file of the API.\n\n "
       }
     }
   },
@@ -302,6 +760,7 @@
           },
           "mode": {
             "type": "string",
+            "description": "Mode of the notification. By selection 'ID_ONLY', the notification will sent only the ID and a GET is required to retrieve the item. By selecting the other option (default), the complete record is sent. For Custom response, this latest mode must be selected.",
             "enum": [
               "ID_ONLY",
               "ALL"
@@ -315,7 +774,7 @@
             "type": "array",
             "description": "List of events associated to the current Webhook.",
             "items": {
-              "$ref": "#/components/schemas/Webhook-API_WebhookEvent"
+              "$ref": "#/components/schemas/WebhookEvent"
             }
           },
           "callback": {
@@ -344,11 +803,13 @@
           },
           "headers": {
             "type": "object",
-            "description": "Object containing required Headers."
+            "description": "Object containing required Headers.",
+            "properties": {}
           },
-          "parameters": {
+          "query": {
             "type": "object",
-            "description": "Object containing Query parameters."
+            "description": "Object containing Query parameters.",
+            "properties": {}
           },
           "authentication": {
             "$ref": "#/components/schemas/WebhookCallbackAuthentication"
@@ -358,9 +819,12 @@
             "description": "Custom body for POST/PATCH/PUT method. If null or not present, the body will use the standard format.",
             "properties": {
               "functions": {
-                "type": "object"
+                "description": "List of function used for the schema. Check our tutorials.",
+                "type": "object",
+                "properties": {}
               },
               "schema": {
+                "description": "Schema used for transforming the response.",
                 "type": "string"
               }
             }
@@ -375,6 +839,7 @@
           },
           "method": {
             "type": "string",
+            "description": "The HTTP method expected for the Callback.",
             "enum": [
               "POST",
               "PUT",
@@ -387,13 +852,16 @@
       "WebhookCallbackAuthentication": {
         "title": "WebhookCallbackAuthentication",
         "type": "object",
+        "description": "Information on the Authentication.",
         "properties": {
           "type": {
             "type": "string",
+            "description": "Type of the authentication to use for the callback.",
             "enum": [
               "BASIC_AUTHENTICATION",
               "NONE",
-              "OAUTH_2"
+              "OAUTH_2",
+              "OAUTH_2_CUSTOM1"
             ]
           },
           "clientId": {
@@ -404,36 +872,38 @@
             "type": "string",
             "description": "Paswword for Basic Authentication or Client Secret for OAuth 2.0"
           },
-          "tokenURL": {
+          "tokenUrl": {
             "type": "string",
             "format": "uri",
             "description": "URL for generating the OAuth 2.0 token. Ignored for Basic Authentication."
           },
-          "refreshTokenURL": {
+          "refreshTokenUrl": {
             "type": "string",
             "format": "uri",
-            "description": "Refresh URL for re generating the OAuth Token. If empty, the refresh mechanism will use the tokenURL. Ignored for Basic Authentication."
+            "description": "Refresh URL for re generating the OAuth Token. If empty, the refresh mechanism will use the token Url. Ignored for Basic Authentication."
           },
           "grantType": {
             "type": "string",
+            "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication.",
             "enum": [
               "CLIENT_CREDENTIAL"
             ],
-            "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication."
+            "example": "CLIENT_CREDENTIAL"
           },
           "clientAuthentication": {
             "type": "string",
+            "description": "Indicates how the clientId & ClientSecret is transfered. For Basic Authentication, only _AUTHORIZATION_HEADER_ is supported.",
             "enum": [
               "AUTHORIZATION_HEADER",
               "CLIENT_CREDENTIAL_IN_BODY"
             ],
-            "description": "Indicates how the clientId & ClientSecret is transfered. For Basic Authentication, only _AUTHORIZATION_HEADER_ is supported.",
             "example": "AUTHORIZATION_HEADER"
           }
         }
       },
       "WebhookEvent": {
         "title": "WebhookEvent",
+        "description": "Information the Webhook events.",
         "type": "object",
         "properties": {
           "id": {
@@ -510,6 +980,7 @@
       },
       "WebhookAdd": {
         "title": "WebhookAdd",
+        "description": "Body for updating a Webhook rule.",
         "type": "object",
         "properties": {
           "name": {
@@ -522,6 +993,7 @@
           },
           "mode": {
             "type": "string",
+            "description": "Mode of the notification. By selection 'ID_ONLY', the notification will sent only the ID and a GET is required to retrieve the item. By selecting the other option (default), the complete record is sent. For Custom response, this latest mode must be selected.",
             "enum": [
               "ID_ONLY",
               "ALL"
@@ -538,7 +1010,7 @@
             }
           },
           "callback": {
-            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
+            "$ref": "#/components/schemas/WebhookCallback"
           }
         },
         "required": [
@@ -551,6 +1023,7 @@
       },
       "WebhookUpdate": {
         "title": "WebhookUpdate",
+        "description": "Body for updating a Webhook rule.",
         "type": "object",
         "properties": {
           "name": {
@@ -563,6 +1036,7 @@
           },
           "mode": {
             "type": "string",
+            "description": "Mode of the notification. By selection 'ID_ONLY', the notification will sent only the ID and a GET is required to retrieve the item. By selecting the other option (default), the complete record is sent. For Custom response, this latest mode must be selected.",
             "enum": [
               "ID_ONLY",
               "ALL"
@@ -579,196 +1053,97 @@
             }
           },
           "callback": {
-            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
+            "$ref": "#/components/schemas/WebhookCallback"
           }
         }
       },
-      "Event": {
-        "title": "Event",
+      "Documentation": {
+        "title": "Documentation",
+        "type": "object",
+        "description": "Swagger (OpenAPI version) of the API in JSON format"
+      },
+      "VersionStruct": {
+        "title": "VersionStruct",
+        "description": "Information on the API Version",
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "name": {
+          "major": {
             "type": "string",
-            "description": "Name of the Webhook."
+            "description": "Major number of the API."
           },
-          "mode": {
+          "minor": {
             "type": "string",
-            "description": "Flag that indicates if receive only the ID or the full record.",
-            "enum": [
-              "ID_ONLY",
-              "ALL"
-            ]
+            "description": "Minor number of the API."
           },
-          "resource": {
+          "patch": {
             "type": "string",
-            "description": "Name of the resource such as 'device', 'incident' etc..."
-          },
-          "uri": {
-            "type": "string",
-            "format": "uri",
-            "description": "URI on the item. example: https://api.orange.com/network/b2b/v2/devices/10-CD00000"
-          },
-          "payload": {
-            "type": "object",
-            "description": "Payload containing the record, if the mode is ID_ONLY, the payload has only the id attribute.\n"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
+            "description": "Patch number of the API."
           }
         }
       },
-      "Webhook-API_Webhook": {
-        "title": "Webhook",
+      "Error": {
+        "title": "Error",
         "type": "object",
+        "description": "Information on the Error.",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Single Identifier of the Webhook notification."
+          "code": {
+            "type": "integer",
+            "description": "Code of the error.",
+            "format": "int32"
           },
-          "name": {
+          "message": {
             "type": "string",
-            "description": "Name of the Webhook rule."
+            "description": "Title of the error."
           },
           "description": {
             "type": "string",
-            "description": "Description of the Webhook rule."
+            "description": "Description of the error."
           },
-          "events": {
-            "type": "object",
-            "description": "List of events associated to the current Webhook."
-          },
-          "callback": {
-            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
-          },
-          "isActive": {
-            "type": "boolean",
-            "description": "Flag indicating if the Webhook rule is active or not."
-          },
-          "createdAt": {
+          "infoURL": {
             "type": "string",
-            "format": "date-time",
-            "description": "Creation date of the Webhook rule."
+            "description": "URL for additional information on the error."
+          }
+        }
+      },
+      "Network-for-business-2_0_Error": {
+        "description": "Information on the Error.",
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Code of the error.",
+            "type": "integer",
+            "format": "int32"
           },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Last update date of the Notification."
+          "message": {
+            "description": "Title of the error.",
+            "type": "string"
+          },
+          "description": {
+            "description": "Description of the error.",
+            "type": "string"
+          },
+          "infoURL": {
+            "description": "URL for additional information on the error.",
+            "type": "string"
           }
         },
-        "description": "Information on the Webhook Rule."
-      },
-      "Webhook-API_WebhookCallback": {
-        "title": "WebhookCallback",
-        "type": "object",
-        "description": "Format of information require for the Callback.",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Url of the callback."
-          },
-          "headers": {
-            "type": "object",
-            "description": "Object containing required Headers."
-          },
-          "query": {
-            "type": "object",
-            "description": "Object containing Query parameters."
-          },
-          "authentication": {
-            "$ref": "#/components/schemas/Webhook-API_WebhookCallbackAuthentication"
-          },
-          "schema": {
-            "type": "object",
-            "description": "Custom body for POST/PATCH/PUT method. If null or not present, the body will use the standard format.",
-            "properties": {
-              "body": {
-                "type": "string"
-              },
-              "function": {
-                "type": "string"
-              }
-            }
-          },
-          "maxRate": {
-            "type": "integer",
-            "description": "Max Number of requests per second. *Future Use*"
-          }
-        }
-      },
-      "Webhook-API_WebhookCallbackAuthentication": {
-        "title": "WebhookCallbackAuthentication",
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "BASIC_AUTHENTICATION",
-              "NONE",
-              "OAUTH_2"
-            ]
-          },
-          "clientId": {
-            "type": "string",
-            "description": "login for Basic Authentication, Client Id for OAuth 2.0."
-          },
-          "clientSecret": {
-            "type": "string",
-            "description": "Paswword for Basic Authentication or Client Secret for OAuth 2.0"
-          },
-          "tokenURL": {
-            "type": "string",
-            "format": "uri",
-            "description": "URL for generating the OAuth 2.0 token. Ignored for Basic Authentication."
-          },
-          "refreshTokenURL": {
-            "type": "string",
-            "format": "uri",
-            "description": "Refresh URL for re generating the OAuth Token. If empty, the refresh mechanism will use the tokenURL. Ignored for Basic Authentication."
-          },
-          "grantType": {
-            "type": "string",
-            "enum": [
-              "CLIENT_CREDENTIAL"
-            ],
-            "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication."
-          },
-          "clientAuthentication": {
-            "type": "string",
-            "enum": [
-              "AUTHORIZATION_HEADER",
-              "CLIENT_CREDENTIAL_IN_BODY"
-            ],
-            "description": "Indicates how the clientId & ClientSecret is transfered. For Basic Authentication, only _AUTHORIZATION_HEADER_ is supported.",
-            "example": "AUTHORIZATION_HEADER"
-          }
-        }
-      },
-      "Webhook-API_WebhookEvent": {
-        "title": "WebhookEvent",
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Event Identifiers.",
-            "enum": [
-              "b2b:incident:new",
-              "b2b:incident:delete",
-              "b2b:device:new",
-              "b2b:device:change",
-              "b2b:device:update",
-              "b2b:incident:change"
-            ]
-          },
-          "filters": {
-            "type": "object",
-            "description": "Filters on parameters"
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Orange": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://api.orange.com/oauth/v3/token",
+            "scopes": {
+              "b2b:webhook": "Allow to manage Webhook rules",
+              "b2b:webhook:readonly": "Access in Read only all information of Webhook rules"
+            },
+            "refreshUrl": "https://api.orange.com/oauth/v3/token"
           }
         }
       }

@@ -1,0 +1,777 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Webhook API",
+    "version": "1.0",
+    "contact": {
+      "name": "Philippe VALETTE",
+      "url": "http://developer.orange.com",
+      "email": "api-support@orange.com"
+    },
+    "description": "This API allows to subcribe to notifications due to a change in the following APIs:\n- Network\n- Incident\n- Change (future)\n- Core Information\n- Maintenance\n- Billing (future)\n\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.orange.com/webhook/b2b/v1"
+    }
+  ],
+  "paths": {
+    "/webhooks": {
+      "get": {
+        "summary": "Find Webhooks",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
+                }
+              }
+            },
+            "headers": {
+              "X-Total-Count": {
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Result-Count": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "FindWebhooks",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "offset"
+          },
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "sort"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "fields"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "id"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "name"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "events.id"
+          },
+          {
+            "schema": {
+              "type": "array"
+            },
+            "in": "query",
+            "name": "authentication.type"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "name": "displayNulls"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "displayLinks"
+          }
+        ],
+        "description": "This method allows to find all Webhook rules matching criterias."
+      },
+      "parameters": [],
+      "post": {
+        "summary": "Add a Webhook",
+        "operationId": "AddWebhook",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          }
+        ],
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookAdd"
+              }
+            }
+          },
+          "description": "Information to send for creating a Webhook Rule."
+        }
+      }
+    },
+    "/webhooks/{webhooksId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "webhooksId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Get Webhook Details",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetWebhook",
+        "description": "This method allows to retrieve details of a Webhook.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "name": "displayNulls"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "name": "displayLinks"
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Modify Webhook",
+        "operationId": "ModifyWebhook",
+        "responses": {
+          "206": {
+            "description": "Partial Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook-API_Webhook"
+                }
+              }
+            }
+          }
+        },
+        "description": "This method allows to modify the Webhook Rule.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          }
+        ],
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookUpdate"
+              }
+            }
+          },
+          "description": "Information that can be changed"
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Webhook": {
+        "title": "Webhook",
+        "type": "object",
+        "description": "Information on the Webhook Rule.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the Webhook notification."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the Webhook rule."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "ID_ONLY",
+              "ALL"
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Flag indicating if the Webhook rule is active or not."
+          },
+          "events": {
+            "type": "array",
+            "description": "List of events associated to the current Webhook.",
+            "items": {
+              "$ref": "#/components/schemas/Webhook-API_WebhookEvent"
+            }
+          },
+          "callback": {
+            "$ref": "#/components/schemas/WebhookCallback"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date of the Webhook rule."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date of the Notification."
+          }
+        }
+      },
+      "WebhookCallback": {
+        "title": "WebhookCallback",
+        "type": "object",
+        "description": "Format of information require for the Callback.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Url of the callback."
+          },
+          "headers": {
+            "type": "object",
+            "description": "Object containing required Headers."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Object containing Query parameters."
+          },
+          "authentication": {
+            "$ref": "#/components/schemas/WebhookCallbackAuthentication"
+          },
+          "body": {
+            "type": "object",
+            "description": "Custom body for POST/PATCH/PUT method. If null or not present, the body will use the standard format.",
+            "properties": {
+              "functions": {
+                "type": "object"
+              },
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "maxRate": {
+            "type": "integer",
+            "description": "Max Number of requests per second. *Future Use*",
+            "default": 5,
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "POST",
+              "PUT",
+              "PATCH"
+            ],
+            "default": "POST"
+          }
+        }
+      },
+      "WebhookCallbackAuthentication": {
+        "title": "WebhookCallbackAuthentication",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "BASIC_AUTHENTICATION",
+              "NONE",
+              "OAUTH_2"
+            ]
+          },
+          "clientId": {
+            "type": "string",
+            "description": "login for Basic Authentication, Client Id for OAuth 2.0."
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "Paswword for Basic Authentication or Client Secret for OAuth 2.0"
+          },
+          "tokenURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for generating the OAuth 2.0 token. Ignored for Basic Authentication."
+          },
+          "refreshTokenURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "Refresh URL for re generating the OAuth Token. If empty, the refresh mechanism will use the tokenURL. Ignored for Basic Authentication."
+          },
+          "grantType": {
+            "type": "string",
+            "enum": [
+              "CLIENT_CREDENTIAL"
+            ],
+            "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication."
+          },
+          "clientAuthentication": {
+            "type": "string",
+            "enum": [
+              "AUTHORIZATION_HEADER",
+              "CLIENT_CREDENTIAL_IN_BODY"
+            ],
+            "description": "Indicates how the clientId & ClientSecret is transfered. For Basic Authentication, only _AUTHORIZATION_HEADER_ is supported.",
+            "example": "AUTHORIZATION_HEADER"
+          }
+        }
+      },
+      "WebhookEvent": {
+        "title": "WebhookEvent",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event Identifiers.",
+            "enum": [
+              "b2b:incident:new",
+              "b2b:incident:update",
+              "b2b:incident:delete",
+              "b2b:incident-note:new",
+              "b2b:incident-note:update",
+              "b2b:incident-note:delete",
+              "b2b:incident-freeze-period:new",
+              "b2b:incident-freeze-period:update",
+              "b2b:incident-freeze-period:delete",
+              "b2b:incident-attachement:new",
+              "b2b:incident-attachement:update",
+              "b2b:incident-attachement:delete",
+              "b2b:network-device:new",
+              "b2b:network-device:update",
+              "b2b:network-device:delete",
+              "b2b:network-access-line:new",
+              "b2b:network-access-line:update",
+              "b2b:network-access-line:delete",
+              "b2b:network-point-of-presence:new",
+              "b2b:network-point-of-presence:update",
+              "b2b:network-point-of-presence:delete",
+              "b2b:location:new",
+              "b2b:location:update",
+              "b2b:location:delete",
+              "b2b:servicePoint:new",
+              "b2b:servicePoint:update",
+              "b2b:servicePoint:delete",
+              "b2b:configurationItem:new",
+              "b2b:configurationItem:update",
+              "b2b:configurationItem:delete",
+              "b2b:change-request:new",
+              "b2b:change-request:update",
+              "b2b:change-request:delete",
+              "b2b:change-catalog-item:new",
+              "b2b:change-catalog-item:update",
+              "b2b:change-catalog-item:delete",
+              "b2b:change-note:new",
+              "b2b:change-note:update",
+              "b2b:change-note:delete",
+              "b2b:change-attachement:new",
+              "b2b:change-atachements:update",
+              "b2b:change-attachment:delete",
+              "b2b:maintenance:new",
+              "b2b:maintenance:update",
+              "b2b:maintenance:delete",
+              "b2b:mobile-line:new",
+              "b2b:mobile-line:update",
+              "b2b:mobile-line:delete",
+              "b2b:mobile-sim-card:new",
+              "b2b:mobile-sim-card:update",
+              "b2b:mobile-sim-card-delete",
+              "b2b:mobile-request-new",
+              "b2b:mobile-request:update",
+              "b2b:mobile-request:delete",
+              "b2b:order:new",
+              "b2b:order:update",
+              "b2b:order:delete",
+              "b2b:commercial-request:new",
+              "b2b:commercial-request:update",
+              "b2b:commercial-request:delete"
+            ]
+          },
+          "filters": {
+            "type": "object",
+            "description": "Filters on parameters"
+          }
+        }
+      },
+      "WebhookAdd": {
+        "title": "WebhookAdd",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "description": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "ID_ONLY",
+              "ALL"
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Flag indicating if the Webhook rule is active or not."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEvent"
+            }
+          },
+          "callback": {
+            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "isActive",
+          "events",
+          "callback"
+        ]
+      },
+      "WebhookUpdate": {
+        "title": "WebhookUpdate",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "description": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "ID_ONLY",
+              "ALL"
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Flag indicating if the Webhook rule is active or not."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEvent"
+            }
+          },
+          "callback": {
+            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
+          }
+        }
+      },
+      "Event": {
+        "title": "Event",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook."
+          },
+          "mode": {
+            "type": "string",
+            "description": "Flag that indicates if receive only the ID or the full record.",
+            "enum": [
+              "ID_ONLY",
+              "ALL"
+            ]
+          },
+          "resource": {
+            "type": "string",
+            "description": "Name of the resource such as 'device', 'incident' etc..."
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI on the item. example: https://api.orange.com/network/b2b/v2/devices/10-CD00000"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Payload containing the record, if the mode is ID_ONLY, the payload has only the id attribute.\n"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Webhook-API_Webhook": {
+        "title": "Webhook",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the Webhook notification."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook rule."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the Webhook rule."
+          },
+          "events": {
+            "type": "object",
+            "description": "List of events associated to the current Webhook."
+          },
+          "callback": {
+            "$ref": "#/components/schemas/Webhook-API_WebhookCallback"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Flag indicating if the Webhook rule is active or not."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date of the Webhook rule."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date of the Notification."
+          }
+        },
+        "description": "Information on the Webhook Rule."
+      },
+      "Webhook-API_WebhookCallback": {
+        "title": "WebhookCallback",
+        "type": "object",
+        "description": "Format of information require for the Callback.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Url of the callback."
+          },
+          "headers": {
+            "type": "object",
+            "description": "Object containing required Headers."
+          },
+          "query": {
+            "type": "object",
+            "description": "Object containing Query parameters."
+          },
+          "authentication": {
+            "$ref": "#/components/schemas/Webhook-API_WebhookCallbackAuthentication"
+          },
+          "schema": {
+            "type": "object",
+            "description": "Custom body for POST/PATCH/PUT method. If null or not present, the body will use the standard format.",
+            "properties": {
+              "body": {
+                "type": "string"
+              },
+              "function": {
+                "type": "string"
+              }
+            }
+          },
+          "maxRate": {
+            "type": "integer",
+            "description": "Max Number of requests per second. *Future Use*"
+          }
+        }
+      },
+      "Webhook-API_WebhookCallbackAuthentication": {
+        "title": "WebhookCallbackAuthentication",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "BASIC_AUTHENTICATION",
+              "NONE",
+              "OAUTH_2"
+            ]
+          },
+          "clientId": {
+            "type": "string",
+            "description": "login for Basic Authentication, Client Id for OAuth 2.0."
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "Paswword for Basic Authentication or Client Secret for OAuth 2.0"
+          },
+          "tokenURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL for generating the OAuth 2.0 token. Ignored for Basic Authentication."
+          },
+          "refreshTokenURL": {
+            "type": "string",
+            "format": "uri",
+            "description": "Refresh URL for re generating the OAuth Token. If empty, the refresh mechanism will use the tokenURL. Ignored for Basic Authentication."
+          },
+          "grantType": {
+            "type": "string",
+            "enum": [
+              "CLIENT_CREDENTIAL"
+            ],
+            "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication."
+          },
+          "clientAuthentication": {
+            "type": "string",
+            "enum": [
+              "AUTHORIZATION_HEADER",
+              "CLIENT_CREDENTIAL_IN_BODY"
+            ],
+            "description": "Indicates how the clientId & ClientSecret is transfered. For Basic Authentication, only _AUTHORIZATION_HEADER_ is supported.",
+            "example": "AUTHORIZATION_HEADER"
+          }
+        }
+      },
+      "Webhook-API_WebhookEvent": {
+        "title": "WebhookEvent",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event Identifiers.",
+            "enum": [
+              "b2b:incident:new",
+              "b2b:incident:delete",
+              "b2b:device:new",
+              "b2b:device:change",
+              "b2b:device:update",
+              "b2b:incident:change"
+            ]
+          },
+          "filters": {
+            "type": "object",
+            "description": "Filters on parameters"
+          }
+        }
+      }
+    }
+  }
+}

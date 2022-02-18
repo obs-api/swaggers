@@ -1,0 +1,45 @@
+  "Event": {
+        "title": "Event",
+        "description":"Format of an event",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the Webhook."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the event."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Webhook."
+          },
+          "mode": {
+            "type": "string",
+            "description": "Flag that indicates if receive only the ID or the full record.",
+            "enum": [
+              "ID_ONLY",
+              "ALL"
+            ]
+          },
+          "resource": {
+            "type": "string",
+            "description": "Name of the resource such as 'device', 'incident' etc..."
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI on the item. example: https://api.orange.com/network/b2b/v2/devices/10-CD00000"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Payload containing the record, if the mode is ID_ONLY, the payload has only the id attribute.\n"
+          },
+          "createdAt": {
+            "description": "Date when the event has been trigged",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
