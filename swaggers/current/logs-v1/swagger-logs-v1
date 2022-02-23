@@ -207,6 +207,26 @@
       },
       "parameters": []
     },
+    "/changes/aggregate": {
+      "get": {
+        "summary": "Aggregate Change Requests",
+        "tags": [
+          "Change Management"
+        ],
+        "responses": {},
+        "operationId": "get-changes-aggregate",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
+      }
+    },
     "/logs/incidentSumissions": {
       "get": {
         "summary": "Incident Submissions Received",
@@ -373,7 +393,27 @@
       },
       "parameters": []
     },
-    "/logs/ordering": {
+    "/incidents/aggregate": {
+      "get": {
+        "summary": "Aggregate Incident Submissions",
+        "tags": [
+          "Incident Management"
+        ],
+        "responses": {},
+        "operationId": "get-incidents-aggregate",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "description": "The API Key required for using Orange Business Services API.",
+            "name": "X-API-KEY"
+          }
+        ]
+      }
+    },
+    "/logs/commercialRequests": {
       "get": {
         "summary": "Commercial Requests Received",
         "responses": {},
@@ -529,6 +569,26 @@
       },
       "parameters": []
     },
+    "/commercialRequests/aggregate": {
+      "get": {
+        "summary": "Aggregate Commercial Requests",
+        "tags": [
+          "Order Management"
+        ],
+        "responses": {},
+        "operationId": "get-commercialRequests-aggregate",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
+      }
+    },
     "/mobileRequets": {
       "get": {
         "summary": "Mobile Requests Received",
@@ -659,36 +719,24 @@
       },
       "parameters": []
     },
-    "/changes/aggregate": {
-      "get": {
-        "summary": "Your GET endpoint",
-        "tags": [],
-        "responses": {},
-        "operationId": "get-changes-aggregate"
-      }
-    },
-    "/incidents/aggregate": {
-      "get": {
-        "summary": "Your GET endpoint",
-        "tags": [],
-        "responses": {},
-        "operationId": "get-incidents-aggregate"
-      }
-    },
     "/mobileRequests/aggregate": {
       "get": {
         "summary": "Your GET endpoint",
-        "tags": [],
+        "tags": [
+          "Mobile Fleet Management"
+        ],
         "responses": {},
-        "operationId": "get-mobileRequests-aggregate"
-      }
-    },
-    "/commercialRequests/aggregate": {
-      "get": {
-        "summary": "Your GET endpoint",
-        "tags": [],
-        "responses": {},
-        "operationId": "get-commercialRequests-aggregate"
+        "operationId": "get-mobileRequests-aggregate",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
       }
     }
   },
