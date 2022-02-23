@@ -1,0 +1,915 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Business Layer - Logs & Statistics",
+    "version": "1.0",
+    "contact": {
+      "name": "Philippe Valette",
+      "url": "https://developer-inside.sso.infra.ftgroup/apis/business-layer-statistics",
+      "email": "philippe.valette@orange.com"
+    },
+    "description": "The objective of this API is to provide information on acts requested via  Orange Buusiness Services APIs.\n\nSupported acts are:\n\n- Report an Incident via the Incident API\n- Submit a Request via the Change API\n- Submit a Request via the Ordering API  \n- Submit a Request via the Mobile API\n\nThanks to this API, Statistics & KPI can be generated. Detailed information provided by this API, can help also for the troubleshooting.\n\nThe purpose of this API is only internal and should not be used for SLA / SLO etc... \n\n*This API should not be shared with Customers.*"
+  },
+  "servers": [
+    {
+      "url": "https://inside01.api.intraorange//businesslayer/b2b/statistics/v1",
+      "description": "Orange"
+    }
+  ],
+  "paths": {
+    "/logs/changes": {
+      "get": {
+        "summary": "Change Requests Recieved",
+        "responses": {},
+        "operationId": "GetChangeRequests",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/statistics"
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Provide the list of changes submited thru API. Allow to calculate the number of changes for generating dashboards",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.*Example: /customerAccount?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by the Orange Identifier of the event"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timestamp",
+            "description": "Filter by the timestamp"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filter by the Customer Identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filter by the Customer Name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "changeId",
+            "description": "Filter by the Orange Change Identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "catalog",
+            "description": "Filter by the catalog name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "catalogItem",
+            "description": "Filter by the catalog item"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "applicationId",
+            "description": "Filter by the Orange Developer Application Id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "userId",
+            "description": "Filter by the SIU identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "apiKeyId",
+            "description": "Filter by the API Key identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt",
+            "description": "Filter by the creation date of the event"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt",
+            "description": "Filter by the last update of the event record"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PRODUCTION",
+                "SANDBOX"
+              ]
+            },
+            "in": "query",
+            "name": "mode",
+            "description": "Filter by the mode Production or Sandbox"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MACHX",
+                "SWAN",
+                "MYSM",
+                "CHANGEWEB",
+                "OTHER"
+              ]
+            },
+            "in": "query",
+            "name": "provider",
+            "description": "filter by the provide name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ],
+        "tags": [
+          "Change Management"
+        ]
+      },
+      "parameters": []
+    },
+    "/logs/incidentSumissions": {
+      "get": {
+        "summary": "Incident Submissions Received",
+        "responses": {},
+        "operationId": "GetIncidentReports",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/statistics"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. __Example: sort=-createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by the identifier of the event"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timestamp",
+            "description": "Filter by Timestamp"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.id",
+            "description": "Filter by the Customer Id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.name",
+            "description": "Filter by the Customer Name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offer.id",
+            "description": "Filter by the Offer Id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offer.name",
+            "description": "Filter by the Offer Name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offer.category",
+            "description": "Filter by the Offer Category"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "provider",
+            "description": "Filter by the name of the application"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "applicationId",
+            "description": "Filter by the Orange Developer Application Id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "userId",
+            "description": "Filter by the SIU identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "apiKeyId",
+            "description": "Filter by the API key identifier "
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "FAILURE"
+              ]
+            },
+            "in": "query",
+            "name": "status",
+            "description": "Filter by the Status"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt",
+            "description": "Filter by the date of creation of the event"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ],
+        "description": "Provide the list of incidents reported thru API. Allow to calculate the number of incident for generating dashboards",
+        "tags": [
+          "Incident Management"
+        ]
+      },
+      "parameters": []
+    },
+    "/logs/ordering": {
+      "get": {
+        "summary": "Commercial Requests Received",
+        "responses": {},
+        "operationId": "GetCommercialRequests",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/statistics"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. __Example: sort=-createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.*Example: /customerAccount?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id",
+            "description": "Filter by the Orange Identifier of the event. Several identifiers must be separated by a comma"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timestamp",
+            "description": "Filter per the Timestamp of the event"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "orderId",
+            "description": "Filter by the Orange Order Identifier"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WEFT",
+                "INDIGO",
+                "SRT",
+                "EWOCS"
+              ]
+            },
+            "in": "query",
+            "name": "provider",
+            "description": "Filter by the name of the application"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "FAILURE"
+              ]
+            },
+            "in": "query",
+            "name": "status",
+            "description": "Filter by the status of the Order"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "applicationId",
+            "description": "Filter by the Orange Developer Application Identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "userId",
+            "description": "Filter by the SIU Identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "apiKeyId",
+            "description": "Filter by the API Key Identifier"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "catalog",
+            "description": "Filter by the Catalog"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "catalogItem",
+            "description": "Filter by the Catalog Item"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ],
+        "description": "Provide the list of orders submited thru API. Allow to calculate the number of order for generating dashboards",
+        "tags": [
+          "Order Management"
+        ]
+      },
+      "parameters": []
+    },
+    "/mobileRequets": {
+      "get": {
+        "summary": "Mobile Requests Received",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/statistics"
+                }
+              }
+            }
+          },
+          "": {
+            "description": ""
+          }
+        },
+        "operationId": "GetMobileRequests",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY",
+            "description": "The API Key required for using Orange Business Services API."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit",
+            "description": "The maximum number of items to retrieve."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "The field name to sort the result. Prefixing a field name with a \"-\" sign will indicate a descending order. __Example: sort=-name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Allows to select attributes returned by the end-point. It is a list of attributes separated by a comma.*Example: /customerAccount?fields=id,name*"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "api.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "api.response.status"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "caller.id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "requestId"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "apiKeyId"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timestamp"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "caller.apiKeyId"
+          }
+        ],
+        "tags": [
+          "Mobile Fleet Management"
+        ]
+      },
+      "parameters": []
+    },
+    "/changes/aggregate": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-changes-aggregate"
+      }
+    },
+    "/incidents/aggregate": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-incidents-aggregate"
+      }
+    },
+    "/mobileRequests/aggregate": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-mobileRequests-aggregate"
+      }
+    },
+    "/commercialRequests/aggregate": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-commercialRequests-aggregate"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "statistics": {
+        "title": "statistics",
+        "type": "object",
+        "description": "Information on the Statistic Object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the record."
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Identifier of the request, generated by Orange API Gateway."
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timestamp when the event has been generated."
+          },
+          "caller": {
+            "type": "object",
+            "description": "Information on the caller of the API.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "SIU ID of the caller."
+              },
+              "apikeyid": {
+                "type": "string",
+                "description": "Single Identifier of the API Key."
+              },
+              "applicationId": {
+                "type": "string"
+              },
+              "scopes": {
+                "type": "string",
+                "description": "Scopes validated by the API Gateway."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "CUSTOMER",
+                  "INTERNAL",
+                  "PROBE",
+                  "TEST"
+                ]
+              }
+            }
+          },
+          "backend": {
+            "type": "object",
+            "description": "Information on the Internal Application.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the Internal Application."
+              },
+              "request": {
+                "type": "object",
+                "description": "Information on the request of the connector.",
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  }
+                }
+              },
+              "response": {
+                "type": "object",
+                "description": "Information on the response by the connector.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the Item created by the request."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the response by the Internal application."
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Status of the request, can be OK or KO.",
+                    "enum": [
+                      "OK",
+                      "KO"
+                    ]
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "Duration in milliseconds of the request."
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Error information returned by the backend, format depends of backend. Available only if status=‘KO’"
+                  }
+                }
+              }
+            }
+          },
+          "customer": {
+            "type": "object",
+            "description": "Information on the Customer.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Single Identifier of the Customer."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the Customer."
+              },
+              "market": {
+                "type": "string",
+                "description": "Market of the Customer. Can be DGC, IB, DEF, OTHER",
+                "enum": [
+                  "DGC",
+                  "IB",
+                  "DEF",
+                  "OTHER"
+                ]
+              }
+            }
+          },
+          "api": {
+            "type": "object",
+            "description": "Information on the request.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the API."
+              },
+              "request": {
+                "type": "object",
+                "description": "Information on the request sent by the caller.",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of the Request, it is the id og the catalog Item (Commercial Request, Change...) for Incident the value is INCIDENT"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Catalog Name of the catalog Item."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "URL used by the caller."
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "HTTP Method of the call issued by the caller."
+                  }
+                }
+              },
+              "response": {
+                "type": "object",
+                "description": "Information on the response sent to the caller.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the created Item."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the request, can be OK or KO."
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "HTTP Code returned to the Caller.",
+                    "enum": [
+                      "OK",
+                      "KO"
+                    ]
+                  }
+                }
+              },
+              "": {
+                "type": "string"
+              }
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "PRODUCTION",
+              "SANDBOX"
+            ],
+            "description": "Mode of the environment (PRODUCTION or SANDBOX)."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the creation of the event."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last upadte of the record.",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "createdAt"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Orange OAuth 2.0": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "",
+            "refreshUrl": "",
+            "scopes": {}
+          }
+        }
+      }
+    }
+  }
+}
