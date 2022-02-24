@@ -11,10 +11,10 @@ Note: Contact your Orange Representative for the Specific Catalog
 
 | type         | Description     |  |
 |:--------------:|-----------|------------|
-| `R_BVPN_FR_1`| Disconnection request for a BVPN Site (France). |   [view](http://)    |
-| `C_GENERIC_FR_1`      | Generic request for French Customers.  |    [view](http://)     |
-   
- 
+| `C_GENERIC_FR_1`      | Generic request  (France only)  |    [view](http://)     |
+| `C_BVPN_FR_1`      | Creation request of a BVPN site (France only)  |    [view](http://)     |
+| `U_BVPN_FR_1`      | Update request of a BVPN site  (France only)  |    [view](http://)     |   
+| `R_BVPN_FR_1`| Disconnection request for a BVPN Site (France)  (France only)|   [view](http://)    |
 
 ###  Specific Catalog Request type
 
