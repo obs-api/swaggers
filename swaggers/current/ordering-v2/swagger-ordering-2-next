@@ -4503,10 +4503,6 @@
       },
       "RequestPOST": {
         "description": "Attributes of a Request.",
-        "discriminator": {
-          "propertyName": "type",
-          "type": "object"
-        },
         "type": "object",
         "title": "RequestPOST",
         "properties": {
@@ -4523,22 +4519,17 @@
             "type": "string",
             "format": "date"
           },
-          "customer": {
-            "description": "Model of a customer.",
+          "comment": {
+            "description": "Additional information on the order",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of the request. The properties attribute depends of the value in Type. The value of type is available  via the end point GET /catalogItems or via the [site](https://obs-api.github.io/documentation/ordering-requests-index)",
+            "type": "string"
+          },
+          "properties": {
             "type": "object",
-            "properties": {
-              "id": {
-                "description": "Unique identifier of the customer account.",
-                "type": "string"
-              },
-              "name": {
-                "description": "Name of the Customer.",
-                "type": "string"
-              }
-            },
-            "required": [
-              "id"
-            ]
+            "description": "Properties of the requests. The format depends of the  value of type attribute. See more details [here](https://obs-api.github.io/documentation/ordering-requests-index)"
           },
           "attachments": {
             "type": "array",
@@ -4565,18 +4556,6 @@
                 "body"
               ]
             }
-          },
-          "comment": {
-            "description": "Additional information on the order",
-            "type": "string"
-          },
-          "type": {
-            "description": "Type of the request. The properties attribute depends of the value in Type. The value of type is available  via the end point GET /catalogItems or via the [site](https://obs-api.github.io/documentation/ordering-requests-index)",
-            "type": "string"
-          },
-          "properties": {
-            "type": "string",
-            "description": "Properties of the requests. The format depends of the  value of type attribute. See more details [here](https://obs-api.github.io/documentation/ordering-requests-index)"
           }
         },
         "required": [
