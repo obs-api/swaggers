@@ -792,7 +792,7 @@
               "type": "string"
             },
             "in": "header",
-            "name": "X-API-Key",
+            "name": "X-API-KEY",
             "description": "The API Key required for using Orange Business Services API."
           }
         ]
@@ -1217,31 +1217,31 @@
         }
       },
       "Network-for-business-2_0_Error": {
+        "required": [
+          "code",
+          "message"
+        ],
         "description": "Information on the Error.",
         "type": "object",
         "properties": {
           "code": {
-            "description": "Code of the error.",
+            "description": "Code of the error",
             "type": "integer",
             "format": "int32"
           },
           "message": {
-            "description": "Title of the error.",
+            "description": "Title of the error",
             "type": "string"
           },
           "description": {
-            "description": "Description of the error.",
+            "description": "Description of the error",
             "type": "string"
           },
           "infoURL": {
             "description": "URL for additional information on the error.",
             "type": "string"
           }
-        },
-        "required": [
-          "code",
-          "message"
-        ]
+        }
       }
     },
     "securitySchemes": {
