@@ -2,17 +2,23 @@
 
 # Request to Disconnect of BPVN Site
 
+<br>
+
+### TYPE = R_BVPN_FR_1
+
 This request can be used only by French Market customers.
 
 The objective of this request is to request the disconnection of a BVPN site.
 
 The request is compatible with Standard and customized catalogs.
 
-### TYPE = R_BVPN_FR_1
+
 
 <br>
 <br>
-###  Structure of the `properties` section
+
+##  Structure of the `properties` section
+
 <br>
 
 
@@ -39,7 +45,7 @@ You can use the servicePoint.customerReference, only if it is assigned to one se
 The primary contact is required and the secondary contact is optional.
 
 
-###  Business Errors
+##  Business Errors
 
 This section describes only specific errors for this request.
 
@@ -50,3 +56,6 @@ The HTTP status code is 422 for all these errors
 | -| -    | ----  |
 | -| -    | ----  |
 | -| -    | ----  |
+
+
+##  Full Example
