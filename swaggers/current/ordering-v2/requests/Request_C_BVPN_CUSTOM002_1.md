@@ -1,10 +1,10 @@
-
-
 # Request to Creation of BPVN Site
 
-The objective of this request is to request the disconnection of a BVPN site.
+The objective of this request is to request the deployment of a new BVPN site based on the template 002.
 
-The request is compatible with Standard and customized catalogs.
+
+Please contact your Orange Representative to verify if you can use this type of request.
+
 
 ### TYPE = C_BVPN_CUSTOM002_1
 

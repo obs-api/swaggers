@@ -16,7 +16,7 @@ The request is compatible with Standard and customized catalogs.
 
 | id         | Type     | Description |
 |--------------|:-----------:|------------|
-| `servicePoint.id`| `string`     | Orange Single Identifier of the Service Point. This information can be found in the API Core Information in the resource _servicePoints_..       |
+| `network.id`| `string`     | Orange Single Identifier of the network.       |
 | `servicePoint.customerReference`      |  `string`  | Customer Reference of the Service Point.       |
 | `servicePoint.reference`      |  `string`  | Commercial Reference of the Service Point.       |
  

@@ -1,10 +1,11 @@
-
-
 # Request to Creation of BPVN Site
 
-The objective of this request is to request the disconnection of a BVPN site.
+The objective of this request is to request the deployment of a new BVPN site based on the template 001.
 
-The request is compatible with Standard and customized catalogs.
+
+Please contact your Orange Representative to verify if you can use this type of request.
+
+
 
 ### TYPE = C_BVPN_CUSTOM001_1
 
@@ -16,9 +17,11 @@ The request is compatible with Standard and customized catalogs.
 
 | id         | Type     | Description |
 |--------------|:-----------:|------------|
-| `servicePoint.id`| `string`     | Orange Single Identifier of the Service Point. This information can be found in the API Core Information in the resource _servicePoints_..       |
-| `servicePoint.customerReference`      |  `string`  | Customer Reference of the Service Point.       |
-| `servicePoint.reference`      |  `string`  | Commercial Reference of the Service Point.       |
+| `network.id`      |  `string`  |Orange Single identifier of the Network where the new BVPN site must be assigned.    |
+| `network.name`      |  `string`  | Name of the Network where the new BVPN site must be assigned.    |
+| `billingAccount.id`      |  `string`  | Billing Account Number for invoicing the service.   |
+| `billingAccount.code`      |  `string`  | Sub Billing Account Number for invoicing the service.    |
+| `profile`| `string`     | Name of the Profile.   |
  
 ###  Constraints
 

@@ -1,0 +1,664 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NCIP 1.0",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.orange.com/ncip/b2b/poc/v1"
+    }
+  ],
+  "paths": {
+    "/networks/{networkId}/reports/contactNumberRouting": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "contactNumberRouting",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "User Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User Not Found"
+          }
+        },
+        "operationId": "get-users-userId",
+        "description": "Retrieve the information of the user with the matching user ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "startAt"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "endAt"
+          }
+        ]
+      }
+    },
+    "/networks/{networkId}/reports/contactNumberRerouting": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "contactNumberRerouting",
+        "operationId": "contactNumberRerouting",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-Key"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "startAt"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "endAt"
+          }
+        ],
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/networks/{networkId}/reports/contactNumberExternalCalls": {
+      "get": {
+        "summary": "contactNumberExternalCalls",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-contactNumberCallsDetailExternal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "startAt"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "endat"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "x-api-key"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/networks/{networkId}/reports/receptionNumberCalls": {
+      "get": {
+        "summary": "receptionNumberCalls",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-receptionNumberCallSummary",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "startAt"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "endAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "x-api-key"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/networks/{networkId}/reports/contactNumberInternalCalls": {
+      "get": {
+        "summary": "contactNumberInternalCalls",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-contactNumberCallsDetailInternal",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "x-api-key"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "startAt"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "in": "query",
+            "name": "endAt"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/networks": {
+      "get": {
+        "summary": "List Networks",
+        "tags": [
+          "Networks"
+        ],
+        "responses": {},
+        "operationId": "get-reportingGroups",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "offset"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "limit"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "sort"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "name"
+          }
+        ],
+        "description": ""
+      },
+      "parameters": []
+    },
+    "/networks/{networkId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "networkId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Details of a Network",
+        "tags": [
+          "Networks"
+        ],
+        "responses": {},
+        "operationId": "get-reportingGroups-reportId",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          }
+        ]
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get API Version",
+        "tags": [
+          "Misc."
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "string"
+                        },
+                        "minor": {
+                          "type": "string"
+                        },
+                        "patch": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "isDeprecated": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "GetVersion"
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Get Status",
+        "tags": [
+          "Misc."
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-status"
+      }
+    },
+    "/doc": {
+      "get": {
+        "summary": "Download Swagger",
+        "tags": [
+          "Misc."
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-doc"
+      }
+    },
+    "/me": {
+      "get": {
+        "summary": "Information on Me",
+        "tags": [
+          "Misc."
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-me",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-KEY"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "title": "Stats contactNumberRouting",
+        "type": "object",
+        "description": "",
+        "x-examples": {
+          "Alice Smith": {
+            "id": 142,
+            "firstName": "Alice",
+            "lastName": "Smith",
+            "email": "alice.smith@gmail.com",
+            "dateOfBirth": "1997-10-31",
+            "emailVerified": true,
+            "signUpDate": "2019-08-24"
+          }
+        },
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the given user."
+          },
+          "reference": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "statistics": {
+            "type": "string",
+            "format": "email"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Network-for-business-2_0_Customer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "reference",
+          "name",
+          "statistics"
+        ]
+      },
+      "Customer": {
+        "title": "Customer",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Statistics": {
+        "title": "Statistics",
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "string"
+          },
+          "success": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "averageDuration": {
+            "type": "string"
+          },
+          "responseRate": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "rejected": {
+            "type": "string"
+          },
+          "noAnswer": {
+            "type": "string"
+          },
+          "busy": {
+            "type": "string"
+          },
+          "limitN": {
+            "type": "string"
+          },
+          "hangup": {
+            "type": "string"
+          },
+          "other": {
+            "type": "string"
+          }
+        }
+      },
+      "Network-for-business-2_0_Customer": {
+        "description": "Customer account information",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Orange Single identifier of the Customer (~customer code).",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the Customer.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Orange OAUTH": {
+        "type": "oauth2"
+      }
+    }
+  }
+}
