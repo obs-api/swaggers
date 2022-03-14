@@ -25,7 +25,7 @@ Please contact your Orange Representative to verify if you can use this type of 
 | `profile`| `string`     | required | Name of the Profile.<br>Possible values: _FDJ CONNECT OPTIMA 8M_, _FDJ CONNECT OPTIMA 18M_, _FDJ CONNECT FTTH_,   _FDJ CONNECT ULTIME_, _FDJ CONNECT CELL_   |
 | `location.name`      |  `string`  | required |  Name of the location where the service must be installed. |
 | `location.localCompany`      |  `string`  | optional | Name of the Local Company  |
-| `location.localCompanyNumber`      |  `string`  | optional | Number of the Local Company corresponding to the SIREN.  |
+| `location.localCompanyLegalNumber`      |  `string`  | optional | Number of the Local Company corresponding to the SIREN.  |
 | `location.address.street`      |  `string`  | required | Main street information. |
 | `location.address.extendedStreet`      |  `string`  | optional | Complementary information allowing to facilitate the elligibily of the Offer.  |
 | `location.address.postalCode`      |  `string`  | required | Postal Code of the Location. For France, must be a 5 digits number.  |
@@ -71,12 +71,12 @@ Please contact your Orange Representative to verify if you can use this type of 
 You can use the servicePoint.customerReference, only if it is assigned to one service. 
 
 
-###  Errors
+###  Business Errors
 
 The HTTP status code is 422 for all these errors
 
 | code         | message     | Description |
 |--------------|:-----------:|------------|
-| -| -    | ----  |
-| -| -    | ----  |
+| -| -    | The current address is not valid. |
+| -| -    | The current address is not enough precize to determin the offer eligibility. Please, fill-in the extendedStreet field.  |
 | -| -    | ----  |
