@@ -87,7 +87,7 @@
             }
           },
           {
-            "name": "X-API-KEY",
+            "name": "X-API-Key",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -134,7 +134,7 @@
         "deprecated": false,
         "parameters": [
           {
-            "name": "X-API-KEY",
+            "name": "X-API-Key",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -1746,6 +1746,38 @@
           }
         }
       }
+    },
+    "/me": {
+      "get": {
+        "summary": "Get User Information",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ME"
+            }
+          }
+        },
+        "operationId": "GetMe",
+        "description": "This endpoint provides information on the connected user.",
+        "security": [
+          {
+            "Orange Developer": [
+              "b2b:incident:readOnly",
+              "b2b:incident"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "in": "header",
+            "name": "X-API-Key",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -1916,7 +1948,8 @@
           "enum": [
             "HIGH",
             "MEDIUM",
-            "LOW"
+            "LOW",
+            "UNKNOWN"
           ],
           "description": "Urgency of the incident."
         },
@@ -1947,7 +1980,8 @@
           "enum": [
             "CUSTOMER",
             "ORANGE",
-            "PROBES"
+            "PROACTIVE",
+            "INTERNAL"
           ]
         },
         "shortDescription": {
@@ -2072,10 +2106,6 @@
         "event": {
           "$ref": "#/definitions/Event"
         },
-        "closeNotes": {
-          "description": "Note of Orange Staff set at the closure of the incident. This field is available only when the incident is closed.",
-          "type": "string"
-        },
         "closureSummary": {
           "type": "object",
           "description": "Information on the closure of the Incident.",
@@ -2095,6 +2125,10 @@
             "responsible": {
               "type": "string",
               "description": "Indicate the responsible entity if Customer or Orange."
+            },
+            "reason": {
+              "type": "string",
+              "description": "Note of Orange Staff set at the closure of the incident. This field is available only when the incident is closed."
             }
           }
         },
@@ -2495,6 +2529,57 @@
         },
         "configurationItems": {
           "$ref": "#/definitions/Hyperlink"
+        }
+      }
+    },
+    "ME": {
+      "title": "Me",
+      "type": "object",
+      "description": "Information on the connected user and the API Key.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Single Identifier of the API key."
+        },
+        "login": {
+          "type": "string",
+          "description": "Login of the associated user."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the associated user."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the associated user."
+        },
+        "mobile": {
+          "type": "string",
+          "description": "Mobile number of the associated user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the associated user."
+        },
+        "scopes": {
+          "type": "string",
+          "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SANDBOX",
+            "PRODUCTION"
+          ],
+          "description": "Type of the environment (Sandbox or Production)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Date of the creation of the API Key."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update date of the API Key."
         }
       }
     },
