@@ -45,7 +45,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -604,7 +605,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -961,7 +963,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -1281,7 +1284,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -1650,64 +1654,68 @@
         },
         "parameters": [
           {
+            "name": "X-API-KEY",
+            "description": "The API key required for using Orange Business Services API.",
+            "in": "header",
             "schema": {
               "type": "string"
-            },
-            "in": "header",
-            "name": "X-API-KEY",
-            "description": "The API Key required for using Orange Business Services API."
+            }
           },
           {
+            "name": "offset",
+            "description": "The index of the first element to retrieve. Zero is the first item of the collection.",
+            "in": "query",
             "schema": {
               "type": "integer",
               "default": 0
-            },
-            "in": "query",
-            "name": "offset",
-            "description": "The index of the first element to retrieve. Zero is the first item of the collection."
+            }
           },
           {
+            "name": "limit",
+            "description": "The maximum number of items to retrieve.",
+            "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
-            },
-            "in": "query",
-            "name": "limit",
-            "description": "The maximum number of items to retrieve."
+              "default": 250,
+              "maximum": 5000
+            }
           },
           {
-            "schema": {
-              "type": "string"
-            },
-            "in": "query",
             "name": "sort",
-            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name"
-          },
-          {
+            "description": "Sort the result by the specified attribute. The descending order can be specify by prefixing the attribute name with a \"-\" sign. __Example: sort=-name",
+            "in": "query",
             "schema": {
               "type": "string"
-            },
-            "in": "query",
+            }
+          },
+          {
             "name": "fields",
-            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status"
-          },
-          {
+            "description": "Allow to have a partial response with only required attributes. The query parameter must contain a list of attributes separated by a comma.\\s __Example: fields=id,status",
+            "in": "query",
             "schema": {
               "type": "string"
-            },
-            "in": "query",
+            }
+          },
+          {
             "name": "id",
-            "description": "Filter by identifiers."
-          },
-          {
+            "description": "Filter by identifiers.",
+            "in": "query",
             "schema": {
               "type": "string"
-            },
-            "in": "query",
-            "name": "customerReference",
-            "description": "Filter by the Customer Reference"
+            }
           },
           {
+            "name": "customerReference",
+            "description": "Filter by the Customer Reference",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "description": "Filter by status of the request",
+            "in": "query",
             "schema": {
               "type": "string",
               "enum": [
@@ -1715,46 +1723,43 @@
                 "NEW",
                 "COMPLETED"
               ]
-            },
-            "in": "query",
-            "name": "status",
-            "description": "Filter by status if the request"
+            }
           },
           {
-            "schema": {
-              "type": "string"
-            },
-            "in": "query",
             "name": "customer.id",
-            "description": "Filter by Customer Identifiers"
-          },
-          {
+            "description": "Filter by Customer Identifiers",
+            "in": "query",
             "schema": {
               "type": "string"
-            },
-            "in": "query",
-            "name": "type",
-            "description": "Filter per the Type of Requests"
+            }
           },
           {
+            "name": "type",
+            "description": "Filter by type of Requests",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Flag for displaying all fields even if the value is null.",
+            "name": "displayNulls",
+            "in": "query",
             "schema": {
               "type": "boolean",
               "enum": [
                 true,
                 false
               ]
-            },
-            "in": "query",
-            "description": "Flag for displaying all fields even if the value is null.",
-            "name": "displayNulls"
+            }
           },
           {
+            "description": "Flag for displaying the HATEOS links of linked ressources.",
+            "name": "displayLinks",
+            "in": "query",
             "schema": {
               "type": "boolean"
-            },
-            "in": "query",
-            "description": "Flag for displaying the HATEOS links of linked ressources.",
-            "name": "displayLinks"
+            }
           }
         ]
       },
@@ -2195,7 +2200,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -2435,7 +2441,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -2675,7 +2682,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "default": 25
+              "default": 250,
+              "maximum": 5000
             }
           },
           {
@@ -2883,6 +2891,34 @@
         },
         "tags": [
           "Catalog"
+        ]
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "GetMe",
+        "summary": "Get user information.",
+        "description": "This endpoint provides information on the connected user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ME"
+                }
+              }
+            }
+          },
+          "408": {
+            "$ref": "#/components/responses/RequestTimeout"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
+          }
+        },
+        "tags": [
+          "Miscellaneous"
         ]
       }
     },
@@ -4946,67 +4982,6 @@
           "compatibleServices"
         ]
       },
-      "CatalogDevice": {
-        "title": "Device in the catalog",
-        "description": "Information about a device in the catalog.",
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "Identifier of the device.",
-            "type": "string"
-          },
-          "name": {
-            "description": "Name of the device.",
-            "type": "string"
-          },
-          "description": {
-            "description": "Description of the device.",
-            "type": "string"
-          },
-          "portfolio": {
-            "description": "Portfolio of the device.",
-            "type": "string"
-          },
-          "brand": {
-            "description": "Brand of the device.",
-            "type": "string"
-          },
-          "model": {
-            "description": "Model of the device.",
-            "type": "string"
-          },
-          "buyer": {
-            "description": "Buyer of the device.",
-            "type": "string",
-            "enum": [
-              "COMPANY",
-              "END_USER"
-            ]
-          },
-          "updatedAt": {
-            "description": "Date of the last update for the device.",
-            "type": "string",
-            "format": "date-time"
-          },
-          "period": {
-            "$ref": "#/components/schemas/TimePeriod"
-          },
-          "price": {
-            "$ref": "#/components/schemas/Price"
-          },
-          "terms": {
-            "$ref": "#/components/schemas/ProductsOfferingTerms"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "description",
-          "portfolio",
-          "updatedAt",
-          "period"
-        ]
-      },
       "TimePeriod": {
         "title": "Time period",
         "description": "A period of time between two dates.",
@@ -5055,6 +5030,57 @@
           "type",
           "amount"
         ]
+      },
+      "ME": {
+        "title": "Me",
+        "type": "object",
+        "description": "Information on the connected user and the API Key.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the API key."
+          },
+          "login": {
+            "type": "string",
+            "description": "Login of the associated user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the associated user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the associated user."
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Mobile number of the associated user."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the associated user."
+          },
+          "scopes": {
+            "type": "string",
+            "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SANDBOX",
+              "PRODUCTION"
+            ],
+            "description": "Type of the environment (Sandbox or Production)"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of the creation of the API Key."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date of the API Key."
+          }
+        }
       },
       "InternalError": {
         "title": "Internal error",
