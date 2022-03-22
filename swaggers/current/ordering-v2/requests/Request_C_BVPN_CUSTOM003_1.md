@@ -42,24 +42,28 @@ Please contact your Orange Representative to verify if you can use this type of 
 | `contacts.secondary.phone`      |  `string`  | optional | Phone Number of the person. The format must be + (TODO)   |
 | `contacts.secondary.mobile`      |  `string`  | optional |   Mobile  Phone Number of the person. The format must be + (TODO) |
 | `contacts.secondary.email`      |  `string`  | optional | Email of the person.    |
-| `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: _8M_, _1M_, _Extended_       |
-| `options.wifi`      |  `string`  | optional | *Wifi complémentaire*    Todo Check Quantity  |
-| `options.multicast`      |  `string`  | optional | *Multicast*    |
-| `options.quickstart`      |  `string`  | optional |*Quickstart*       |
-| `options.ethernet`      |  `string`  | optional |*Ethernet complémentaire*       |
-| `options.internal_antenna`      |  `string`  | optional |*Antenne mobile intérieure*     |
-| `options.external_antenna`      |  `string`  | optional |*Antenne mobile extérieure*     |
+| `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: _8M_, _1M_, _Extended_ . Only valid for the profile 'FDJ CONNECT OPTIMA 8M'      |
+| `options.countWifi`      |  `integer`  | optional |    value can be '1' or '2'  |
+| `options.isMulticastNeeded`      |  `boolean`  | optional | *Multicast*    |
+| `options.isQuickstartNeeded`      |  `boolean`  | optional |*Quickstart*       |
+| `options.isEthernetPortNeeded`      |  `boolean`  | optional |*Ethernet complémentaire*    Boolean? |
+| `options.isAnInternalAntennaNeeded`      |  `boolean`  | optional |*Antenne mobile intérieure*, only available for the profile 'FDJ CONNECT CELL'     |
+| `options.isExternalAntennaNeeded`      |  `boolean`  | optional |*Antenne mobile extérieure*, only available for the profile 'FDJ CONNECT CELL'    |
 
 
 <br>
 
 (1)
 
-(2)
+(2) At least one of these value must be provided
 
 (3)
 
 (4)
+
+
+Note: If an attribute is specified and not compatible with the selected profile, it will be ignored.
+
 
 <br>
 <br>

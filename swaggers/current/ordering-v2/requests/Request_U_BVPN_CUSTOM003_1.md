@@ -23,17 +23,18 @@ The request is compatible with Standard and customized catalogs.
 | `servicePoint.reference`      |  `string`  | (1) |  Commercial Reference of the Service Point.       |
 | `profile`| `string`     | required | Name of the Profile.<br>Possible values: _FDJ CONNECT OPTIMA 8M_, _FDJ CONNECT OPTIMA 18M_, _FDJ CONNECT FTTH_,   _FDJ CONNECT ULTIME_, _FDJ CONNECT CELL_   |
 | `options.bandwidth`      |  `string`  | required | *Débit*<br>Possible values: _8M_, _1M_, _Extended_       |
-| `options.wifi`      |  `string`  |  required | *Wifi complémentaire*   TODO check Quantity???   |
- | `options.multicast`      |  `string`  |required |  *Multicast*    |
- | `options.quickstart`      |  `string`  |required | *Quickstart*       |
- | `options.ethernet`      |  `string`  |required | *Ethernet complémentaire*       |
- | `options.internal_antenna`      |  `string`  | required | *Antenne mobile intérieure*     |
-| `options.external_antenna`      |  `string`  | required | *Antenne mobile extérieure*     |
+| `options.countWifi`      |  `integer`  | optional |    value can be '1' or '2'  |
+| `options.isMulticastNeeded`      |  `boolean`  | optional | *Multicast*    |
+| `options.isQuickstartNeeded`      |  `boolean`  | optional |*Quickstart*       |
+| `options.isEthernetPortNeeded`      |  `boolean`  | optional |*Ethernet complémentaire*    Boolean? |
+| `options.isAnInternalAntennaNeeded`      |  `boolean`  | optional |*Antenne mobile intérieure*, only available for the profile 'FDJ CONNECT CELL'     |
+| `options.isExternalAntennaNeeded`      |  `boolean`  | optional |*Antenne mobile extérieure*, only available for the profile 'FDJ CONNECT CELL'    |
 
 <br>
 
 (1) One of these attributes must be specified `servicePoint.id`, `servicePoint.reference`, `servicePoint.customerReference`. The API can accept the request only one Service/Product per request. By using `servicePoint.customerReference`, several Services/Products can match the value, in this case an error will be returned. 
 
+Note: If an attribute is specified and not compatible with the selected profile, it will be ignored.
 
 <br>
 

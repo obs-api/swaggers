@@ -60,9 +60,10 @@ The HTTP status code is 422 for all these errors
 
 | code         | message     | Description |
 |--------------|:-----------:|------------|
-| 3610 | Several Products identified    | A disconnection request can be accepted only on one Service/Product. The current criterias    |
 | 3611| RequestedAt not Valid    | The requestedAt date must be 20 days minimum and must be a working day in France.  |
-| -| -    | ----  |
+| 3620| Properties item is not valid   | The 'properties' attribute is not valid due to the following error : %MSG%  |
+| 3621 | Several Products match criterias    | Several Service Points mach the criteria. Disconnection can be requested on only one Service Point.   |
+| 3622 | No Service Point match criteria  | No Service Point was found with the current criteria.    |
 
 ##  Common Errors
 
