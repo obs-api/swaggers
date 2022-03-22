@@ -42,8 +42,8 @@ Please contact your Orange Representative to verify if you can use this type of 
 | `contacts.secondary.phone`      |  `string`  | optional | Phone Number of the person. The format must be + (TODO)   |
 | `contacts.secondary.mobile`      |  `string`  | optional |   Mobile  Phone Number of the person. The format must be + (TODO) |
 | `contacts.secondary.email`      |  `string`  | optional | Email of the person.    |
-| `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: _8M_, _1M_, _Extended_ . Only valid for the profile 'FDJ CONNECT OPTIMA 8M'      |
-| `options.countWifi`      |  `integer`  | optional |    value can be '1' or '2'  |
+| `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: '8M', '1M', 'EXTENDED' . Only valid for the profile 'FDJ CONNECT OPTIMA 8M'      |
+| `options.isAdditionalWifiNeeded`      |  `boolean`  | optional |      default : 'false'   |
 | `options.isMulticastNeeded`      |  `boolean`  | optional | *Multicast*    |
 | `options.isQuickstartNeeded`      |  `boolean`  | optional |*Quickstart*       |
 | `options.isEthernetPortNeeded`      |  `boolean`  | optional |*Ethernet complémentaire*    Boolean? |
@@ -63,6 +63,22 @@ Please contact your Orange Representative to verify if you can use this type of 
 
 
 Note: If an attribute is specified and not compatible with the selected profile, it will be ignored.
+
+
+## MAPPING RULES - Temporary (need to move in the Internal documentation)
+
+
+
+| id         | Type     | required | Description |
+|--------------|:-----------:|:-----------:|------------|
+| `options.bandwidth`      |  `string`  | optional |  the default is '8M' and the value code is sent for the selected bandwidth     |
+| `options.isAdditionalWifiNeeded`      |  `boolean`  | optional |  if (value=false) send WIFI0002 with quantify=1 , if true  WIFI0002 with quantify=2    |
+| `options.isMulticastNeeded`      |  `boolean`  |  if (value=false) nothing is sent , if true  the option code is sent for the optionn MULTICAS01  |     |
+| `options.isQuickstartNeeded`      |  `boolean`  |  if (value=false) nothing is sent , if true  the option code is sent for the optionn QUICKSMALL or QUICKCORPO following the selected profile |      |
+| `options.isEthernetPortNeeded`      |  `boolean`  | if (value=false) nothing is sent , if true  the option code is sent for the optionn WIFI0004   |  |
+| `options.isAnInternalAntennaNeeded`      |  `boolean`  | if (value=false) nothing is sent , if true  the option code is sent for the optionn ANTENNEINT  |    |
+| `options.isExternalAntennaNeeded`      |  `boolean`  | if (value=false) nothing is sent , if true  the option code is sent for the optionn ANTENNEEXT  |    |
+
 
 
 <br>

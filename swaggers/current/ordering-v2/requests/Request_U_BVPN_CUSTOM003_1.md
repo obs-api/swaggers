@@ -22,8 +22,8 @@ The request is compatible with Standard and customized catalogs.
 | `servicePoint.customerReference`      |  `string`  | (1) | Customer Reference of the Service Point.       |
 | `servicePoint.reference`      |  `string`  | (1) |  Commercial Reference of the Service Point.       |
 | `profile`| `string`     | required | Name of the Profile.<br>Possible values: _FDJ CONNECT OPTIMA 8M_, _FDJ CONNECT OPTIMA 18M_, _FDJ CONNECT FTTH_,   _FDJ CONNECT ULTIME_, _FDJ CONNECT CELL_   |
-| `options.bandwidth`      |  `string`  | required | *Débit*<br>Possible values: _8M_, _1M_, _Extended_       |
-| `options.countWifi`      |  `integer`  | optional |    value can be '1' or '2'  |
+| `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: '8M', '1M', 'EXTENDED' . Only valid for the profile 'FDJ CONNECT OPTIMA 8M'      |
+| `options.isAdditionalWifiNeeded`      |  `boolean`  | optional |      default : 'false'   |
 | `options.isMulticastNeeded`      |  `boolean`  | optional | *Multicast*    |
 | `options.isQuickstartNeeded`      |  `boolean`  | optional |*Quickstart*       |
 | `options.isEthernetPortNeeded`      |  `boolean`  | optional |*Ethernet complémentaire*    Boolean? |
