@@ -23,7 +23,7 @@ The request is compatible with Standard and customized catalogs.
 | `servicePoint.reference`      |  `string`  | (1) |  Commercial Reference of the Service Point.       |
 | `profile`| `string`     | required | Name of the Profile.<br>Possible values: _FDJ CONNECT OPTIMA 8M_, _FDJ CONNECT OPTIMA 18M_, _FDJ CONNECT FTTH_,   _FDJ CONNECT ULTIME_, _FDJ CONNECT CELL_   |
 | `options.bandwidth`      |  `string`  | optional | *Débit*<br>Possible values: '8M', '1M', 'EXTENDED' . Only valid for the profile 'FDJ CONNECT OPTIMA 8M'      |
-| `options.isAdditionalWifiNeeded`      |  `boolean`  | optional |      default : 'false'   |
+| `options.isAdditionalWifiNeeded`      |  `boolean`  | required |      default : 'false'   |
 | `options.isMulticastNeeded`      |  `boolean`  | optional | *Multicast*    |
 | `options.isQuickstartNeeded`      |  `boolean`  | optional |*Quickstart*       |
 | `options.isEthernetPortNeeded`      |  `boolean`  | optional |*Ethernet complémentaire*    Boolean? |
@@ -50,6 +50,9 @@ The HTTP status code is 422 for all these errors
 
 | code         | message     | Description |
 |--------------|:-----------:|------------|
-| -| -    | Several services can match criterias |
-| -| -    | ----  |
-| -| -    | ----  |
+| 3611| RequestedAt not Valid    | The requestedAt date must be 20 days minimum and must be a working day in France.  |
+| 3620| Properties item is not valid   | The 'properties' attribute is not valid due to the following error : %MSG%  |
+| 3621 | Several Products match criterias    | Several Service Points mach the criteria. Disconnection can be requested on only one Service Point.   |
+| 3622 | No Service Point match criteria  | No Service Point was found with the current criteria.    |
+| 3623 | Internal Ordering System not available  |The ordering system is not available at the moment. The request was not accepted.   |
+ 

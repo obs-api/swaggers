@@ -64,7 +64,7 @@ The HTTP status code is 422 for all these errors
 | 3620| Properties item is not valid   | The 'properties' attribute is not valid due to the following error : %MSG%  |
 | 3621 | Several Products match criterias    | Several Service Points mach the criteria. Disconnection can be requested on only one Service Point.   |
 | 3622 | No Service Point match criteria  | No Service Point was found with the current criteria.    |
-
+| 3623 | Internal Ordering System not available  |The ordering system is not available at the moment. The request was not accepted.   |
 ##  Common Errors
 
 This section describes only specific errors for this request.
