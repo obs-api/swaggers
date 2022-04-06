@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "description": "Core Information provides several methods to access transversal information and the global inventory.is an API restricted to Orange Business Services customers.\n\nThis API allows to retrieve the list of Customer Accounts, Location, Resources, Products and Services. \n\n### Internationalization\nThis API Provides data only in English\n### Resources\n\n- **accounts** :  Customer Accounts \n- **locations** :  Geographic place identified by a postal address where equipment are deployed.\n- **servicePoints** : Installed offers / solutions.\n- **configurationItems** : Equipments or supports installed based on Service Points.\n\n\n- **doc** : Documentation of the API in Swagger format.\n- **status** : Health of the API component.\n- **version** : Version of the API component.\n\nCopyright © OBS 2021. All Rights Reserved.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:core-information| Full access of the API. |\n| b2b:core-information:readonly | API limited to read actions |  \n\n# Authentication\n \nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services for _'Machine2Machine'_ mode.",
-    "version": "2.0",
+    "version": "2.1.2",
     "title": "Core Information",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -1961,6 +1961,14 @@
             "in": "query",
             "name": "location.address.country",
             "description": "Filters by the country code of the location where the Servie Point has been deployed. Several values can be specified (separated by a comma)"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "properties.option",
+            "description": "Filters by the option name of the Servie Point has been deployed. Several values can be specified (separated by a comma)"
           }
         ],
         "security": [
@@ -2574,11 +2582,51 @@
           }
         ]
       }
+    },
+    "/me": {
+      "get": {
+        "summary": "Provide information on the User",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ME"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMe",
+        "description": "Provide information on the login using the API."
+      }
     }
   },
   "servers": [
     {
-      "url": "https://api.orange.com/core-information/b2b/v2/",
+      "url": "https://api.orange.com/core-information/b2b/v2",
       "description": "Orange Developer"
     }
   ],
@@ -3812,6 +3860,16 @@
                 "$ref": "#/components/schemas/Hyperlink"
               }
             }
+          },
+          "pricing": {
+            "type": "object",
+            "description": "Information on the pricing.",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Pricing code of the service."
+              }
+            }
           }
         },
         "required": [
@@ -4073,6 +4131,57 @@
           "mobile": {
             "type": "string",
             "description": "Mobile number of the contact."
+          }
+        }
+      },
+      "ME": {
+        "title": "Me",
+        "type": "object",
+        "description": "Information on the connected user and the API Key.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the API key."
+          },
+          "login": {
+            "type": "string",
+            "description": "Login of the associated user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the associated user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the associated user."
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Mobile number of the associated user."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the associated user."
+          },
+          "scopes": {
+            "type": "string",
+            "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SANDBOX",
+              "PRODUCTION"
+            ],
+            "description": "Type of the environment (Sandbox or Production)"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of the creation of the API Key."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date of the API Key."
           }
         }
       }

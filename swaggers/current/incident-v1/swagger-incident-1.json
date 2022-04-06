@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "An Orange Business Service API for managing incidents.\n\n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **incidents** : A incident defines an event impacting the service.\n- **attachments** : Attachments defines all files associated to an incident.\n- **notes** :  notes are comments on the incident written by Orange or the Customer.\n- **freezePeriods** :  periods when the incident is frozen\n- **aggregation** : calculate counters based on grouped attribute values.\n- **status** : used to know the status of API components.\n- **version** : provides the version of the API.\n- **doc** : allows to download the swagger file.\n\n### Incident API performs the following operations :\n- Create or update a incident, retrieve an incident or a collection of incidents.\n- Add a note, retrieve notes.\n- Upload a attachment/file, list or download attachments.\n- Generate statistics on incidents\n\n### OAuth 2.0 Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:incident | Grants access to list and have details of incidents and also to report new incidents |\n| b2b:incident:readonly | \tGrants access to list and have details of incidents |\n\n***\nCopyright © Orange Business Services 2020. All Rights Reserved.",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "title": "Incident API",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -219,6 +219,8 @@
                 "-location.address.postalCode",
                 "location.address.country",
                 "-location.address.country",
+                "keyDates.openeddAt",
+                "-keyDates.openeddAt",
                 "keyDates.resolvedAt",
                 "-keyDates.resolvedAt",
                 "keyDates.restoredAt",
@@ -1749,7 +1751,7 @@
     },
     "/me": {
       "get": {
-        "summary": "Get User Information",
+        "summary": "Get User Information.",
         "tags": [],
         "responses": {
           "200": {
