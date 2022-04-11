@@ -3860,16 +3860,6 @@
                 "$ref": "#/components/schemas/Hyperlink"
               }
             }
-          },
-          "pricing": {
-            "type": "object",
-            "description": "Information on the pricing.",
-            "properties": {
-              "code": {
-                "type": "string",
-                "description": "Pricing code of the service."
-              }
-            }
           }
         },
         "required": [
@@ -3939,13 +3929,15 @@
         "description": "Category of the Configuration Item."
       },
       "ProvisioningState": {
+        "type": "string",
         "title": "ProvisioningState",
         "description": "Provisionning State of the configuration item.",
-        "type": "string",
         "enum": [
           "INSTALLING",
           "OPERATIONAL",
-          "TERMINATED"
+          "TERMINATED",
+          "CANCELLED",
+          "UNKNOWN"
         ]
       },
       "BillingAccount": {

@@ -163,5 +163,6 @@ The HTTP status code is 422 for all these errors
 | code         | message     | Description |
 |--------------|:-----------:|------------|
 | 3623 | Internal Ordering System not available  |The ordering system is not available at the moment. The request was not accepted.   |
-| 3630 | Not authorizes  |You are not authorized to send request on this Network.   |
+| 3630 | Not authorized  |You are not authorized to send request on this Network.   |
+| 3631 | Several Networks  | Not possible to determine a single network based on the criteria provided. |
  
