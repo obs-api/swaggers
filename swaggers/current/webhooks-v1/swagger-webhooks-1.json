@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Orange Business Service Webhook API",
+    "title": "Orange Business Service Notification API",
     "version": "1.0",
     "contact": {
       "name": "Philippe VALETTE",
       "url": "http://developer.orange.com",
       "email": "philippe.valette@orange.com"
     },
-    "description": "\n## Overview\n[Webhooks](https://en.wikipedia.org/wiki/Webhook) are a way for applications to receive real-time information when an item in Orange Business Services API is created or updated. This mechanism avoid to put in place none efficient polling scripts.\n\nThe principle is that a subcription is required for each event in order to activate the notification. For this subcription, a callback url must be provided and also the type of authentication (no authentication, basic authentication or OAuth 2.0). The callback URL (or an API) must be accessible on Internet or in your intranet if you have the option BVPN Gallery.\nOnce the subscription is completed, Orange's servers will sent an HTTP POST based on subcribed events. \n\nObviously,it is possible to be notified on several applications for the same event.\n\nThis Webhook API allows also to customize the body of the event in order to use an API protected by Basic Authentication or OAuth 2.0\n\n\nA step by step [tutorial](https://obs-api.github.io/tutorials/webhooks) will help you to put in place Webhooks.\n\n\n>Webhook events can be sent more than once and the delivery is not guaranteed to be in order. To defend against this behavior a `timestamp`  in included in the body so for the same event on the same object, the state can be managed on the client side.\n\n## Event Object\nThe list of available events is available [here](http://https://obs-api.github.io/documentation/webhooks). \nThe standard the received payload format is\n\n```\n {\n     \"id\": \"620d043dd7a5d4752655e723\",\n     \"event\":\n     {\n         \"id\": \"b2b:incident:update\"\n     },\n     \"rule\":\n     {\n         \"id\": \"61747d2133a086001be1f6af\",\n         \"name\": \"Notification on Incident update\"\n     },\n     \"payload\":\n     {\n         \"id\": \"123456788\",\n         . . . \n     },\n     \"createdAt\":\"2021-10-23T21:22:41Z\"\n }\n```\n\n###  JSON Body Parameters\n\n| id         | Type     | Description |\n|--------------|:-----------:|------------|\n| `id`| `string`     | Unique event identifier, which can be used to ensure<br>that events are only digested once.       |\n| `event.id`      |  `string`  | Event type.       |\n| `rule.id`      |  `string`  | Single Identifier of the rule that trigged the event.       |\n| `rule.name`      |  `string`  | Name of the rule that trigged the event.       |\n| `resource`      |  `string`  | Resource name this event has been generated for.    |\n| `href`        | `string`  | Contains the URL to  `GET` to request the entire resource.      |\n| `mode`      | `string`  | Mode of the event Full or only the resource id       |\n| `payload`      | `string` | The complete resource information this event has been generated for.       |\n| `createdAt`      |  `string`  | ISO time when the event occured.     |\n\n\n\n"
+    "description": "\n## Overview\nThe Notification API proposes a [Webhooks](https://en.wikipedia.org/wiki/Webhook) a mechanism, for applications to receive real-time information when an item in Orange Business Services API is created or updated. This mechanism avoid to put in place none efficient polling scripts.\n\nThe principle is that a subcription is required for each event in order to activate the notification. For this subcription, a callback url must be provided and also the type of authentication (no authentication, basic authentication or OAuth 2.0). The callback URL (or an API) must be accessible on Internet or in your intranet if you have the option BVPN Gallery.\nOnce the subscription is completed, Orange's servers will sent an HTTP POST based on subcribed events. \n\nObviously,it is possible to be notified on several applications for the same event.\n\nThis Webhook API allows also to customize the body of the event in order to use an API protected by Basic Authentication or OAuth 2.0\n\n\nA step by step [tutorial](https://obs-api.github.io/tutorials/webhooks) will help you to put in place Webhooks.\n\n\n>Webhook events can be sent more than once and the delivery is not guaranteed to be in order. To defend against this behavior a `timestamp`  in included in the body so for the same event on the same object, the state can be managed on the client side.\n\n## Event Object\nThe list of available events is available [here](http://https://obs-api.github.io/documentation/webhooks). \nThe standard the received payload format is\n\n```\n {\n     \"id\": \"620d043dd7a5d4752655e723\",\n     \"event\":\n     {\n         \"id\": \"b2b:incident:update\"\n     },\n     \"rule\":\n     {\n         \"id\": \"61747d2133a086001be1f6af\",\n         \"name\": \"Notification on Incident update\"\n     },\n     \"payload\":\n     {\n         \"id\": \"123456788\",\n         . . . \n     },\n     \"createdAt\":\"2021-10-23T21:22:41Z\"\n }\n```\n\n###  JSON Body Parameters\n\n| id         | Type     | Description |\n|--------------|:-----------:|------------|\n| `id`| `string`     | Unique event identifier, which can be used to ensure<br>that events are only digested once.       |\n| `event.id`      |  `string`  | Event type.       |\n| `rule.id`      |  `string`  | Single Identifier of the rule that trigged the event.       |\n| `rule.name`      |  `string`  | Name of the rule that trigged the event.       |\n| `resource`      |  `string`  | Resource name this event has been generated for.    |\n| `href`        | `string`  | Contains the URL to  `GET` to request the entire resource.      |\n| `mode`      | `string`  | Mode of the event Full or only the resource id       |\n| `payload`      | `string` | The complete resource information this event has been generated for.       |\n| `createdAt`      |  `string`  | ISO time when the event occured.     |\n\n\n\n"
   },
   "servers": [
     {
@@ -218,6 +218,14 @@
             "in": "query",
             "name": "displayLinks",
             "description": "Flag for displaying the HATEOS links of linked ressources."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "isActive",
+            "description": "Returns Webhook rules that are active or not."
           }
         ],
         "description": "This endpoint returns a Webhook rules that matching criterias defined in the Query Parameters. ",
@@ -1206,6 +1214,14 @@
             ],
             "description": "Type of the environment (Sandbox or Production)"
           },
+          "application": {
+            "type": "string",
+            "description": "Application identifier in Orange Developer Portal."
+          },
+          "token": {
+            "type": "string",
+            "description": "Token identifier associated to the API Key."
+          },
           "createdAt": {
             "type": "string",
             "description": "Date of the creation of the API Key."
@@ -1213,6 +1229,10 @@
           "updatedAt": {
             "type": "string",
             "description": "Last update date of the API Key."
+          },
+          "expiredAt": {
+            "type": "string",
+            "description": "Expiration Date of the API Key.\n"
           }
         }
       },
