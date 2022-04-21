@@ -48,16 +48,8 @@
       "description": "Aggregate incidents grouped by one or several attribute values."
     },
     {
-      "name": "Documentation",
-      "description": "Link for downloading the Swagger of the Customer Data for Business API."
-    },
-    {
-      "name": "Status",
-      "description": "Provide the status of the API."
-    },
-    {
-      "name": "Version",
-      "description": "Track version of the API."
+      "name": "Miscellaneous",
+      "description": "Information on the API and the user."
     }
   ],
   "paths": {
@@ -87,7 +79,7 @@
             }
           },
           {
-            "name": "X-API-Key",
+            "name": "X-API-KEY",
             "required": false,
             "in": "header",
             "description": "The API Key required for using Orange Business Services API.",
@@ -1977,9 +1969,6 @@
     },
     "/doc": {
       "get": {
-        "tags": [
-          "Documentation"
-        ],
         "produces": [
           "application/json;charset=utf-8"
         ],
@@ -2006,14 +1995,14 @@
               "$ref": "#/definitions/ZError"
             }
           }
-        }
+        },
+        "tags": [
+          "Miscellaneous"
+        ]
       }
     },
     "/status": {
       "get": {
-        "tags": [
-          "Status"
-        ],
         "produces": [
           "application/json;charset=utf-8"
         ],
@@ -2040,14 +2029,14 @@
               "$ref": "#/definitions/APIStatus"
             }
           }
-        }
+        },
+        "tags": [
+          "Miscellaneous"
+        ]
       }
     },
     "/version": {
       "get": {
-        "tags": [
-          "Version"
-        ],
         "produces": [
           "application/json;charset=utf-8"
         ],
@@ -2109,13 +2098,18 @@
               "$ref": "#/definitions/ZError"
             }
           }
-        }
+        },
+        "tags": [
+          "Miscellaneous"
+        ]
       }
     },
     "/me": {
       "get": {
         "summary": "Get User Information.",
-        "tags": [],
+        "tags": [
+          "Miscellaneous"
+        ],
         "responses": {
           "200": {
             "description": "OK",
