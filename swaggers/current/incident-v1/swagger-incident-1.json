@@ -2384,6 +2384,9 @@
         "location": {
           "$ref": "#/definitions/Location"
         },
+        "contact": {
+          "$ref": "#/definitions/Individual"
+        },
         "keyDates": {
           "type": "object",
           "description": "Important dates of the Incident.\n",
@@ -2440,7 +2443,11 @@
               "type": "string",
               "format": "date-time",
               "example": "2020-01-01T00:00:00Z",
-              "description": "Date of the current secalation. If no escalation in progress the attribute is null. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
+              "description": "Date of the current secalation. If no escalation in progress the attribute is null. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_\n*This feature will be available in a next version*"
+            },
+            "modifiedAt": {
+              "type": "string",
+              "description": "Date of the last modification. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
             }
           }
         },
@@ -2468,41 +2475,6 @@
             }
           }
         },
-        "closureSummary": {
-          "type": "object",
-          "description": "Information on the closure of the Incident.",
-          "properties": {
-            "reason": {
-              "type": "string",
-              "description": "Note of Orange Staff set at the closure of the incident. This field is available only when the incident is closed."
-            },
-            "isCauseRoot": {
-              "type": "boolean",
-              "description": "Flag indicating if the issue is the cause root of the trouble."
-            },
-            "initialCategory": {
-              "type": "string",
-              "description": "Initial Category of the Incident."
-            },
-            "cause": {
-              "type": "string",
-              "description": "Cause of the Incident."
-            },
-            "details": {
-              "type": "string",
-              "description": "Detailed information on the Incident."
-            },
-            "responsible": {
-              "type": "string",
-              "description": "Indicate the responsible entity if Customer or Orange."
-            },
-            "closedAt": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Date when the ticket has been closed.\nUse the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_"
-            }
-          }
-        },
         "createdAt": {
           "description": "Date of the Incident has been created in the system. Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
           "type": "string",
@@ -2513,7 +2485,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "event": {
+        "events": {
           "$ref": "#/definitions/Event"
         },
         "attachments": {
@@ -2531,13 +2503,8 @@
         "_links": {
           "$ref": "#/definitions/IncidentLinks"
         },
-        "contacts": {
-          "type": "object",
-          "properties": {
-            "primary": {
-              "$ref": "#/definitions/Individual"
-            }
-          }
+        "": {
+          "type": "string"
         }
       },
       "required": [
@@ -2628,25 +2595,9 @@
       "description": "Person.",
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Orange Single identifier of a contact (Individual)",
-          "type": "string"
-        },
-        "title": {
-          "type": "string",
-          "description": "Title of the contact"
-        },
         "name": {
           "type": "string",
           "description": "Full name of the contact (First name + last name)"
-        },
-        "lastName": {
-          "type": "string",
-          "description": "First name of the contact"
-        },
-        "firstName": {
-          "type": "string",
-          "description": "Last name of the contact"
         },
         "phone": {
           "type": "string",
@@ -2659,14 +2610,6 @@
         "email": {
           "type": "string",
           "description": "email of the contact"
-        },
-        "comment": {
-          "type": "string",
-          "description": "Comment on the contact"
-        },
-        "prefered": {
-          "type": "string",
-          "description": "Indicate that the preferated support."
         }
       },
       "required": [
@@ -2677,25 +2620,9 @@
       "description": "Person wrote the Note.",
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Orange Single identifier of a contact (Individual)",
-          "type": "string"
-        },
-        "title": {
-          "type": "string",
-          "description": "Title of the contact"
-        },
         "name": {
           "type": "string",
           "description": "Full name of the Author (First name + last name)"
-        },
-        "lastName": {
-          "type": "string",
-          "description": "First name of the Author"
-        },
-        "firstName": {
-          "type": "string",
-          "description": "Last name of the Author"
         }
       },
       "required": [
@@ -2990,11 +2917,6 @@
     },
     "Event": {
       "description": "Proactive Event having created the incident",
-      "required": [
-        "id",
-        "name",
-        "createdAt"
-      ],
       "type": "object",
       "properties": {
         "id": {
@@ -3009,8 +2931,17 @@
           "type": "string",
           "format": "date-time",
           "description": "Date when the event has been trigged.  Use the [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_."
+        },
+        "isCurrent": {
+          "type": "boolean",
+          "description": "Indicate if it is the current step."
         }
-      }
+      },
+      "required": [
+        "id",
+        "name",
+        "createdAt"
+      ]
     },
     "ServicePointPOST": {
       "description": "Service Point where the incident is detected. If you want to report an incident on a Service Point, you must specified one of these attributes.",
