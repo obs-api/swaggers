@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "An Orange Business Service API for managing incidents.\n\n\n# Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **incidents** : A incident defines an event impacting the service.\n- **attachments** : Attachments defines all files associated to an incident.\n- **notes** :  notes are comments on the incident written by Orange or the Customer.\n- **freezePeriods** :  periods when the incident is frozen\n- **aggregation** : calculate counters based on grouped attribute values.\n- **status** : used to know the status of API components.\n- **version** : provides the version of the API.\n- **doc** : allows to download the swagger file.\n\n### Incident API performs the following operations :\n- Create or update a incident, retrieve an incident or a collection of incidents.\n- Add a note, retrieve notes.\n- Upload a attachment/file, list or download attachments.\n- Generate statistics on incidents\n\n### OAuth 2.0 Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:incident | Grants access to list and have details of incidents and also to report new incidents |\n| b2b:incident:readonly | \tGrants access to list and have details of incidents |\n\n***\nCopyright © Orange Business Services 2020. All Rights Reserved.\n\n # Authentication\nexplanation on seach\n\n# Search\nexplanation on seach\n\n",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "title": "Incident API",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -231,6 +231,14 @@
                 "-keyDates.modifiedAt",
                 "keyDates.validatedAt",
                 "-keyDates.validatedAt",
+                "contacts.primary.name",
+                "-contacts.primary.name",
+                "contacts.primary.phone",
+                "-contacts.primary.phone",
+                "contacts.primary.mobile",
+                "-contacts.primary.mobile",
+                "contacts.primary.email",
+                "-contacts.primary.email",
                 "closureSummary.isRootCause",
                 "-closureSummary.isRootCause",
                 "closureSummary.initialCategory",
@@ -296,6 +304,10 @@
                 "keyDates.closedAt",
                 "keyDates.modifiedAt",
                 "keyDates.validatedAt",
+                "contacts.primary.name",
+                "contacts.primary.phone",
+                "contacts.primary.mobile",
+                "contacts.primary.email",
                 "closureSummary.isRootCause",
                 "closureSummary.initialCategory",
                 "closureSummary.cause",
@@ -628,6 +640,34 @@
             "type": "string"
           },
           {
+            "name": "contacts.primary.name",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.phone",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.mobile",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.email",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
             "name": "keyDates.validatedAt",
             "required": false,
             "in": "query",
@@ -647,23 +687,6 @@
             "in": "query",
             "description": "Filter by the last update date of the Incident. Can be an exact value or a search expression.",
             "type": "string"
-          },
-          {
-            "name": "isEscalated",
-            "required": false,
-            "in": "query",
-            "description": "TODO - Filter incidents that are escalated or not.",
-            "type": "boolean"
-          },
-          {
-            "name": "event.id",
-            "required": false,
-            "in": "query",
-            "description": "TODO - Filter by the identifier of the Event that generate the Incident",
-            "type": "string",
-            "items": {
-              "type": "string"
-            }
           },
           {
             "name": "includes",
@@ -1081,6 +1104,34 @@
             "type": "string"
           },
           {
+            "name": "contacts.primary.name",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.phone",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.mobile",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
+            "name": "contacts.primary.email",
+            "required": false,
+            "in": "query",
+            "description": "Filter by the validation date of the Incident. Can be an exact value or a search expression.",
+            "type": "string"
+          },
+          {
             "name": "createdAt",
             "required": false,
             "in": "query",
@@ -1192,6 +1243,10 @@
                 "keyDates.closedAt",
                 "keyDates.modifiedAt",
                 "keyDates.validatedAt",
+                "contacts.primary.name",
+                "contacts.primary.phone",
+                "contacts.primary.mobile",
+                "contacts.primary.email",
                 "closureSummary.isRootCause",
                 "closureSummary.initialCategory",
                 "closureSummary.cause",
@@ -2384,8 +2439,13 @@
         "location": {
           "$ref": "#/definitions/Location"
         },
-        "contact": {
-          "$ref": "#/definitions/Individual"
+        "contacts": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "$ref": "#/definitions/Individual"
+            }
+          }
         },
         "keyDates": {
           "type": "object",
@@ -2502,9 +2562,6 @@
         },
         "_links": {
           "$ref": "#/definitions/IncidentLinks"
-        },
-        "": {
-          "type": "string"
         }
       },
       "required": [
@@ -2609,7 +2666,8 @@
         },
         "email": {
           "type": "string",
-          "description": "email of the contact"
+          "description": "email of the contact",
+          "format": "email"
         }
       },
       "required": [
@@ -2738,7 +2796,7 @@
             "LOW"
           ]
         },
-        "configurationItems": {
+        "configurationItem": {
           "$ref": "#/definitions/ConfigurationItemPOST"
         },
         "servicePoint": {
@@ -2756,9 +2814,15 @@
           "$ref": "#/definitions/Customer"
         },
         "contacts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Individual"
+          "type": [
+            "object",
+            "string"
+          ],
+          "description": "Contacts that can be contacted or notified about the incident.",
+          "properties": {
+            "primary": {
+              "$ref": "#/definitions/Individual"
+            }
           }
         }
       },
