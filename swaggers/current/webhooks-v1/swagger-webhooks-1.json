@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Orange Business Service Notification API",
-    "version": "1.0",
+    "version": "1.0.1",
     "contact": {
       "name": "Philippe VALETTE",
       "url": "http://developer.orange.com",
@@ -1202,37 +1202,64 @@
             "type": "string",
             "description": "Email address of the associated user."
           },
-          "scopes": {
-            "type": "string",
-            "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "SANDBOX",
-              "PRODUCTION"
-            ],
-            "description": "Type of the environment (Sandbox or Production)"
-          },
           "application": {
-            "type": "string",
-            "description": "Application identifier in Orange Developer Portal."
+            "type": "object",
+            "description": "Application identifier in Orange Developer Portal.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the application in the Orange Developer Portal."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the application in Orange Developer Portal."
+              }
+            }
           },
-          "token": {
-            "type": "string",
-            "description": "Token identifier associated to the API Key."
+          "apiKey": {
+            "type": "object",
+            "description": "Token identifier associated to the API Key.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the API KEY."
+              },
+              "scopes": {
+                "type": "string",
+                "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date of the creation of the API Key."
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last update date of the API Key."
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the environment (Sandbox or Production).",
+                "enum": [
+                  "ACTIVE",
+                  "EXPIRED",
+                  "SUSPENDED"
+                ]
+              },
+              "expiredAt": {
+                "type": "string",
+                "description": "Date of the expiration of the API Key."
+              }
+            }
           },
           "createdAt": {
             "type": "string",
-            "description": "Date of the creation of the API Key."
+            "description": "Date of the creation of the User Account."
           },
           "updatedAt": {
             "type": "string",
-            "description": "Last update date of the API Key."
-          },
-          "expiredAt": {
-            "type": "string",
-            "description": "Expiration Date of the API Key.\n"
+            "description": "Last update date of the User Account."
           }
         }
       },
