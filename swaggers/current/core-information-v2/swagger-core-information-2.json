@@ -1703,7 +1703,7 @@
             "description": "The API Key required for using Orange Business Services API."
           }
         ],
-        "description": "This method returns Configuration Items (equipment/devices, etc..) matching criterias.\n\nThe configuration item can have the following status\n\n**INSTALLING**: The equipment/device installtion is in progress, it is not operational\n**OPERATIONAL**: The equipment/device is ready for the service and totally operational\n**TERMINATED**: The equipment/device has been disconnected.\n**CANCELLED**: The equipment/device was not installed due to an issue.\n**UNKNOWN**! At this stage it is not possible to determine an accurate status of the deployment.\n\n",
+        "description": "This method returns Configuration Items (equipment/devices, etc..) matching criterias.\n\nThe configuration item can have the following status\n\n- **INSTALLING**: The equipment/device installtion is in progress, it is not operational\n- **OPERATIONAL**: The equipment/device is ready for the service and totally operational\n- **TERMINATED**: The equipment/device has been disconnected.\n- **CANCELLED**: The equipment/device was not installed due to an issue.\n- **UNKNOWN**: At this stage it is not possible to determine an accurate status of the deployment.\n\n",
         "security": [
           {
             "OrangeDeveloper": [
@@ -2172,7 +2172,7 @@
           }
         },
         "operationId": "FindServicePoints",
-        "description": "This method returns all Service Points matching criterias.\n\n\nThe configuration item can have the following status\n\n**INSTALLING**: The service installtion is in progress, it is not operational\n**OPERATIONAL**: The service is 'ready for the service' and totally operational\n**TERMINATED**: The service has been disconnected.\n**CANCELLED**: The installation of the service was cancelled due to an issue.\n**UNKNOWN**! At this stage it is not possible to determine an accurate status of the deployment of the service.\n\n",
+        "description": "This method returns all Service Points matching criterias.\n\n\nThe configuration item can have the following status\n\n- **INSTALLING**: The service installtion is in progress, it is not operational\n- **OPERATIONAL**: The service is 'ready for the service' and totally operational\n- **TERMINATED**: The service has been disconnected.\n- **CANCELLED**: The installation of the service was cancelled due to an issue.\n- **UNKNOWN**: At this stage it is not possible to determine an accurate status of the deployment of the service.\n\n",
         "parameters": [
           {
             "schema": {
