@@ -402,7 +402,7 @@
             }
           },
           {
-            "name": "name",
+            "name": "localCompany",
             "required": false,
             "in": "query",
             "description": "Filters by the name of the location. Several values can be specified (separated by a comma)",
@@ -464,6 +464,272 @@
                 true
               ]
             }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "customer.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "residence"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "building"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.street"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.extendedStreet"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.locality"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.postalCode"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.state"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.region"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "formattedAddress"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "floor"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "room"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "stair"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "openingHours"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "legalNumber"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.firstName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.lastName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.email"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.mobile"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.firstName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.lastName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.email"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.mobile"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.gmt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.offset"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.latitude"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.longitude"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.accuracy"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt"
           }
         ],
         "responses": {
@@ -591,7 +857,7 @@
             "in": "query",
             "description": "Filter with the identifier of the location",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -615,7 +881,7 @@
             "in": "query",
             "description": "Filter with the customer reference",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -627,7 +893,7 @@
             "in": "query",
             "description": "Filter with the postal code",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -639,7 +905,7 @@
             "in": "query",
             "description": "Filter with the state",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -660,7 +926,7 @@
             "in": "query",
             "description": "Filter with the city name",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -672,7 +938,7 @@
             "in": "query",
             "description": "Filter with the country code name",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -684,7 +950,7 @@
             "in": "query",
             "description": "Filter with the  customer identifier",
             "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -696,19 +962,7 @@
             "in": "query",
             "description": "Filter with the  customer name",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "type",
-            "required": false,
-            "in": "query",
-            "description": "Filter with the  type",
-            "schema": {
-              "type": "array",
+              "type": "string",
               "items": {
                 "type": "string"
               }
@@ -731,6 +985,230 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "residence"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.street"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.extendedStreet"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "address.region"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "formattedAddress"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "floor"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "room"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "stair"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "openingHours"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "legalNumber"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.firstName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.lastName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.email"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.primary.mobile"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.firstName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.lastName"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.phone"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.email"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "contacts.secondary.mobile"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.id"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.name"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.gmt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "timeZone.offset"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.latitude"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.longitude"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "geoCoding.accuracy"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "createdAt"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "updatedAt"
           }
         ]
       }
@@ -1225,7 +1703,7 @@
             "description": "The API Key required for using Orange Business Services API."
           }
         ],
-        "description": "This method returns Configuration Items matching criterias.",
+        "description": "This method returns Configuration Items (equipment/devices, etc..) matching criterias.\n\nThe configuration item can have the following status\n\n**INSTALLING**: The equipment/device installtion is in progress, it is not operational\n**OPERATIONAL**: The equipment/device is ready for the service and totally operational\n**TERMINATED**: The equipment/device has been disconnected.\n**CANCELLED**: The equipment/device was not installed due to an issue.\n**UNKNOWN**! At this stage it is not possible to determine an accurate status of the deployment.\n\n",
         "security": [
           {
             "OrangeDeveloper": [
@@ -1694,7 +2172,7 @@
           }
         },
         "operationId": "FindServicePoints",
-        "description": "This method returns all Service Points matching criterias.",
+        "description": "This method returns all Service Points matching criterias.\n\n\nThe configuration item can have the following status\n\n**INSTALLING**: The service installtion is in progress, it is not operational\n**OPERATIONAL**: The service is 'ready for the service' and totally operational\n**TERMINATED**: The service has been disconnected.\n**CANCELLED**: The installation of the service was cancelled due to an issue.\n**UNKNOWN**! At this stage it is not possible to determine an accurate status of the deployment of the service.\n\n",
         "parameters": [
           {
             "schema": {
@@ -2791,29 +3269,45 @@
           "customerReference",
           "customer.id",
           "customer.name",
-          "company",
+          "localCompany",
+          "residence",
           "building",
-          "address.city",
-          "address.country",
-          "address.locality",
           "address.street",
           "address.extendedStreet",
+          "address.locality",
           "address.postalCode",
+          "address.state",
+          "address.city",
+          "address.country",
+          "address.region",
+          "formattedAddress",
+          "floor",
+          "room",
+          "stair",
+          "phone",
+          "openingHours",
+          "legalNumber",
+          "contacts.primary.name",
+          "contacts.primary.firstName",
+          "contacts.primary.lastName",
+          "contacts.primary.phone",
+          "contacts.primary.email",
+          "contacts.primary.mobile",
+          "contacts.secondary.name",
+          "contacts.secondary.firstName",
+          "contacts.secondary.lastName",
+          "contacts.secondary.phone",
+          "contacts.secondary.email",
+          "contacts.secondary.mobile",
           "timeZone.id",
           "timeZone.name",
           "timeZone.gmt",
-          "phone",
-          "createdAt",
-          "updatedAt",
-          "address.state",
-          "formattedAddress",
-          "residence",
-          "floor",
-          "room",
-          "stairCase",
+          "timeZone.offset",
           "geoCoding.latitude",
           "geoCoding.longitude",
-          "geoCoding.accuracy"
+          "geoCoding.accuracy",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "LocationSort": {
@@ -2830,50 +3324,84 @@
           "-customer.id",
           "customer.name",
           "-customer.name",
-          "company",
-          "-company",
+          "localCompany",
+          "-localCompany",
           "building",
           "-building",
-          "address.city",
-          "-address.city",
-          "address.country",
-          "-address.country",
-          "address.locality",
-          "-address.locality",
-          "createdAt",
-          "-createdAt",
-          "updatedAt",
-          "-updatedAt",
+          "residence",
+          "-residence",
           "address.street",
           "-address.street",
+          "address.extendedStreet",
+          "-address.extendedStreet",
+          "address.locality",
+          "-address.locality",
           "address.postalCode",
           "-address.postalCode",
+          "address.city",
+          "-address.city",
           "address.state",
-          "-address.state",
+          "-address.country",
+          "address.country",
+          "-address.country",
+          "address.region",
+          "-address.region",
           "formattedAddress",
           "-formattedAddress",
+          "floor",
+          "-floor",
+          "room",
+          "-room",
+          "stair",
+          "-stair",
           "phone",
           "-phone",
+          "openingHours",
+          "-openingHours",
+          "legalNumber",
+          "-legalNumber",
+          "contacts.primary.name",
+          "-contacts.primary.name",
+          "contacts.primary.firstName",
+          "-contacts.primary.firstName",
+          "contacts.primary.lastName",
+          "-contacts.primary.lastName",
+          "contacts.primary.phone",
+          "-contacts.primary.phone",
+          "contacts.primary.email",
+          "-contacts.primary.email",
+          "contacts.primary.mobile",
+          "-contacts.primary.mobile",
+          "contacts.secondary.name",
+          "-contacts.secondary.name",
+          "contacts.secondary.firstName",
+          "-contacts.secondary.firstName",
+          "contacts.secondary.lastName",
+          "-contacts.secondary.lastName",
+          "contacts.secondary.phone",
+          "-contacts.secondary.phone",
+          "contacts.secondary.email",
+          "-contacts.secondary.email",
+          "contacts.secondary.mobile",
+          "-contacts.secondary.mobile",
           "timeZone.id",
           "-timeZone.id",
           "timeZone.name",
           "-timeZone.name",
           "timeZone.gmt",
           "-timeZone.gmt",
-          "residence",
-          "-residence",
-          "floor",
-          "-floor",
-          "room",
-          "-room",
-          "stairCase",
-          "-stairCase",
+          "timeZone.offset",
+          "-timeZone.offset",
           "geoCoding.latitude",
           "-geoCoding.latitude",
           "geoCoding.longitude",
           "-geoCoding.longitude",
           "geoCoding.accuracy",
-          "-geoCoding.accuracy"
+          "-geoCoding.accuracy",
+          "createdAt",
+          "-createdAt",
+          "updatedAt",
+          "-updatedAt"
         ]
       },
       "ConfigurationItemsSort": {
@@ -4155,25 +4683,64 @@
             "type": "string",
             "description": "Email address of the associated user."
           },
-          "scopes": {
-            "type": "string",
-            "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+          "application": {
+            "type": "object",
+            "description": "Application identifier in Orange Developer Portal.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the application in the Orange Developer Portal."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the application in Orange Developer Portal."
+              }
+            }
           },
-          "type": {
-            "type": "string",
-            "enum": [
-              "SANDBOX",
-              "PRODUCTION"
-            ],
-            "description": "Type of the environment (Sandbox or Production)"
+          "apiKey": {
+            "type": "object",
+            "description": "Token identifier associated to the API Key.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the API KEY."
+              },
+              "scopes": {
+                "type": "string",
+                "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date of the creation of the API Key."
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last update date of the API Key."
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the environment (Sandbox or Production).",
+                "enum": [
+                  "ACTIVE",
+                  "EXPIRED",
+                  "SUSPENDED"
+                ]
+              },
+              "expiredAt": {
+                "type": "string",
+                "description": "Date of the expiration of the API Key."
+              }
+            }
           },
           "createdAt": {
             "type": "string",
-            "description": "Date of the creation of the API Key."
+            "description": "Date of the creation of the User Account."
           },
           "updatedAt": {
             "type": "string",
-            "description": "Last update date of the API Key."
+            "description": "Last update date of the User Account."
           }
         }
       }
