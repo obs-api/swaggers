@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "description": "Core Information provides several methods to access transversal information and the global inventory.is an API restricted to Orange Business Services customers.\n\nThis API allows to retrieve the list of Customer Accounts, Location, Resources, Products and Services. \n\n### Internationalization\nThis API Provides data only in English\n### Resources\n\n- **accounts** :  Customer Accounts \n- **locations** :  Geographic place identified by a postal address where equipment are deployed.\n- **servicePoints** : Installed offers / solutions.\n- **configurationItems** : Equipments or supports installed based on Service Points.\n\n\n- **doc** : Documentation of the API in Swagger format.\n- **status** : Health of the API component.\n- **version** : Version of the API component.\n\nCopyright © OBS 2021. All Rights Reserved.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:core-information| Full access of the API. |\n| b2b:core-information:readonly | API limited to read actions |  \n\n# Authentication\n \nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services for _'Machine2Machine'_ mode.",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "title": "Core Information",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -4038,7 +4038,7 @@
           },
           "serviceLevelManagement": {
             "type": "object",
-            "description": "Information on the Service Level Management.",
+            "description": "Information on the Service Level Management. **This feature is only available for International Customers.**",
             "properties": {
               "code": {
                 "type": "string",
@@ -4100,37 +4100,29 @@
               }
             }
           },
-          "inHouseLocation": {
-            "type": "object",
-            "description": "Additional information where the Configuration Item is installed/deployed.",
-            "properties": {
-              "room": {
-                "type": "string",
-                "description": "Room Number."
-              },
-              "stair": {
-                "type": "string",
-                "description": "Stair name or number."
-              },
-              "floor": {
-                "type": "string",
-                "description": "Number of the floor where the Configuration Item is installed."
-              }
-            }
-          },
           "keyDates": {
             "type": "object",
             "description": "Dates of the Configuration Item Lifecycle.",
             "properties": {
-              "orderedAt": {
+              "installedAt": {
                 "type": "string",
                 "format": "date",
-                "example": "2021-01-01"
+                "description": "Date when the device has been installed.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
               },
-              "activatedAt": {
+              "startedAt": {
                 "type": "string",
                 "format": "date",
-                "example": "2021-01-01"
+                "description": "Date when the device has been declared ready for service.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
+              },
+              "endOfSaleAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the brand will stop to sale the equipment.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
+              },
+              "endOfSupportAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the brand will stop to support the equipment.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
               },
               "terminatedAt": {
                 "type": "string",

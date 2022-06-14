@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "The Network API allows to provide a clear visibility on the deployed Network solutions and Equipements. This API provides the full inventory, QoS and usage reports.  \nMost of Network Offers are supported.\n  \n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **accessLines** : An Access Line (or Circuit) is the physical line supporting the service such as Optical Fiber or DSL.\n- **devices** : A device is an equipement of the WAN or LAN network for example a Router. Devices can be also virtual.\n- **interfaces** : An Interface is a physical port of a device.\n- **locations** : A location is a Geographical place like a building.\n- **pointOfPresences** : Point of Presence is a Orangecenter containing Network Equipments.\n- **servicePoints** : Service Point is an installed Offer such as a BVPN site. You will find Commercial information on this object.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:network| Full access of the API. |\n| b2b:network:readonly | API limited to read actions |  \n\n\n# Authentication\n\nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services",
-    "version": "2.2.1",
+    "description": "The Network API allows to provide a clear visibility on the deployed Network solutions and Equipements. This API provides the full inventory, QoS and usage reports.  \nMost of Network Offers are supported.\n  \n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **accessLines** : An Access Line (or Circuit) is the physical line supporting the service such as Optical Fiber or DSL.\n- **devices** : A  device is an equipement of the WAN or LAN network for example a Router. Devices are physical but can be also virtual.\n- **interfaces** : An Interface is a physical port of a device.\n- **locations** : A location is a Geographical place like a building.\n- **pointOfPresences** : Point of Presence is a Orangecenter containing Network Equipments.\n- **servicePoints** : Service Point is an installed Offer such as a BVPN site. You will find Commercial information on this object.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:network| Full access of the API. |\n| b2b:network:readonly | API limited to read actions |  \n\n\n# Authentication\n\nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services",
+    "version": "2.2.3",
     "title": "Network",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -779,6 +779,15 @@
             "description": "Aggregates Access Lines that match the exact value or formula about the Country Code of the Location where the Access Line was deployed. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications."
           },
           {
+            "name": "location.address.region",
+            "schema": {
+              "type": "string",
+              "example": "EU"
+            },
+            "in": "query",
+            "description": "Aggregates Access Lines that match the exact value or formula about the Country Code of the Location where the Access Line was deployed. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications."
+          },
+          {
             "name": "carrierReference",
             "schema": {
               "type": "string"
@@ -953,7 +962,7 @@
           {
             "OrangeDeveloper": [
               "b2b:network",
-              "b2b:network:readOnly"
+              "b2b:network:readonly"
             ]
           }
         ]
@@ -966,7 +975,7 @@
         ],
         "operationId": "FindtDevices",
         "summary": "Retrieve Network Devices",
-        "description": "This end-point returns a list of devices by default sorted by the id.\nThe number of returned items is by default 25 but it can be changed with query parameters.\n\n----------",
+        "description": "This end-point returns a list of devices by default sorted by the id.\nThe number of returned items is by default 25 but it can be changed with query parameters.\n\n**Interfaces are available onlyfor International Customers.**\n----------",
         "deprecated": false,
         "parameters": [
           {
@@ -1152,6 +1161,15 @@
             "required": false,
             "in": "query",
             "description": "Returns Devices that match the exact value or formula about the Country Code of the Location where the Device has been deployed.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location.address.region",
+            "required": false,
+            "in": "query",
+            "description": "Returns Devices that match the exact value or formula about the Region of the Location where the Device has been deployed.",
             "schema": {
               "type": "string"
             }
@@ -1499,24 +1517,6 @@
             }
           },
           {
-            "name": "customer.id",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Single Identifier of the Customer.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "customer.name",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Name of the Customer.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "type",
             "required": false,
             "in": "query",
@@ -1526,12 +1526,13 @@
             }
           },
           {
-            "schema": {
-              "$ref": "#/components/schemas/DeviceCategory"
-            },
-            "in": "query",
             "name": "category",
-            "description": "Aggregates Devices that match the exact value or formula about the Category of the Device."
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the category of the Device.",
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "isVirtual",
@@ -1549,6 +1550,24 @@
             "description": "Aggregates Devices that match the exact value or formula about the Provisioning State of the Device.",
             "schema": {
               "$ref": "#/components/schemas/DeviceState"
+            }
+          },
+          {
+            "name": "customer.id",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Single Identifier of the Customer.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customer.name",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Name of the Customer.",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -1573,7 +1592,16 @@
             "name": "location.customerReference",
             "required": false,
             "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Orange Postal Code of the Location where the Device has been deployed.",
+            "description": "Aggregates Devices that match the exact value or formula about the Customer Reference of the Location where the Device has been deployed.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location.localCompany",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Company name of the Location where the Device has been deployed.",
             "schema": {
               "type": "string"
             }
@@ -1606,19 +1634,10 @@
             }
           },
           {
-            "name": "offer.id",
+            "name": "location.address.region",
             "required": false,
             "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Orange Single Identifier of the Offer associated to the Device.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offer.name",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Orange Name of the Offer associated to the Device.",
+            "description": "Aggregates Devices that match the exact value or formula about the Region of the Location where the Device has been deployed.",
             "schema": {
               "type": "string"
             }
@@ -1628,51 +1647,6 @@
             "required": false,
             "in": "query",
             "description": "Aggregates Devices that match the exact value or formula about the Network community of the Device.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "hardware.model",
-            "required": false,
-            "description": "Aggregates Devices that match the exact value or formula about the Model of the Device.",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "hardware.family",
-            "required": false,
-            "description": "Aggregates Devices that match the exact value or formula about the Product Family of the Device.",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "hardware.chassis",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Chassis reference of the Device as indicated thru Device Console.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "hardware.manufacturer",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Manufacturer Name of the Device.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "hardware.serialNumber",
-            "required": false,
-            "in": "query",
-            "description": "Aggregates Devices that match the exact value or formula about the Serial Number of the Device.",
             "schema": {
               "type": "string"
             }
@@ -1701,6 +1675,177 @@
             "description": "Aggregates Devices that match the exact value or formula about the Customer Reference of Service Point associated to the Device.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "offer.id",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Orange Single Identifier of the Offer associated to the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offer.name",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Orange Name of the Offer associated to the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offer.family",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Family of the Offer associated to the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.manufacturer",
+            "required": false,
+            "description": "Aggregates Devices that match the exact value or formula about the Manufacturer of the Device.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.model",
+            "required": false,
+            "description": "Aggregates Devices that match the exact value or formula about the Model of the Device.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.family",
+            "required": false,
+            "description": "Aggregates Devices that match the exact value or formula about the Product Family of the Device.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.memorySize",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the memory Size of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.cpuType",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the cpu Type of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.cpuReference",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the cpu reference of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.cpuReference",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the cpu reference of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.cpuCount",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the cpu count of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.cpuSpeed",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the cpu speed of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.diskSize",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the disk Size of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.networkPortCount",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the network Port Count of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.serialNumber",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Serial Number of the Device.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hardware.chassis",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Chassis reference of the Device as indicated thru Device Console.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "firmware.name",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Topology role of the Device (Limited Number of Values).",
+            "schema": {
+              "$ref": "#/components/schemas/DeviceTopologyRole"
+            }
+          },
+          {
+            "name": "firmware.version",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Topology role of the Device (Limited Number of Values).",
+            "schema": {
+              "$ref": "#/components/schemas/DeviceTopologyRole"
+            }
+          },
+          {
+            "name": "firmware.featureSets",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Devices that match the exact value or formula about the Topology role of the Device (Limited Number of Values).",
+            "schema": {
+              "$ref": "#/components/schemas/DeviceTopologyRole"
             }
           },
           {
@@ -1789,7 +1934,7 @@
         ],
         "operationId": "GetDevice",
         "summary": "Get details of a Device",
-        "description": "Returns all available information about the device.\n\n----------",
+        "description": "Returns all available information about the device.\n\n**Interfaces are available onlyfor International Customers.**\n----------",
         "deprecated": false,
         "parameters": [
           {
@@ -1908,7 +2053,7 @@
         ],
         "operationId": "FindDeviceInterfaces",
         "summary": "Retrieve interfaces of a device",
-        "description": "This end-point returns a list of interfaces of a device sorted by the name.\nThe number of returned items is by default 20 but it can be changed with query parameters.\n\n----------",
+        "description": "This end-point returns a list of interfaces of a device sorted by the name.\nThe number of returned items is by default 20 but it can be changed with query parameters.\n\n**This feature is only available for International Customers.**\n\n----------",
         "deprecated": false,
         "parameters": [
           {
@@ -2418,6 +2563,15 @@
             }
           },
           {
+            "name": "address.region",
+            "required": false,
+            "in": "query",
+            "description": "Returns Locations that match the exact value or formula about the region of the Location. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "customer.id",
             "required": false,
             "in": "query",
@@ -2668,6 +2822,15 @@
             "required": false,
             "in": "query",
             "description": "Aggregates Locations that match the exact value or formula about the country code of the Location. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address.region",
+            "required": false,
+            "in": "query",
+            "description": "Aggregates Locations that match the exact value or formula about the region of the Location. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications.",
             "schema": {
               "type": "string"
             }
@@ -4080,6 +4243,58 @@
         ]
       }
     },
+    "/me": {
+      "get": {
+        "summary": "Get User Information.",
+        "tags": [
+          "Miscellaneous"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ME"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Core-resources-2_Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Core-resources-2_Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMe",
+        "description": "This endpoint provides information on the connected user.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-API-Key",
+            "description": "The API Key required for using Orange Business Services API."
+          }
+        ]
+      }
+    },
     "/doc": {
       "get": {
         "operationId": "DownloadSwagger",
@@ -4148,13 +4363,11 @@
     "schemas": {
       "InterfaceStatus": {
         "type": "string",
-        "description": "Status of the Interface.",
+        "description": "Status of the Interface. ",
         "enum": [
-          "UP",
-          "DOWN",
-          "UNKNOWN",
-          "DEGRADED",
-          "DISABLED"
+          "ACTIVE",
+          "NOT_ACTIVATED",
+          "UNKNOWN"
         ]
       },
       "LocationType": {
@@ -4174,13 +4387,11 @@
         ]
       },
       "DeviceTopologyRole": {
-        "description": "Role of the device in the topology. For example, if the mode is DUAL_BACK, the router can be main device some PRIMARY. If the device is a backup of the main device, the value will be SECONDARY. Values depend of the offer, please consult the documentation of the service.",
         "type": "string",
+        "description": "Role of the device in the topology. For example, if the mode is DUAL_BACK, the router can be main device some PRIMARY. If the device is a backup of the main device, the value will be SECONDARY. Values depend of the offer, please consult the documentation of the service.",
         "enum": [
           "PRIMARY",
-          "SECONDARY",
-          "SINGLE",
-          "UNKNOWN"
+          "SECONDARY"
         ]
       },
       "InterfaceType": {
@@ -4216,86 +4427,99 @@
           "name",
           "customerReference",
           "type",
-          "status",
-          "customer",
+          "category",
+          "isVirtual",
+          "state",
           "customer.id",
           "customer.name",
-          "customer.segment",
-          "hardware",
-          "hardware.manufacturer",
-          "hardware.model",
-          "hardware.family",
-          "hardware.cpuType",
-          "order",
-          "order.state",
-          "location",
           "location.id",
           "location.name",
-          "location.customerReference",
           "location.localCompany",
+          "location.customerReference",
           "location.address",
           "location.address.street",
           "location.address.extendedStreet",
           "location.address.postalCode",
-          "location.address.city",
           "location.address.state",
-          "location.geoCoding",
-          "location.geoCoding.longitude",
-          "location.geoCoding.latitude",
-          "offer",
-          "offer.id",
-          "offer.name",
-          "offer.family",
-          "health",
-          "health.status",
-          "topology",
-          "topology.role",
-          "topology.isCascaded",
-          "ownedBy",
-          "ownedBy.id",
-          "ownedBy.name",
-          "managedBy",
-          "managedBy.id",
-          "managedBy.name",
-          "supportedBy",
-          "supportedBy.id",
-          "supportedBy.name",
-          "settings",
-          "settings.function",
-          "createdAt",
-          "updatedAt",
-          "installation",
-          "installation.room",
-          "installation.stair",
-          "installation.floor",
-          "hardware.serialNumber",
-          "hardware.memorySize",
-          "hardware.networkPortCount",
-          "firmware.name",
-          "firmware.version",
-          "firmware.featureSets",
-          "community.id",
-          "community.name",
-          "location.building",
           "location.address.locality",
+          "location.address.city",
+          "location.address.country",
+          "location.address.region",
+          "location.type",
+          "location.geoCoding.latitude",
+          "location.geoCoding.longitude",
+          "location.building",
+          "location.comment",
           "location.formattedAddress",
-          "health.memoryUsage",
-          "health.cpuUsage",
-          "health.sdwanTunnelsConnectivity",
-          "health.sdwanHardwareStatus",
-          "health.sdwanBfdSessionUpCount",
-          "health.sdwanBfdSessionDownCount",
-          "topology.layer",
-          "topology.sdwanOverlaySiteName",
-          "topology.sdwanOverlaySiteType",
-          "topology.mplsUnderlaySiteName",
-          "topology.isHub",
-          "settings.hostname",
-          "settings.sdwanControlConnections",
+          "location.primaryContact",
+          "location.primaryContact.title",
+          "location.primaryContact.name",
+          "location.primaryContact.firstName",
+          "location.primaryContact.lastName",
+          "location.primaryContact.phone",
+          "location.primaryContact.mobile",
+          "location.primaryContact.email",
+          "location.primaryContact.roles",
+          "location.secondaryContact.title",
+          "location.secondaryContact.name",
+          "location.secondaryContact.firstName",
+          "location.secondaryContact.lastName",
+          "location.secondaryContact.phone",
+          "location.secondaryContact.mobile",
+          "location.secondaryContact.email",
+          "location.secondaryContact.roles",
           "community",
           "servicePoint.id",
           "servicePoint.name",
-          "servicePoint.customerReference"
+          "servicePoint.customerReference",
+          "offer.id",
+          "offer.name",
+          "offer.family",
+          "topology.isCascaded",
+          "topology.layer",
+          "topology.mode",
+          "topology.role",
+          "settings.function",
+          "settings.hostname",
+          "hardware.manufacturer",
+          "hardware.model",
+          "hardware.family",
+          "hardware.memorySize",
+          "hardware.cpuType",
+          "hardware.cpuReference",
+          "hardware.cpuCount",
+          "hardware.cpuSpeed",
+          "hardware.diskSize",
+          "hardware.networkPortCount",
+          "hardware.serialNumber",
+          "hardware.chassis",
+          "firmware.name",
+          "firmware.version",
+          "firmware.featureSets",
+          "ownedBy.id",
+          "ownedBy.name",
+          "managedBy.id",
+          "managedBy.name",
+          "supportedBy;id",
+          "supportedBy.name",
+          "stackedBy.id",
+          "stackedBy.name",
+          "stackedBy.customerReference",
+          "hostedBy.id",
+          "hostedBy.name",
+          "hostedBy.customerReference",
+          "serviceLevelManagement.coverage",
+          "serviceLevelManagement.restoreTime",
+          "serviceLevelManagement.responseTime",
+          "keyDates.installedAt",
+          "keyDates.startedAt",
+          "keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "keyDates.discoveredAt",
+          "keyDates.terminatedAt",
+          "interfaces",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "DeviceSort": {
@@ -4306,12 +4530,191 @@
           "-id",
           "name",
           "-name",
+          "customerReference",
+          "-customerReference",
+          "type",
+          "-type",
+          "category",
+          "-category",
+          "isVirtual",
+          "-isVirtual",
+          "state",
+          "-state",
+          "customer.id",
+          "-customer.id",
+          "customer.name",
+          "-customer.name",
+          "location.id",
+          "-location.id",
+          "location.name",
+          "-location.name",
+          "location.localCompany",
+          "-location.localCompany",
+          "location.customerReference",
+          "-location.customerReference",
+          "location.address",
+          "-location.address",
+          "location.address.street",
+          "-location.address.street",
+          "location.address.extendedStreet",
+          "-location.address.extendedStreet",
+          "location.address.postalCode",
+          "-location.address.postalCode",
+          "location.address.state",
+          "-location.address.state",
+          "location.address.locality",
+          "-location.address.locality",
+          "location.address.city",
+          "-location.address.city",
+          "location.address.country",
+          "-location.address.country",
+          "location.address.region",
+          "-location.address.region",
+          "location.type",
+          "-location.type",
+          "location.geoCoding.latitude",
+          "-location.geoCoding.latitude",
+          "location.geoCoding.longitude",
+          "-location.geoCoding.longitude",
+          "location.building",
+          "-location.building",
+          "location.comment",
+          "-location.comment",
+          "location.formattedAddress",
+          "-location.formattedAddress",
+          "location.primaryContact.title",
+          "-location.primaryContact.title",
+          "location.primaryContact.name",
+          "-location.primaryContact.name",
+          "location.primaryContact.firstName",
+          "-location.primaryContact.firstName",
+          "location.primaryContact.lastName",
+          "-location.primaryContact.lastName",
+          "location.primaryContact.phone",
+          "-location.primaryContact.phone",
+          "location.primaryContact.mobile",
+          "-location.primaryContact.mobile",
+          "location.primaryContact.email",
+          "-location.primaryContact.email",
+          "location.primaryContact.roles",
+          "-location.primaryContact.roles",
+          "location.secondaryContact.title",
+          "-location.secondaryContact.title",
+          "location.secondaryContact.name",
+          "-location.secondaryContact.name",
+          "location.secondaryContact.firstName",
+          "-location.secondaryContact.firstName",
+          "location.secondaryContact.lastName",
+          "-location.secondaryContact.lastName",
+          "location.secondaryContact.phone",
+          "-location.secondaryContact.phone",
+          "location.secondaryContact.mobile",
+          "-location.secondaryContact.mobile",
+          "location.secondaryContact.email",
+          "-location.secondaryContact.email",
+          "location.secondaryContact.roles",
+          "-location.secondaryContact.roles",
+          "community",
+          "-community",
+          "servicePoint.id",
+          "-servicePoint.id",
+          "servicePoint.name",
+          "-servicePoint.name",
+          "servicePoint.customerReference",
+          "-servicePoint.customerReference",
+          "offer.id",
+          "-offer.id",
+          "offer.name",
+          "-offer.name",
+          "offer.family",
+          "-offer.family",
+          "topology.isCascaded",
+          "-topology.isCascaded",
+          "topology.layer",
+          "-topology.layer",
+          "topology.mode",
+          "-topology.mode",
+          "topology.role",
+          "-topology.role",
+          "settings.function",
+          "-settings.function",
+          "settings.hostname",
+          "-settings.hostname",
+          "hardware.manufacturer",
+          "-hardware.manufacturer",
+          "hardware.model",
+          "-hardware.model",
+          "hardware.family",
+          "-hardware.family",
+          "hardware.memorySize",
+          "-hardware.memorySize",
+          "hardware.cpuType",
+          "-hardware.cpuType",
+          "hardware.cpuReference",
+          "-hardware.cpuReference",
+          "hardware.cpuCount",
+          "hardware.cpuSpeed",
+          "-hardware.cpuSpeed",
+          "hardware.diskSize",
+          "-hardware.diskSize",
+          "hardware.networkPortCount",
+          "-hardware.networkPortCount",
+          "hardware.serialNumber",
+          "-hardware.serialNumber",
+          "hardware.chassis",
+          "-hardware.chassis",
+          "firmware.name",
+          "-firmware.name",
+          "firmware.version",
+          "-firmware.version",
+          "firmware.featureSets",
+          "-firmware.featureSets",
+          "ownedBy.id",
+          "-ownedBy.id",
+          "ownedBy.name",
+          "-ownedBy.name",
+          "managedBy.id",
+          "-managedBy.id",
+          "managedBy.name",
+          "-managedBy.name",
+          "supportedBy;id",
+          "-supportedBy;id",
+          "supportedBy.name",
+          "-supportedBy.name",
+          "stackedBy.id",
+          "-stackedBy.id",
+          "stackedBy.name",
+          "-stackedBy.name",
+          "stackedBy.customerReference",
+          "-stackedBy.customerReference",
+          "hostedBy.id",
+          "-hostedBy.id",
+          "hostedBy.name",
+          "-hostedBy.name",
+          "hostedBy.customerReference",
+          "-hostedBy.customerReference",
+          "serviceLevelManagement.coverage",
+          "-serviceLevelManagement.coverage",
+          "serviceLevelManagement.restoreTime",
+          "-serviceLevelManagement.restoreTime",
+          "serviceLevelManagement.responseTime",
+          "-serviceLevelManagement.responseTime",
+          "keyDates.installedAt",
+          "-keyDates.installedAt",
+          "keyDates.startedAt",
+          "-keyDates.startedAt",
+          "keyDates.billingStartedAt",
+          "-keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "-keyDates.billingEndedAt",
+          "keyDates.discoveredAt",
+          "-keyDates.discoveredAt",
+          "keyDates.terminatedAt",
+          "-keyDates.terminatedAt",
           "createdAt",
           "-createdAt",
           "updatedAt",
-          "-updatedAt",
-          "model",
-          "-model"
+          "-updatedAt"
         ]
       },
       "LocationFields": {
@@ -4321,12 +4724,19 @@
           "id",
           "name",
           "customerReference",
+          "localCompany",
+          "type",
+          "building",
+          "formattedAddress",
           "address",
           "address.street",
           "address.extendedStreet",
+          "address.state",
+          "address.locality",
+          "address.postalCode",
           "address.city",
           "address.country",
-          "address.postalCode",
+          "address.region",
           "createdAt",
           "updatedAt",
           "address.state",
@@ -4345,12 +4755,10 @@
           "secondaryContact.phone",
           "secondaryContact.email",
           "secondaryContact.mobile",
-          "type",
           "openingHours",
           "geocoding",
           "geocoding.latitude",
           "geocoding.longitude",
-          "localCompany",
           "timeZone",
           "timeZone.name",
           "timeZone.gmt",
@@ -4366,16 +4774,78 @@
           "-id",
           "name",
           "-name",
-          "createdAt",
-          "-createdAt",
-          "updatedAt",
-          "-updatedAt",
+          "customerReference",
+          "-customerReference",
           "localCompany",
           "-locationCompany",
+          "building",
+          "-building",
+          "type",
+          "-type",
+          "formattedAddress",
+          "-formattedAddress",
+          "address.street",
+          "-address.street",
+          "address.extendedStreet",
+          "-address.extendedStreet",
+          "address.locality",
+          "-address.locality",
+          "address.state",
+          "-address.state",
           "address.city",
           "-address.city",
           "address.country",
-          "-address.country"
+          "-address.country",
+          "address.region",
+          "-address.region",
+          "timeZone.code",
+          "-timeZone.code",
+          "timeZone.name",
+          "-timeZone.name",
+          "timeZone.offset",
+          "-timeZone.offset",
+          "timeZone.GMT",
+          "-timeZone.GMT",
+          "geoCoding.latitude",
+          "-geoCoding.latitude",
+          "geoCoding.longitude",
+          "-geoCoding.longitude",
+          "customer.id",
+          "-customer.id",
+          "customer.name",
+          "-customer.name",
+          "openHours",
+          "-openHours",
+          "primaryContact.name",
+          "-primaryContact.name",
+          "primaryContact.firstName",
+          "-primaryContact.firstName",
+          "primaryContact.lastName",
+          "-primaryContact.lastName",
+          "primaryContact.phone",
+          "-primaryContact.phone",
+          "primaryContact.mobile",
+          "-primaryContact.mobile",
+          "primaryContact.email",
+          "-primaryContact.email",
+          "secondaryContact.name",
+          "-secondaryContact.name",
+          "secondaryContact.firstName",
+          "-secondaryContact.firstName",
+          "secondaryContact.lastName",
+          "-secondaryContact.lastName",
+          "secondaryContact.phone",
+          "-secondaryContact.phone",
+          "secondaryContact.email",
+          "-secondaryContact.email",
+          "secondaryContact.mobile",
+          "-secondaryContact.mobile",
+          "comment",
+          "-comment",
+          "createdAt",
+          "-createdAt",
+          "updatedAt",
+          "-updatedAt"
         ]
       },
       "OfferFamily": {
@@ -4386,23 +4856,23 @@
           "OTHER",
           "CLOUD",
           "VOICE",
-          "SECURITY"
+          "SECURITY",
+          "UNKNOWN"
         ]
       },
       "AccessLineRole": {
-        "description": "List of Roles available for an Access Line..",
         "type": "string",
+        "description": "List of Roles available for an Access Line..",
         "enum": [
           "SINGLE",
           "PRIMARY",
           "SECONDARY",
-          "UNKNOWN",
-          "QUICKSTART"
+          "UNKNOWN"
         ]
       },
       "AccessLineType": {
         "type": "string",
-        "description": "List of possible values of Access Line Type.",
+        "description": "Access Line Type.",
         "enum": [
           "LEASED",
           "PSTN",
@@ -4417,7 +4887,7 @@
           "VMI",
           "MOBILE",
           "DSL",
-          "OPTIC_FIBER",
+          "OPTICAL_FIBER",
           "OTHER"
         ]
       },
@@ -4567,31 +5037,30 @@
           "id",
           "name",
           "customerReference",
-          "customer",
+          "state",
+          "requestInProgress",
+          "category",
+          "criticality",
           "customer.id",
           "customer.name",
-          "location",
-          "location.id",
-          "location.name",
-          "location.customerReference",
-          "createdAt",
-          "updatedAt",
-          "type",
-          "offer",
           "offer.id",
           "offer.name",
           "offer.family",
-          "orderedAt",
-          "billingStartedAt",
-          "billingEndedAt",
-          "startedAt",
-          "stoppedAt",
+          "location.id",
+          "location.name",
+          "location.customerReference",
+          "keyDates.orderedAt",
+          "keyDates.startedAt",
+          "keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "keyDates.terminatedAt",
+          "createdAt",
+          "updatedAt",
           "billingAccount.id",
           "billingAccount.name",
           "agreement.id",
           "agreement.name",
-          "accessLines",
-          "devices"
+          "properties"
         ]
       },
       "ServicePointSort": {
@@ -4604,10 +5073,14 @@
           "-name",
           "customerReference",
           "-customerReference",
-          "createdAt",
-          "-createdAt",
-          "updatedAt",
-          "-updatedAt",
+          "state",
+          "-state",
+          "requestInProgress",
+          "-requestInProgress",
+          "category",
+          "-category",
+          "criticality",
+          "-criticality",
           "customer.id",
           "-customer.id",
           "customer.name",
@@ -4616,27 +5089,36 @@
           "-offer.id",
           "offer.name",
           "-offer.name",
+          "offer.family",
+          "-offer.family",
           "location.id",
           "-location.id",
           "location.name",
+          "-location.name",
           "location.customerReference",
           "-location.customerReference",
-          "agreement.id",
-          "-agreement.id",
+          "keyDates.orderedAt",
+          "-keyDates.orderedAt",
+          "keyDates.startedAt",
+          "-keyDates.startedAt",
+          "keyDates.billingStartedAt",
+          "-keyDates.billingStartedAt",
+          "keyDates.billingEndedAt",
+          "-keyDates.billingEndedAt",
+          "keyDates.terminatedAt",
+          "-keyDates.terminatedAt",
           "billingAccount.id",
           "-billingAccount.id",
-          "orderedAt",
-          "-orderedAt",
-          "billingStartedAt",
-          "-billingStartedAt",
-          "billingEndedAt",
-          "-billingEndedAt",
-          "startedAt",
-          "-startedAt",
-          "endedAt",
-          "-endedAt",
-          "state",
-          "-state"
+          "billingAccount.name",
+          "-billingAccount.name",
+          "agreement.id",
+          "-agreement.id",
+          "agreement.name",
+          "-agreement.name",
+          "createdAt",
+          "-createdAt",
+          "updatedAt",
+          "-updatedAt"
         ]
       },
       "PointOfPresenceFields": {
@@ -4700,13 +5182,12 @@
         ]
       },
       "DeviceTopologyMode": {
-        "description": "Mode of the topology. The mode depends of the offer associated to the device.",
         "type": "string",
+        "description": "Mode of the topology. The mode depends of the offer associated to the device. The _LOAD_BALANCING_ value will be use in a next version of the API.",
         "enum": [
           "STANDALONE",
           "DUAL_BACKUP",
           "LOAD_BALANCING",
-          "OTHER",
           "UNKNOWN"
         ]
       },
@@ -4727,12 +5208,15 @@
           "SWITCH",
           "ACCESS_POINT",
           "WIRELESS_ACCESS_POINT",
-          "INTERNETGATEWAY",
           "WAN_ACCELERATOR",
           "DDR",
           "UCPE",
           "HUB",
-          "WAN_EDGE"
+          "WAN_EDGE",
+          "INTERNET_GATEWAY",
+          "OTHER",
+          "UNKNOWN",
+          "WIRELESS_LAN_CONTROLLER"
         ]
       },
       "DeviceCategory": {
@@ -4819,27 +5303,22 @@
       },
       "LocationAddress": {
         "description": "Address information of the site",
-        "required": [
-          "street",
-          "city",
-          "country"
-        ],
         "type": "object",
         "properties": {
           "street": {
-            "description": "Street of the site",
+            "description": "Street of the site.",
             "type": "string"
           },
           "extendedStreet": {
-            "description": "Additional street information of the site",
+            "description": "Additional street information of the site.",
             "type": "string"
           },
           "postalCode": {
-            "description": "Postal code of the site",
+            "description": "Postal code of the site.",
             "type": "string"
           },
           "state": {
-            "description": "State where the site is located. Only for US",
+            "description": "State where the site is located. Only for US.",
             "type": "string"
           },
           "locality": {
@@ -4853,8 +5332,17 @@
           "country": {
             "description": "The country code of the location. The code follow the [ISO-3166-1 alpha 2](https://en.wikipedia.org/wiki/ISO_3166-1) specifications.",
             "type": "string"
+          },
+          "region": {
+            "type": "string",
+            "description": "Region of the location. alpha 2."
           }
-        }
+        },
+        "required": [
+          "street",
+          "city",
+          "country"
+        ]
       },
       "Customer": {
         "description": "Customer account information",
@@ -4949,9 +5437,6 @@
           "serviceLevelManagement": {
             "$ref": "#/components/schemas/ServiceLevelManagement"
           },
-          "inHouseLocation": {
-            "$ref": "#/components/schemas/DeviceInHouse"
-          },
           "keyDates": {
             "type": "object",
             "description": "Information on Key Dates",
@@ -4976,36 +5461,46 @@
                 "description": "Date when the billing was stopped after a disconnection request for example. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09_.",
                 "format": "date"
               },
-              "discoveredAt": {
-                "type": "string",
-                "description": "Date when the device was reached by Orange probes.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_.",
-                "format": "date"
-              },
               "terminatedAt": {
                 "type": "string",
                 "description": "Date when the device has been removed from the service. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09_.",
                 "format": "date"
+              },
+              "endOfSaleAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the brand will stop to sale the equipment.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
+              },
+              "endOfSupportAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the brand will stop to support the equipment.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
+              },
+              "restartedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date when the equipment has been restarted.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format."
               }
             }
-          },
-          "createdAt": {
-            "description": "Date when the device record was created in the API. There is no Business meaning. This field facilitates the data synchronisation. There is no business meaning, helps only for synchronisation of data.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
-            "type": "string",
-            "format": "date-time"
           },
           "updatedAt": {
             "description": "Date when the record was updated in the API. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_.",
             "type": "string",
             "format": "date-time"
           },
-          "_links": {
-            "$ref": "#/components/schemas/DeviceLinks"
+          "createdAt": {
+            "description": "Date when the device record was created in the API. There is no Business meaning. This field facilitates the data synchronisation. There is no business meaning, helps only for synchronisation of data.  The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
+            "type": "string",
+            "format": "date-time"
           },
           "interfaces": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DeviceInterface"
             }
+          },
+          "_links": {
+            "$ref": "#/components/schemas/DeviceLinks"
           }
         },
         "required": [
@@ -5018,21 +5513,12 @@
           "ownedBy",
           "managedBy",
           "supportedBy",
-          "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "createdAt"
         ]
       },
       "DeviceInterface": {
-        "description": "Model description of a Device Interface",
-        "required": [
-          "id",
-          "name",
-          "type",
-          "isLogical",
-          "bandwidth",
-          "cos",
-          "physicalInterface"
-        ],
+        "description": "Interfaces of the Device",
         "type": "object",
         "properties": {
           "id": {
@@ -5100,18 +5586,9 @@
             "description": "VALN id defined on the Interface",
             "type": "string"
           },
-          "hardwareAddress": {
-            "description": "MAC address of the interface",
-            "type": "string"
-          },
           "bandwidth": {
             "description": "Service bandwidth configured",
             "type": "string"
-          },
-          "seenAt": {
-            "description": "Date of the last",
-            "type": "string",
-            "format": "date-time"
           },
           "health": {
             "$ref": "#/components/schemas/DeviceInterfaceHealth"
@@ -5119,16 +5596,21 @@
           "ipAddressing": {
             "$ref": "#/components/schemas/DeviceInterfaceIpAddressing"
           },
-          "cos": {
-            "$ref": "#/components/schemas/DeviceCos"
-          },
           "physicalInterface": {
             "$ref": "#/components/schemas/DeviceInterfaceShort"
           },
           "_links": {
             "$ref": "#/components/schemas/InterfaceLinks"
           }
-        }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "isLogical",
+          "bandwidth",
+          "physicalInterface"
+        ]
       },
       "DeviceTopology": {
         "type": "object",
@@ -5148,6 +5630,14 @@
           },
           "role": {
             "$ref": "#/components/schemas/DeviceTopologyRole"
+          },
+          "mainIpAddress": {
+            "type": "string",
+            "description": "Main IP address of the device."
+          },
+          "mplsUnderlaySiteName": {
+            "type": "string",
+            "description": "Topology site code where the device is deployed.\n"
           }
         },
         "required": [
@@ -5165,6 +5655,12 @@
           },
           "interfaces": {
             "$ref": "#/components/schemas/HyperlinkDeviceInterfaces"
+          },
+          "location": {
+            "$ref": "#/components/schemas/HyperlinkDeviceLocation"
+          },
+          "servicePoint": {
+            "$ref": "#/components/schemas/HyperlinkDeviceServicePoint"
           }
         }
       },
@@ -5180,13 +5676,21 @@
             "description": "Name of the location",
             "type": "string"
           },
+          "customerReference": {
+            "description": "External Reference of the location. This reference is set by Customer.",
+            "type": "string"
+          },
           "localCompany": {
             "type": "string",
             "description": "Name of the company in the premises\n"
           },
-          "customerReference": {
-            "description": "External Reference of the location. This reference is set by Customer.",
-            "type": "string"
+          "building": {
+            "type": "string",
+            "description": "Name of the building"
+          },
+          "formattedAddress": {
+            "type": "string",
+            "description": "Complete formatted address of the location"
           },
           "address": {
             "$ref": "#/components/schemas/LocationAddress"
@@ -5196,18 +5700,6 @@
           },
           "geoCoding": {
             "$ref": "#/components/schemas/GeoCoding"
-          },
-          "building": {
-            "type": "string",
-            "description": "Name of the building"
-          },
-          "comment": {
-            "type": "string",
-            "description": "Comment on the location"
-          },
-          "formattedAddress": {
-            "type": "string",
-            "description": "Complete formatted address of the location"
           },
           "primaryContact": {
             "$ref": "#/components/schemas/PrimaryIndividual"
@@ -5262,10 +5754,6 @@
       },
       "GeoCoding": {
         "description": "GPS information of the location",
-        "required": [
-          "latitude",
-          "longitude"
-        ],
         "type": "object",
         "properties": {
           "latitude": {
@@ -5274,11 +5762,15 @@
             "format": "float"
           },
           "longitude": {
-            "description": "Longitudeof the location.",
+            "description": "Longitude of the location.",
             "type": "number",
             "format": "float"
           }
-        }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
       },
       "Offer": {
         "type": "object",
@@ -5367,18 +5859,19 @@
       "DeviceFirmware": {
         "type": "object",
         "description": "Information on the Device eFirmware.",
+        "title": "",
         "properties": {
           "name": {
             "type": "string",
-            "description": "Name of the Firmware"
+            "description": "Name of the Firmware."
           },
           "version": {
-            "description": "Version of the firrmware",
+            "description": "Version of the firrmware.",
             "type": "string"
           },
           "featureSets": {
             "type": "string",
-            "description": "List of features"
+            "description": "List of features."
           }
         }
       },
@@ -5387,19 +5880,19 @@
         "description": "Information on the Device Hardware.",
         "properties": {
           "manufacturer": {
-            "description": "Manufacturer of the device",
+            "description": "Manufacturer of the device.",
             "type": "string"
           },
           "model": {
-            "description": "Model of the device",
+            "description": "Model of the device.",
             "type": "string"
           },
           "family": {
-            "description": "Family,Product line of the device",
+            "description": "Family,Product line of the device.",
             "type": "string"
           },
           "memorySize": {
-            "description": "Size of the installed memory in the device. Value in kOctets",
+            "description": "Size of the installed memory in the device. Value in kOctets.",
             "type": "integer",
             "format": "int32"
           },
@@ -5412,16 +5905,16 @@
             "type": "string"
           },
           "cpuCount": {
-            "description": "Indicate the number of cpu installed in the Device",
+            "description": "Indicate the number of cpu installed in the Device.",
             "type": "integer",
             "format": "int32"
           },
           "cpuSpeed": {
-            "description": "Indicate the speed of the Processor of the Device in Ghz",
+            "description": "Indicate the speed of the Processor of the Device in Ghz.",
             "type": "string"
           },
           "diskSize": {
-            "description": "Indicate the size of the disk in kOctets",
+            "description": "Indicate the size of the disk in kOctets.",
             "type": "integer",
             "format": "int32"
           },
@@ -5432,17 +5925,21 @@
           },
           "serialNumber": {
             "type": "string",
-            "description": "Serial Number of the device"
+            "description": "Serial Number of the device."
           },
           "chassis": {
             "type": "string",
-            "description": "Chassis name of the device"
+            "description": "Chassis name of the device."
+          },
+          "addresses": {
+            "type": "string",
+            "description": "MAC addresses of the device."
           }
         }
       },
       "DeviceSettings": {
         "type": "object",
-        "description": "Information on the Device Settings",
+        "description": "Main function of the device.",
         "properties": {
           "function": {
             "$ref": "#/components/schemas/DeviceSettingsFunctions"
@@ -5450,19 +5947,11 @@
           "hostname": {
             "type": "string",
             "description": "hostname defined in the device configuration"
-          },
-          "countControlConnections": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Number of connections for a SDWAN device"
           }
         }
       },
       "Hyperlink": {
-        "description": "Link on the resource.",
-        "required": [
-          "href"
-        ],
+        "description": "Link on the item.",
         "type": "object",
         "properties": {
           "href": {
@@ -5476,7 +5965,10 @@
             "description": "Body for POST or PATCH methods",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "href"
+        ]
       },
       "PrimaryIndividual": {
         "type": "object",
@@ -5660,18 +6152,6 @@
           "maskV4": {
             "description": "IP mask of the subnet in v6 format",
             "type": "string"
-          },
-          "maskLengthV4": {
-            "description": "IP Variable Length Subnet Mask in v4 format",
-            "type": "string"
-          },
-          "ipV6": {
-            "description": "IP address in v6 format",
-            "type": "string"
-          },
-          "maskV6": {
-            "description": "IP mask of the subnet in v6 format",
-            "type": "string"
           }
         }
       },
@@ -5696,6 +6176,28 @@
           }
         ],
         "description": "URI on the Device Interface."
+      },
+      "HyperlinkDeviceLocation": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          {
+            "type": "object"
+          }
+        ],
+        "description": "URI on the location."
+      },
+      "HyperlinkDeviceServicePoint": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Hyperlink"
+          },
+          {
+            "type": "object"
+          }
+        ],
+        "description": "URI on the Service Point."
       },
       "Location": {
         "required": [
@@ -6044,15 +6546,11 @@
               }
             }
           },
-          "phoneNumber": {
-            "type": "string",
-            "description": "Phonenumber of the Access Line in case of DSL for example. The value can be null if not relevant for the support."
-          },
           "reference": {
             "type": "string",
             "description": "Internal Reference for identying the Access Line."
           },
-          "dslParameters": {
+          "dsl": {
             "type": "object",
             "description": "Information on the DSL Service.",
             "properties": {
@@ -6063,6 +6561,10 @@
               "vpi": {
                 "type": "number",
                 "description": "Contains the Virtual Path Identifier. Used only for DSL Line."
+              },
+              "phoneNumber": {
+                "type": "string",
+                "description": "Phonenumber of the Access Line in case of DSL for example. The value can be null if not relevant for the support."
               }
             }
           }
@@ -6263,20 +6765,16 @@
         }
       },
       "PointOfPresenceLinks": {
-        "required": [
-          "self",
-          "device"
-        ],
         "description": "HATEOS links on nested resources.",
         "type": "object",
         "properties": {
           "self": {
             "$ref": "#/components/schemas/Hyperlink"
-          },
-          "device": {
-            "$ref": "#/components/schemas/Hyperlink"
           }
-        }
+        },
+        "required": [
+          "self"
+        ]
       },
       "DeviceInHouse": {
         "type": "object",
@@ -6297,16 +6795,38 @@
         }
       },
       "DeviceInterfaceHealth": {
-        "required": [
-          "status"
-        ],
         "type": "object",
-        "description": "Operational Status of the device",
+        "description": " Status of the device interface",
         "properties": {
-          "status": {
-            "$ref": "#/components/schemas/InterfaceStatus"
+          "hardware": {
+            "type": "string",
+            "enum": [
+              "UP",
+              "DOWN",
+              "UNKNOWN"
+            ],
+            "description": "Status of the hardware."
+          },
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "UP",
+              "DOWN",
+              "UNKNOWN"
+            ],
+            "description": "Status of the Protocol."
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date of the last change of the the protocol status."
           }
-        }
+        },
+        "required": [
+          "hardware",
+          "protocol",
+          "modifiedAt"
+        ]
       },
       "ServiceLevelManagement": {
         "required": [
@@ -6314,7 +6834,7 @@
           "restoreTime",
           "responseTime"
         ],
-        "description": "Information on the Service Level.",
+        "description": "Information on the Service Level.\n**This information is only available for International Customers.**",
         "type": "object",
         "properties": {
           "coverage": {
@@ -6353,56 +6873,6 @@
           "customerReference"
         ],
         "description": "Service Point of the Access Line."
-      },
-      "DeviceCos": {
-        "required": [
-          "date",
-          "d1",
-          "d2",
-          "d3",
-          "internet",
-          "video",
-          "voice"
-        ],
-        "type": "object",
-        "description": "Information on the QOS.",
-        "properties": {
-          "data": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for data trafic."
-          },
-          "d1": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for data trafic of classe 1."
-          },
-          "d2": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for data trafic of classe 2."
-          },
-          "d3": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for data trafic of classe 3."
-          },
-          "internet": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for internet trafic."
-          },
-          "video": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for Video trafic."
-          },
-          "voice": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Percentage of bandwidth reserved for Voice trafic."
-          }
-        }
       },
       "ServicePointLinks": {
         "type": "object",
@@ -6609,9 +7079,122 @@
           }
         }
       },
+      "ME": {
+        "title": "Me",
+        "type": "object",
+        "description": "Information on the connected user and the API Key.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Single Identifier of the API key."
+          },
+          "login": {
+            "type": "string",
+            "description": "Login of the associated user."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the associated user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the associated user."
+          },
+          "mobile": {
+            "type": "string",
+            "description": "Mobile number of the associated user."
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the associated user."
+          },
+          "application": {
+            "type": "object",
+            "description": "Application identifier in Orange Developer Portal.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the application in the Orange Developer Portal."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the application in Orange Developer Portal."
+              }
+            }
+          },
+          "apiKey": {
+            "type": "object",
+            "description": "Token identifier associated to the API Key.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Orange Single Identifier of the API KEY."
+              },
+              "scopes": {
+                "type": "string",
+                "description": "Scopes defined for the API Key for Machine to Machine connection, or negotiated scopes for User to Machine connection."
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date of the creation of the API Key."
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Last update date of the API Key."
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the environment (Sandbox or Production).",
+                "enum": [
+                  "ACTIVE",
+                  "EXPIRED",
+                  "SUSPENDED"
+                ]
+              },
+              "expiredAt": {
+                "type": "string",
+                "description": "Date of the expiration of the API Key."
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Date of the creation of the User Account."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date of the User Account."
+          }
+        }
+      },
       "NetworkDocumentation": {
         "description": "Swagger of the API.",
         "type": "object"
+      },
+      "Core-resources-2_Error": {
+        "description": "Information of the occured error.",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Code of the error.."
+          },
+          "message": {
+            "type": "string",
+            "description": "Type of the error."
+          },
+          "description": {
+            "type": "string",
+            "description": "Details of the occured error."
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
       }
     },
     "securitySchemes": {
@@ -6623,7 +7206,7 @@
             "refreshUrl": "https://api.orange.com/oauth/v3/token",
             "scopes": {
               "b2b:network": "Allow to access and manage resources",
-              "b2b:network:readOnly": "Allow to access all resources in read mode"
+              "b2b:network:readonly": "Allow to access all resources in read mode"
             }
           }
         }
