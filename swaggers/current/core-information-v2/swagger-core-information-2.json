@@ -4291,8 +4291,11 @@
           "customer": {
             "$ref": "#/components/schemas/Customer"
           },
-          "billingAccount": {
-            "$ref": "#/components/schemas/BillingAccount"
+          "billingAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillingAccount"
+            }
           },
           "category": {
             "type": "string",

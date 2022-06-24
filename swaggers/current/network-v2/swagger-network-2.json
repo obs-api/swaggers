@@ -5635,6 +5635,10 @@
             "type": "string",
             "description": "Main IP address of the device."
           },
+          "mainIpMask": {
+            "type": "string",
+            "description": "IP Mask for the main IP address of the device. Format v4."
+          },
           "mplsUnderlaySiteName": {
             "type": "string",
             "description": "Topology site code where the device is deployed.\n"
@@ -6650,8 +6654,11 @@
             "description": "Date when the record was updated. There is no Business meaning. This field facilitates the data synchronisation. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09T12:07:56Z_",
             "format": "date-time"
           },
-          "billingAccount": {
-            "$ref": "#/components/schemas/BillingAccount"
+          "billingAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillingAccount"
+            }
           },
           "agreement": {
             "$ref": "#/components/schemas/Agreement"
@@ -6829,11 +6836,6 @@
         ]
       },
       "ServiceLevelManagement": {
-        "required": [
-          "coverage",
-          "restoreTime",
-          "responseTime"
-        ],
         "description": "Information on the Service Level.\n**This information is only available for International Customers.**",
         "type": "object",
         "properties": {
@@ -6848,6 +6850,10 @@
           "responseTime": {
             "type": "string",
             "description": "Response Time to fix an issue."
+          },
+          "code": {
+            "type": "string",
+            "description": "Code of the Service Management Level."
           }
         }
       },
