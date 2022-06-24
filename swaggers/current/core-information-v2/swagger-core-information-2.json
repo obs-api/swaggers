@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "description": "Core Information provides several methods to access transversal information and the global inventory.is an API restricted to Orange Business Services customers.\n\nThis API allows to retrieve the list of Customer Accounts, Location, Resources, Products and Services. \n\n### Internationalization\nThis API Provides data only in English\n### Resources\n\n- **accounts** :  Customer Accounts \n- **locations** :  Geographic place identified by a postal address where equipment are deployed.\n- **servicePoints** : Installed offers / solutions.\n- **configurationItems** : Equipments or supports installed based on Service Points.\n\n\n- **doc** : Documentation of the API in Swagger format.\n- **status** : Health of the API component.\n- **version** : Version of the API component.\n\nCopyright © OBS 2021. All Rights Reserved.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:core-information| Full access of the API. |\n| b2b:core-information:readonly | API limited to read actions |  \n\n# Authentication\n \nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services for _'Machine2Machine'_ mode.",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "title": "Core Information",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
