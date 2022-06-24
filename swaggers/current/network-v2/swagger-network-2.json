@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "description": "The Network API allows to provide a clear visibility on the deployed Network solutions and Equipements. This API provides the full inventory, QoS and usage reports.  \nMost of Network Offers are supported.\n  \n\n### Internationalization\nBy default, data are in English but you can request data in French by specifying a language code in the Accept-Language header.\n_Example: Accept-Language: fr_\n\n### Resources \n- **accessLines** : An Access Line (or Circuit) is the physical line supporting the service such as Optical Fiber or DSL.\n- **devices** : A  device is an equipement of the WAN or LAN network for example a Router. Devices are physical but can be also virtual.\n- **interfaces** : An Interface is a physical port of a device.\n- **locations** : A location is a Geographical place like a building.\n- **pointOfPresences** : Point of Presence is a Orangecenter containing Network Equipments.\n- **servicePoints** : Service Point is an installed Offer such as a BVPN site. You will find Commercial information on this object.\n\n\n### Scopes\n\n| Scope | Features |\n| --- | --- |\n| b2b:network| Full access of the API. |\n| b2b:network:readonly | API limited to read actions |  \n\n\n# Authentication\n\nThe authentication is based on OAuth 2.0 and and API Key provided by Orange Business Services",
-    "version": "2.2.3",
+    "version": "2.2.4",
     "title": "Network",
     "x-logo": {
       "url": "https://raw.githubusercontent.com/obs-api/swaggers/main/assets/logo.png",
@@ -235,7 +235,7 @@
             }
           },
           {
-            "name": "servicePoints.id",
+            "name": "servicePoint.id",
             "required": false,
             "in": "query",
             "description": "Returns Access Lines that match the exact value or formula about the Single identifier of the Service Point linked to the Access Line.",
