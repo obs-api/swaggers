@@ -27,6 +27,8 @@ Please contact your Orange Representative to verify if you can use this type of 
 | `location.localCompany`      |  `string`  | optional | Name of the Local Company  |
 | `location.localCompanyLegalNumber`      |  `string`  | optional | Number of the Local Company corresponding to the SIREN.  |
 | `location.building`      |  `string`  | optional | Building name. The max size is 50 characters. |
+| `location.buildingCode`      |  `string`  | optional | Building Code provided by ARCEP. The max size is 50 characters. |
+| `location.name`      |  `string`  | required |  Name of the location where the service must be installed. The max size is 20 characters.|
 | `location.stair`      |  `string`  | optional | Stair of the location. The max size is 50 characters. |
 | `location.floor`      |  `string`  | optional | Floor number. The max size is 50 characters. |
 | `location.room`      |  `string`  | optional | Room number. The max size is 50 characters. |
