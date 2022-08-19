@@ -4355,6 +4355,7 @@
       "Note": {
         "type": "object",
         "description": "Attributes of a Note",
+        "title": "Note",
         "properties": {
           "id": {
             "type": "string",
@@ -4363,10 +4364,6 @@
           "title": {
             "type": "string",
             "description": "Summary of the note"
-          },
-          "type": {
-            "type": "string",
-            "description": "Type of the note"
           },
           "body": {
             "type": "string",
@@ -4393,8 +4390,7 @@
           "body",
           "createdAt",
           "updatedAt"
-        ],
-        "title": "Note"
+        ]
       },
       "NotePOST": {
         "type": "object",
@@ -4404,10 +4400,6 @@
           "title": {
             "type": "string",
             "description": "Summary of the note"
-          },
-          "type": {
-            "type": "string",
-            "description": "Type of the note"
           },
           "body": {
             "type": "string",
@@ -4613,43 +4605,43 @@
       },
       "Version": {
         "description": "Information on the API Version",
-        "required": [
-          "version",
-          "deprecated"
-        ],
         "type": "object",
         "properties": {
           "version": {
             "$ref": "#/components/schemas/VersionStruct"
           },
           "deprecated": {
-            "description": "Flag indicating that API is deprecated",
+            "description": "Flag indicating that API is deprecated.",
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "version",
+          "deprecated"
+        ]
       },
       "VersionStruct": {
         "description": "Information on the Version",
+        "type": "object",
+        "properties": {
+          "major": {
+            "description": "Major number of the API.",
+            "type": "string"
+          },
+          "minor": {
+            "description": "Minor number of the API.",
+            "type": "string"
+          },
+          "patch": {
+            "description": "Patch number of the API.",
+            "type": "string"
+          }
+        },
         "required": [
           "major",
           "minor",
           "patch"
-        ],
-        "type": "object",
-        "properties": {
-          "major": {
-            "description": "Major number of the API",
-            "type": "string"
-          },
-          "minor": {
-            "description": "Minor number of the API",
-            "type": "string"
-          },
-          "patch": {
-            "description": "Patch number of the API",
-            "type": "string"
-          }
-        }
+        ]
       },
       "ServicePoint": {
         "type": "object",
@@ -4675,7 +4667,8 @@
       },
       "Documentation": {
         "description": "Swagger of the API",
-        "type": "object"
+        "type": "object",
+        "title": ""
       },
       "Request_BVPNFrance_Delete": {
         "description": "Body for requesting of a BVPN disconnection (Manual Process).",
@@ -4975,12 +4968,12 @@
               },
               "customerSignedAt": {
                 "type": "string",
-                "format": "date",
+                "format": "date-time",
                 "description": "Date when the order was signed. Use \"YYYY-MM-DD\" format Example: 2018-04-18."
               },
               "validatedAt": {
                 "type": "string",
-                "format": "date",
+                "format": "date-time",
                 "description": "Date when the order was validated. Use \"YYYY-MM-DD\" format Example: 2018-04-18."
               },
               "inHouseWiringCompletedAt": {
@@ -4991,7 +4984,7 @@
               "equipmentOrderedAt": {
                 "type": "string",
                 "description": "Date when the equipment was ordered. Use \"YYYY-MM-DD\" format Example: 2018-04-18.",
-                "format": "date"
+                "format": "date-time"
               },
               "equipmentDeliveredAt": {
                 "type": "string",
@@ -5001,7 +4994,7 @@
               "circuitOrderedAt": {
                 "type": "string",
                 "description": "Date when the circuit was ordered. Use \"YYYY-MM-DD\" format Example: 2018-04-18.",
-                "format": "date"
+                "format": "date-time"
               },
               "circuitDeliveredAt": {
                 "type": "string",
@@ -5030,7 +5023,7 @@
               },
               "informationSentAt": {
                 "type": "string",
-                "format": "date",
+                "format": "date-time",
                 "description": "Date when the information was sent. Use \"YYYY-MM-DD\" format Example: 2018-04-18."
               },
               "disconnectedAt": {
@@ -5062,6 +5055,16 @@
                 "type": "string",
                 "format": "date-time",
                 "description": "Date when the order was completed. Use \"YYYY-MM-DD\" format Example: 2018-04-18."
+              },
+              "customerDeliveryRequestedAt  ": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the Customer requst the delivery."
+              },
+              "equipmentCustomerSiteDeleveryExpectedAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Date when the Customer expect to receive equipemnt on Site."
               }
             }
           },
@@ -5077,7 +5080,20 @@
           "billingAccounts": {
             "type": "array",
             "description": "List of Billing accounts used for the order.",
-            "items": {}
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "comment": {
             "type": "string",
@@ -5241,13 +5257,13 @@
             "type": "string",
             "description": "Name of the attachment."
           },
-          "content": {
+          "fullname": {
+            "type": "string",
+            "description": "FullName of the attachment."
+          },
+          "body": {
             "type": "string",
             "description": "Content of the attachment in Base64 format."
-          },
-          "format": {
-            "type": "string",
-            "description": "Format of the Attachment. It is a mime format such as _application/pdf_. This value is just an information for faciliting the file management."
           },
           "href": {
             "type": "string",
@@ -5260,6 +5276,14 @@
           "updatedAt": {
             "type": "string",
             "description": "Last update of the item for efficient data synchronisation. There is no Business meaning. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09_."
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "Format of the Attachment. It is a mime format such as _application/pdf_. This value is just an information for faciliting the file management."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the file."
           }
         }
       },
@@ -5272,21 +5296,6 @@
             "type": "string",
             "description": "Single Identifier of the Step"
           },
-          "name": {
-            "type": "string",
-            "description": "Name of the Step"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "NEW",
-              "IN_PROGRESS",
-              "COMPLETED",
-              "CANCELLED",
-              "UNKNOWN"
-            ],
-            "description": "Status of the Step"
-          },
           "updatedAt": {
             "type": "string",
             "description": "Last update of the item for efficient data synchronisation. There is no Business meaning. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09_."
@@ -5295,6 +5304,15 @@
             "type": "string",
             "format": "date-time",
             "description": "Creation date of the item for efficient data synchronisation. There is no Business meaning. The format is [ISO-8601](https://www.w3.org/TR/NOTE-datetime) format.\n_Example: 2015-04-09_"
+          },
+          "author": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "step": {
+            "type": "string"
           }
         }
       },

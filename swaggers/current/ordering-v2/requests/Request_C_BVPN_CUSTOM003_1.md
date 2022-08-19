@@ -1,5 +1,6 @@
 # Request to Creation of BPVN Site
 
+
 The objective of this request is to request the deployment of a new BVPN site based on the template 003.
 
 
@@ -36,6 +37,7 @@ Please contact your Orange Representative to verify if you can use this type of 
 | `location.building`      |  `string`  | optional | Building name. The max size is 50 characters. |
 | `location.address.postalCode`      |  `string`  | required | Postal Code of the Location. For France, must be a 5 digits number.  |
 | `location.address.city`      |  `string`  | required | Name of the City. The max size is 50 characters.  |
+| `location.address.country`      |  `string`  | required | ISO Code of the country.  FR for France  |
 | `contacts.primary.title`      |  `string`  | required |  Title of the person. Authorized Values are: M., Mrs.  |
 | `contacts.primary.firstName`      |  `string`  | required | First name of the person.   |
 | `contacts.primary.lastName`      |  `string`  | required |  Last name of the person  |
