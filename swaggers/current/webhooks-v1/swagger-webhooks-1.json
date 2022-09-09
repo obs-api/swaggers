@@ -8,16 +8,13 @@
             "url": "http://developer.orange.com",
             "email": "philippe.valette@orange.com"
         },
-        "description": "\n## Overview\nThe Notification API proposes a [Webhooks](https://en.wikipedia.org/wiki/Webhook) a mechanism, for applications to receive real-time information when an item in Orange Business Services API is created or updated. This mechanism avoid to put in place none efficient polling scripts.\n\nThe principle is that a subcription is required for each event in order to activate the notification. For this subcription, a callback url must be provided and also the type of authentication (no authentication, basic authentication or OAuth 2.0). The callback URL (or an API) must be accessible on Internet or in your intranet if you have the option BVPN Gallery.\nOnce the subscription is completed, Orange's servers will sent an HTTP POST based on subcribed events. \n\nObviously,it is possible to be notified on several applications for the same event.\n\nThis Webhook API allows also to customize the body of the event in order to use an API protected by Basic Authentication or OAuth 2.0\n\n\nA step by step [tutorial](https://obs-api.github.io/tutorials/webhooks) will help you to put in place Webhooks.\n\n\n>Webhook events can be sent more than once and the delivery is not guaranteed to be in order. To defend against this behavior a `timestamp`  in included in the body so for the same event on the same object, the state can be managed on the client side.\n\n## Event Object\nThe list of available events is available [here](http://https://obs-api.github.io/documentation/webhooks). \nThe standard the received payload format is\n\n```\n {\n     \"id\": \"620d043dd7a5d4752655e723\",\n     \"event\":\n     {\n         \"id\": \"b2b:incident:update\"\n     },\n     \"rule\":\n     {\n         \"id\": \"61747d2133a086001be1f6af\",\n         \"name\": \"Notification on Incident update\"\n     },\n     \"payload\":\n     {\n         \"id\": \"123456788\",\n         . . . \n     },\n     \"createdAt\":\"2021-10-23T21:22:41Z\"\n }\n```\n\n###  JSON Body Parameters\n\n| id         | Type     | Description |\n|--------------|:-----------:|------------|\n| `id`| `string`     | Unique event identifier, which can be used to ensure<br>that events are only digested once.       |\n| `event.id`      |  `string`  | Event type.       |\n| `rule.id`      |  `string`  | Single Identifier of the rule that trigged the event.       |\n| `rule.name`      |  `string`  | Name of the rule that trigged the event.       |\n| `resource`      |  `string`  | Resource name this event has been generated for.    |\n| `href`        | `string`  | Contains the URL to  `GET` to request the entire resource.      |\n| `mode`      | `string`  | Mode of the event Full or only the resource id       |\n| `payload`      | `string` | The complete resource information this event has been generated for.       |\n| `createdAt`      |  `string`  | ISO time when the event occured.     |\n\n\n\n"
+        "description": "# Overview\n\n\nThe Notification API proposes a [Webhooks](https://en.wikipedia.org/wiki/Webhook) a mechanism, for applications to receive real-time information when an item in Orange Business Services API is created or updated. This mechanism avoid to put in place none efficient polling scripts.\n\nThe principle is that a subcription is required for each event in order to activate the notification. For this subcription, a callback url must be provided and also the type of authentication methods. The callback URL (or an API) must be accessible on Internet or in your intranet if you have the option BVPN Gallery.\nOnce the subscription is completed, Orange's servers will sent an HTTP POST based on subcribed events. \n\nObviously, it is possible to notify several applications for the same event.\n\nThis Webhook API allows also to customize the body of the event in order to use an API protected by Basic Authentication or OAuth 2.0\n\n\n| **API**               | **Description**                          | **Offer API**                   |\n|-----------------------|------------------------------------------|---------------------------------|\n| **Core Information**  |                                          |                                 |\n| **Incident**          |                                          |                                 |\n| **Network**           |                                          |                                 |\n| **Ordering**          |                                          |                                 |\n| **Mobile**            |                                          |                                 |\n\n\n\nOrange Business Services provides 2 types of Webhook\n- Standard\n- Customized\n\n\n>Webhook events can be sent more than once and the delivery is not guaranteed to be in order. To defend against this behavior a `timestamp`  in included in the body so for the same event on the same object, the state can be managed on the client side.\n\nThis documentation explains 'how to implement a Webhook notification with Orange Business Services API'. \n\nTo implement Webhook notificaton, the API 'Webhook API' must be subcribed in Orange Developer Portal.\n\n\n\n# What's a Webhook Notification\n\nWebhooks are one of a few ways web applications can communicate with each other.\n webhooks are a way for apps to communicate between them automatically.\nIt allows you to send real-time data from one application to another whenever a given event occurs.\n\nWebhooks are user-defined HTTP callbacks. They are triggered by some event in a web application and can facilitate integrating different applications or third-party APIs, like Twilio.\n\n\n### How does a webhook operate?\n\n\nYou can register a webhook by registering the URL to notify and events that you need a notification. This first step is usually done via Webhook API. To secure the relationship an authentication (Basic Authentication, OAuth 2.0...) mechanism can be added.\n\nThe route created holds the logic to be executed once events occur.\n\nThis way, a system doesn't have to know the nature of what needs to be executed, it only needs to keep track of the routes to notify.\n\n\n<img title=\"a title\" alt=\"Alt text\" src=\"schama.png\">\n\n\nIt's really powerful since everything remains decoupled. System B, receiving the notification through the chosen URL, not only knows an event occurred on another system, but it can also react to it.\n\nThe route holding the logic has to be accessible through an HTTP POST request.\n\nThe POST request is used in order to include data via the POST body. It's a  JSON object **(see the event format - todo)**.\n\n\n## Webhook API\n\nOrange Business Services Provides an API for register Webhook on several events (Production & Sandbox).\n\nThe API allows to \n- list all webhook registrations\n- Get the details of the\n- Register a new Webhook\n- Update the registration of a Webhook\n- Suspend the registration of a Webhook\n\nAll these methods are described in the Swagger.\n\nThe API is accessible on the Orange Developer Portal **Add the link - todo**\n\n\n## Webhook Registration\n\nTo register to an avent or several events, a POST method with a body is required.\n\nthe body contains\n- Common information such the name, status etc...\n- List of events to register\n- Callback information with the callback URL, authentication, headers, query parameters and transformation rules\n\n\n## Common Information\n\n\n```\n{\n   \n  \"name\": \"My First Basic Rule\",\n  \"description\": \"This first rule allows to receive notifications on the creation of a new incident.\",\n  \"mode\": \"ALL\",\n  \"isActive\": true,\n  \"events\": [\n    {\n      \"id\": \"b2b:incident:new\" \n    }\n  ],\n  \"callback\": {\n    \"url\": \"https://obs-test.requestcatcher.com/\",\n    \"method\": \"POST\",\n    \"headers\": {\n        \"version\": \"1\"\n    },\n    \"query\": {\n         \n    },\n    \"authentication\": {\n      \"type\": \"BASIC_AUTHENTICATION\",\n      \"clientId\": \"user1\",\n      \"clientSecret\": \"123456789\"\n    \n    },\n    \"maxRate\": 5\n  }\n}\n\n```\n\n\n## Callback Information\n\nThis section allows to specify all parameters required to send the notification.\n\nThe format is \n\n ```\n{\n  . . .\n  \"callback\": {\n    \"url\": \"https://obs-test.requestcatcher.com\",\n    \"method\": \"POST\",\n    \"headers\": {\n        \"key\": \"ABCDEG\"\n    },\n    \"query\": {\n        \"version\": \"1\"\n    },\n    . . .\n  }\n  . . .\n}\n\n```\n\nThe _method_ is only POST, other methods will be introduced in next versions of the Webhook API.\n\nThe _header_ section allows to add static information in the header.\n\nThe _query_ section allows to add statix information in Query parameters. \n\nThe example will not the following CURL call\n\n```\n    POST https://obs-test.requestcatcher.com?version=1\n    key: \"ABCDEG\"\n    {\n        \"id\"\n    }\n\n```\n\n\n\n\n\n## Authentication\n\nThe POST method can be public (no recommended) but also private in order to secure the exchange and to be sure that the caller is Orange Business Service system.\nThe choice of the authentication is made during the registration phase.\n\n\n### No Authentication\n\nThe event can be trigged without any Authentication. The format of the registration will be\n\n```\n\n{\n    \"name\": \"My First Customized Rule\",\n    . . .\n    \"callback\": {\n     \n    . . .\n\n        \"authentication\": {\n            \"type\": \"NO_AUTHENTICATION\" \n        },\n    . . .\n}\n```\n\n### Basic Authentication\n\nThe event can be trigged without any Authentication. The format of the registration will be\n\n```\n{\n    \"name\": \"My First Customized Rule\",\n    . . .\n    \"callback\": {\n     \n    . . .\n\n        \"authentication\": {\n            \"type\": \"BASIC_AUTHENTICATION\",\n            \"clientId\": \"user1\",\n            \"clientSecret\": \"123456789\"\n        },\n    . . .\n}\n```\n\n\n\n### OAuth Authentication\n\n\n```\n{\n    \"name\": \"My First Customized Rule\",\n    . . .\n    \"callback\": {\n     \n    . . .\n\n        \"authentication\": {\n            \"type\": \"OAUTH_AUTHENTICATION\",\n            \"tokenUrl\": null,\n            \"refreshTokenUrl\": null,\n            \"grantType\": null,\n            \"clientAuthentication\": null,\n            \"requestTokenPayloadType\": null,\n            \"tokenHeaderName\": null,\n            \"tokenType\": null,\n            \"clientIdName\": null,\n            \"clientSecretName\": null,\n            \"tokenResponse\": {\n                \"accessTokenPath\": null,\n                \"expiresInPath\": null,\n                \"expiresIn\": null\n            },\n            \"tokenResponseType\": null,\n            \"authAdditionalHeaders\": null\n        },\n    . . .\n}\n```\n\n\n## Body Transformation\n\nBy default, the event sent in the body has the format described **here-todo***\n\nBut in order to be adaptable to several implementation like calling an API and in collaboration with the Authentication, it is possible to specify another format. \n\n\n\n### Mapping\n\nTo achieve a transformation, we use the JSONATA **link-todo** format. \n\nExample of a transformation, we would like to have the following body\n\n```\n{\n    \"providerReference\": \"123456\",\n    \"provider\": \"Orange\",\n    \"status\": \"OK\"\n}\n```\n\nwhen Orange system sent by default\n\n```\n{\n    \"id\": \"123456\",\n    \"status\": \"OK\",\n    \"payload\":\n    {\n        \"id\": \"123456\",\n        \"state\": \"OK\"\n    }\n}\n```\nThe transformation schema must set in the be encoded in\n\n\n```\n{\n    \"providerReference\": event.payload.id,\n    \"provider\": \"Orange\",\n    \"status\": event.payload.state\n}\n``` \n\nas the transformation schema is transfered in a JSON object, it must be encoded\n \n```\n    . . .\n    \"schema\": {\n            \"body\": \"\n{\\\"providerReference\\\": event.payload.id,\\\"provider\\\": \\\"Orange\\\",\\\"status\\\": event.payload.state }\",\n            \"functions\": {}\n    },\n    . . .\n``` \n\nThe target system will received the expected format.\n\n\n\n### Functions\n\nSometime, it can be interesting to use a Javascript function. JSONATA has several native functions (see documentation **link-todo**) but allows alsoto be extended by custom function.  \nTo call a function, the format is _$namefunction_. \nIn the section schema/function, custom functions can be defined.\n\nExample of a simple mapping\n\n``` \n    . . .\n    \"schema\": {\n                \"mapStatus\": \"function(value){if (value=='OK') return 'INPROGRESS'; .... }\"\n            \"body\": \"{\\\"providerReference\\\": event.payload.id,\\\"provider\\\": \\\"Orange\\\",\\\"status\\\": $mapStatus(event.payload.state) }\",\n            \"functions\": {\n                \"mapStatus\": \"function(value){if (value=='OK') return 'INPROGRESS'; .... }\"\n            }\n    },\n    . . .\n``` \nIn this case the target system will receive\n\n\n```\n{\n    \"providerReference\": \"123456\",\n    \"provider\": \"Orange\",\n    \"status\": \"INPROGRESS\"\n}\n```\n\n## Event Object\n \nThe body sent to the remote host follows this format\n\n\n| id         | Type     | Description |\n|--------------|:-----------:|------------|\n| `id`| `string`     | Unique event identifier, which can be used to ensure<br>that events are only digested once.       |\n| `event.id`      |  `string`  | Event type.       |\n| `rule.id`      |  `string`  | Single Identifier of the rule that trigged the event.       |\n| `rule.name`      |  `string`  | Name of the rule that trigged the event.       |\n| `resource`      |  `string`  | Resource name this event has been generated for.    |\n| `href`        | `string`  | Contains the URL to  `GET` to request the entire resource.      |\n| `mode`      | `string`  | Mode of the event Full or only the resource id       |\n| `payload`      | `string` | The complete structure of the resource that has trigged the event.       |\n| `createdAt`      |  `string`  | ISO time when the event occured.     |\n\n\n\nExample:\n\n```\n {\n     \"id\": \"620d043dd7a5d4752655e723\",\n     \"event\":\n     {\n         \"id\": \"b2b:incident:update\"\n     },\n     \"rule\":\n     {\n         \"id\": \"61747d2133a086001be1f6af\",\n         \"name\": \"Notification on Incident update\"\n     },\n     \"payload\":\n     {\n         \"id\": \"123456788\",\n         . . . \n     },\n     \"createdAt\":\"2021-10-23T21:22:41Z\"\n }\n```\n\n \n\n## CallBack Host configuration\n\n\n### URL\n\n\n\n### Authentication\n\n\n\n# Customized Webhook / API calls\n\nThe Orange Business Services Webhook API provide the capability to customized the signature of the notification.\nThis feature combined with the Authentication is usefull to call Public API.\n\nThe Body transformation is based on an JSON transformation engine named JSONATA tools [https://jsonata.org/](https://jsonata.org/)\n\nSo for each type of event, a transformation rule must be  must be specified in the attribute `schema` present in the `callback` section.  \nSee the [Swagger](http://)\n\nThe attribute `schema` is an object composed of 2 attributes:\n\n- `body`: Contains the the new transformation schema encoded (due to JSON) with escaped characters.\n- `functions`: Contains a list of Javascript functions that can be call from the transformation schema, this is usefull for complex transformation or  mapping, even if JSONATA allows to define embedded functions.\n\n\n## Transformation of the body\n\nThe transformation schema must be defined in JSONATA with escapêd characters. \n\nTo access data of the event, the object `event` is available to access attribute of the event.\nAll information of the item that is new, changed are avaialble under `payload`attribute.\n\nFor example, to access the status of an incident, the syntax will be `event.payload.status`\n\nThe following transformation schema\n\n```json\n{\n    . . .\n    \"callback\":\n    {\n        \"schema\":\n        {\n            \"body\": \"{\\\"id\\\": event.payload.status, \\\"status\\\": event.payload.status}\",\n        }\n    }\n\n    . . .\n}\n \n```\n\nWith the following standard event:\n\n```json\n{\n    \"id\": \"10-xxxxxxxx\",\n    . . .\n    \"payload\":\n    {\n         \"id\": \"10-xxxxxxx\",\n         . . .\n         \"status\":\"IN_PROGRESS\",\n         . . .\n    }\n    . . .\n}\n\n```\n\nwill be transformed in more simple event\n\n```json\n{\n    \"id\": \"10-xxxxxxxx\",\n    \"status\":\"IN_PROGRESS\"\n}\n\n```\n\n\nWith this mechanism, the Webhook API can be adapted for all type of REST API.\n\n\n## Complex transformation with JS functions\n\nFrom the schema you can call Javascript functions for complex transformations.\n\nThe function must be defined in the `functions` attribute that it is an object where keys are the name of the function. \n\nTo avoid unexpected response of the function, all errors must be catched or prevented.\n\nTo work, the function must return a value and several parameters can be indicated.\n\n\nIn tis example, 2 functions are defined\n- one for multiple by twice a value\n- another one for doing a simple mapping ('P1' => 1, 'P2' => 2, all other values will be null) \n\n\n```json\n{\n    . . .\n    \"callback\":\n    {\n        . . .\n        \"functions\":{\n            \"multiplyByTwo\" : \"function(a) {  return a*2 }\",\n            \"mapPriorities\" : \"function (a) { switch(a) { case 'P1': return 1; case P2: return 2}; return null;}\"\n        }\n        . . .\n    }\n    . . .\n}\n\n```\n\nin these exemple, these functions can be call from the schema. In JSONATA, the function must be called by is name with a $ in prefix.\n\nExample of a transformation schema:\n```json\n\n{\n    \"id\": event.payload.id,\n    \"duration\": $multiplyByTwo(event.payload.duration),\n    \"priority\": $mapPriorities(event.payload.priority)\n}\n```\n\nThe complete definition is \n\n```json\n{\n    . . .\n    \"callback\":\n    {\n        . . .\n        \"schema\":\n        {\n            \"body\": \"{\\\"id\\\": event.payload.id, \\\"duration\\\": $multiplyByTwo(event.payload.duration), \\\"priority\\\": $mapPriorities(event.payload.priority)\",\n            \"functions\":{\n                \"multiplyByTwo\" : \"function(a) {  return a*2 }\",\n                \"mapPriorities\" : \"function (a) { switch(a) { case 'P1': return 1; case P2: return 2}; return null;}\"\n            }\n        }\n        . . .\n    }\n    . . .\n}\n\n```\n\n\n\nSo with the following standard event,\n\n```json\n{\n    \"id\": \"10-xxxxxxxx\",\n    . . .\n    \"payload\":\n    {\n        \"id\": \"10-xxxxxxxx\",\n        . . .\n        \"duration\": 15,\n        \"priority\": \"P1\"\n        . . .\n    }\n    . . .\n}\n\n```\n\nThe remote host will be received the follwing body \n\n```json\n{\n    \"id\": \"10-xxxxxxxx\",\n    \"duration\": 30,\n    \"priority\": 1\n}\n```\n\n\nThe system is very flexible combined with Authentication.\n\n\n\n\n# A Walkthough\n\nIn this chapter, we will describe Step by Step how to implement a Webhook notification.\n\n## Target System Implementation\n\nFirst of all, we must have a system to receive notifications. To illustrate the implementation, we will use the Request Catcher (https://requestcatcher.com/)web site. The site will crate a subdomain where we can forward calls. The application allows to see all parameters of the HTTP.\n\nOn the first page of the site, you have to enter the name of the subdomain\n \n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/requestcatcher-1.png\">\n\n\nIn this example, we used webhook-test, and the callback URL will be https://webhook-test.requestcatcher.com/\n\n\nOn the next page, the site is waiting calls,\n\n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/requestcatcher-2.png\">\n\n\n\n don't close the window, eventw will be displayed.\n\n\n## Subcription to event\n\nThe next step is to register a notification. So must have registered to the Webhook API in the Orange Developer Portal.\n\nFor this walkthough we will use a demo account, the API Key is available here.\n\nTo register, via POSTMAN, you must send a POST method with the following Body.\n\nFor illustrating capabilities for this first test, we will use the Basic Authentication, a query parameter and a header attribute.\n\nWe will subcribe to incident events\n\nThe format of the request will be\n\n```\n{\n    \"name\": \"My First Registration\",\n    \"description\": \"A basic registration to Incident Events.\",\n    \"mode\": \"ALL\",\n    \"isActive\": true,\n    \"events\": [\n        { \n            \"id\": \"b2b:incidents:new\"\n        },\n        {\n            \"id\": \"b2b:incidents:update\"\n        }\n    ],\n    \"callback\": {\n        \"url\": \"https://webhook-test.requestcatcher.com\",\n        \"method\": \"POST\",\n        \"headers\": {\n            \"version\": \"1\"\n        },\n        \"query\": {\n            \"provider\": \"ORANGE\"\n        },\n        \"authentication\": {\n            \"type\": \"BASIC_AUTHENTICATION\",\n            \"clientId\": \"user1\",\n            \"clientSecret\": \"123456789\"\n        },\n        \"schema\": {} \n    }\n}\n\n```\n\nThe Postman collection can be download here **TODO**\n\n\n\n<br><br>\n\n## Test with Espace Client Entreprise\n<br>\n\nFor generating an incident, we will use the Developer Portal (http://espaceclient.orange-business.com/group/ece2) and the associated demo login (demo.gcompte/Demo1234!)\n\n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/requestcatcher-1.png\">\n\n\nClick on the 'Report an incident'\n\n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/ece-incident-1.png\">\n\n\n\n<br><br>\nSelect the item <br>\n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/ece-incident-2.png\">\n\n\n\n<br><br>\n\nFill in the form<br>\n\n<img title=\"a title\" alt=\"Alt text\" src=\"https://raw.githubusercontent.com/obs-api/swaggers/main/swaggers/current/webhooks-v1/assets/ece-incident-3.png\">\n\n\n\n## Result in Request Catcher\n\n\n\n\n\n\n"
     },
-    "servers": [
-        {
-            "url": "https://api.orange.com/webhook/b2b/preview/v1"
-        }
-    ],
-    "tags": [
-        {
-            "name": "Webhook Rules",
+    "servers": [{
+        "url": "https://api.orange.com/webhook/b2b/preview/v1"
+    }],
+    "tags": [{
+            "name": "Webhook Rules API",
             "description": "Webhook rules allows to subscribe to event on the following APIs: Core Information, Incident, Network, Ordering."
         },
         {
@@ -30,7 +27,7 @@
             "get": {
                 "summary": "Find Webhooks",
                 "tags": [
-                    "Webhook Rules"
+                    "Webhook Rules API"
                 ],
                 "responses": {
                     "200": {
@@ -82,8 +79,7 @@
                     }
                 },
                 "operationId": "FindWebhooks",
-                "parameters": [
-                    {
+                "parameters": [{
                         "schema": {
                             "type": "string"
                         },
@@ -95,6 +91,7 @@
                         "schema": {
                             "type": "integer",
                             "minimum": 0,
+                            "format": "int32",
                             "default": 0
                         },
                         "in": "query",
@@ -104,6 +101,7 @@
                     {
                         "schema": {
                             "type": "integer",
+                            "format": "int32",
                             "minimum": 0,
                             "maximum": 250,
                             "default": 250
@@ -227,15 +225,14 @@
                     }
                 ],
                 "description": "This endpoint returns a Webhook rules that matching criterias defined in the Query Parameters. ",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }]
             },
+            "parameters": [],
             "post": {
                 "summary": "Add a Webhook",
                 "operationId": "AddWebhook",
@@ -272,18 +269,16 @@
                         }
                     }
                 },
-                "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "header",
-                        "name": "X-API-KEY",
-                        "description": "The API Key required for using Orange Business Services API."
-                    }
-                ],
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "header",
+                    "name": "X-API-KEY",
+                    "description": "The API Key required for using Orange Business Services API."
+                }],
                 "tags": [
-                    "Webhook Rules"
+                    "Webhook Rules API"
                 ],
                 "requestBody": {
                     "content": {
@@ -296,16 +291,23 @@
                     "description": "Information to send for creating a Webhook Rule."
                 },
                 "description": "This endpoint allows to add a new Webhook rules that will be activated in the Customer perimeter. ",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook"
-                        ]
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook"
+                    ]
+                }]
             }
         },
         "/webhooks/{webhooksId}": {
+            "parameters": [{
+                "schema": {
+                    "type": "string"
+                },
+                "name": "webhooksId",
+                "description": "Single Identifier of the Webhook.",
+                "in": "path",
+                "required": true
+            }],
             "get": {
                 "summary": "Get Webhook Details",
                 "responses": {
@@ -352,17 +354,7 @@
                 },
                 "operationId": "GetWebhook",
                 "description": "This method allows to retrieve details of a Webhook.",
-                "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "name": "webhooksId",
-                        "description": "Single Identifier of the Webhook.",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
+                "parameters": [{
                         "schema": {
                             "type": "string"
                         },
@@ -403,16 +395,14 @@
                         "description": "Flag for displaying the HATEOS links of linked ressources."
                     }
                 ],
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ],
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }],
                 "tags": [
-                    "Webhook Rules"
+                    "Webhook Rules API"
                 ]
             },
             "patch": {
@@ -461,27 +451,16 @@
                     }
                 },
                 "description": "This method allows to modify the Webhook Rule.",
-                "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "name": "webhooksId",
-                        "description": "Single Identifier of the Webhook.",
-                        "in": "path",
-                        "required": true
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
                     },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "header",
-                        "name": "X-API-KEY",
-                        "description": "The API Key required for using Orange Business Services API."
-                    }
-                ],
+                    "in": "header",
+                    "name": "X-API-KEY",
+                    "description": "The API Key required for using Orange Business Services API."
+                }],
                 "tags": [
-                    "Webhook Rules"
+                    "Webhook Rules API"
                 ],
                 "requestBody": {
                     "content": {
@@ -493,13 +472,11 @@
                     },
                     "description": "Information that can be changed"
                 },
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook"
-                        ]
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook"
+                    ]
+                }]
             },
             "delete": {
                 "summary": "Delete a Webhook Rules",
@@ -539,35 +516,14 @@
                         }
                     }
                 },
-                "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "name": "webhooksId",
-                        "description": "Single Identifier of the Webhook.",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "header",
-                        "name": "X-API-KEY",
-                        "description": "The API Key required for using Orange Business Services API."
-                    }
-                ],
                 "description": "The endpoint allows cancellation of an existing Webhook rule.",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook"
-                        ]
-                    }
-                ],
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook"
+                    ]
+                }],
                 "tags": [
-                    "Webhook Rules"
+                    "Webhook Rules API"
                 ]
             }
         },
@@ -649,14 +605,12 @@
                 },
                 "operationId": "GetStatus",
                 "description": "This endpoint returns the status of the API and the version number.",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }]
             }
         },
         "/version": {
@@ -709,14 +663,12 @@
                 },
                 "operationId": "GetVersion",
                 "description": "Return the current version of the API including Major Release number, Minor Release number and Patch number.\n\nThe Major Release number is present in the URI of the API. ",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }]
             }
         },
         "/doc": {
@@ -758,14 +710,12 @@
                     }
                 },
                 "operationId": "DownloadSwagger",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ],
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }],
                 "description": "This endpoint allows to download the current Swagger file of the API.\n\n "
             }
         },
@@ -809,24 +759,20 @@
                 },
                 "operationId": "GetMe",
                 "description": "This endpoint provides information on the connected user.",
-                "security": [
-                    {
-                        "Orange": [
-                            "b2b:webhook",
-                            "b2b:webhook:readonly"
-                        ]
-                    }
-                ],
-                "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "header",
-                        "name": "X-API-KEY",
-                        "description": "The API Key required for using Orange Business Services API."
-                    }
-                ]
+                "security": [{
+                    "Orange": [
+                        "b2b:webhook",
+                        "b2b:webhook:readonly"
+                    ]
+                }],
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "header",
+                    "name": "X-API-KEY",
+                    "description": "The API Key required for using Orange Business Services API."
+                }]
             }
         }
     },
@@ -924,6 +870,7 @@
                         "type": "integer",
                         "description": "Max Number of requests per second. *Future Use*",
                         "default": 5,
+                        "format": "int32",
                         "minimum": 1,
                         "maximum": 50
                     },
@@ -950,7 +897,8 @@
                         "enum": [
                             "BASIC_AUTHENTICATION",
                             "NONE",
-                            "OAUTH_2"
+                            "OAUTH_2",
+                            "OAUTH_2_CUSTOM1"
                         ]
                     },
                     "clientId": {
@@ -973,10 +921,9 @@
                     },
                     "grantType": {
                         "type": "string",
-                        "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication. If set as NONE no grant type will be sent in the request",
+                        "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication.",
                         "enum": [
-                            "CLIENT_CREDENTIAL",
-                            "NONE"
+                            "CLIENT_CREDENTIAL"
                         ],
                         "example": "CLIENT_CREDENTIAL"
                     },
@@ -988,68 +935,6 @@
                             "CLIENT_CREDENTIAL_IN_BODY"
                         ],
                         "example": "AUTHORIZATION_HEADER"
-                    },
-                    "requestTokenPayloadType": {
-                        "description": "Specify how to send the payload data",
-                        "type": "string",
-                        "enum": [
-                            "MULTIPART",
-                            "URLENCODED",
-                            "JSON"
-                        ],
-                        "default": "URLENCODED"
-                    },
-                    "tokenHeaderName": {
-                        "type": "string",
-                        "description": "Header name to use while sending the acquired token",
-                        "default": "Authorization"
-                    },
-                    "tokenType": {
-                        "type": "string",
-                        "description": "type of token received set as NONE if the token doesn't need a type in auth header",
-                        "default": "Bearer"
-                    },
-                    "clientIdName": {
-                        "type": "string",
-                        "description": "Name to use as the CLIENT ID in the CLIENT_CREDENTIAL_IN_BODY clientAuthentication",
-                        "default": "client_id"
-                    },
-                    "clientSecretName": {
-                        "type": "string",
-                        "description": "Name to use as the CLIENT SECRET in the CLIENT_CREDENTIAL_IN_BODY clientAuthentication",
-                        "default": "client_secret"
-                    },
-                    "tokenResponse": {
-                        "type": "object",
-                        "properties": {
-                            "accessTokenPath": {
-                                "type": "string",
-                                "description": "JSONATA to indicate where to get the access token from . e.g $ means the token is the body root",
-                                "default": "access_token"
-                            },
-                            "expiresInPath": {
-                                "type": "string",
-                                "description": "JSONATA to indicate where to get the expiration from",
-                                "default": "expires_in"
-                            },
-                            "expiresIn": {
-                                "type": "string",
-                                "description": "Can be used instead of expires_in_path if the response doesn't return expires_in in the response. can be in seconds e.g 1s or ms e.g 100ms"
-                            }
-                        }
-                    },
-                    "tokenResponseType": {
-                        "type": "string",
-                        "description": "Type of the token response",
-                        "enum": [
-                            "TEXT",
-                            "JSON"
-                        ],
-                        "default": "JSON"
-                    },
-                    "authAdditionalHeaders": {
-                        "type": "object",
-                        "description": "used if the authentication request requires additional headers to be sent"
                     }
                 }
             },
