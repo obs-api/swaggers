@@ -1006,6 +1006,8 @@
                             "b2b:order:new",
                             "b2b:order:update",
                             "b2b:order:delete",
+                            "b2b:order:new:sandbox",
+                            "b2b:order:update:sandbox",
                             "b2b:commercial-request:new",
                             "b2b:commercial-request:update",
                             "b2b:commercial-request:delete"
