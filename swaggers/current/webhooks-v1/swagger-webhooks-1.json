@@ -90,8 +90,8 @@
                     {
                         "schema": {
                             "type": "integer",
-                            "minimum": 0,
                             "format": "int32",
+                            "minimum": 0,
                             "default": 0
                         },
                         "in": "query",
@@ -232,7 +232,6 @@
                     ]
                 }]
             },
-            "parameters": [],
             "post": {
                 "summary": "Add a Webhook",
                 "operationId": "AddWebhook",
@@ -299,15 +298,6 @@
             }
         },
         "/webhooks/{webhooksId}": {
-            "parameters": [{
-                "schema": {
-                    "type": "string"
-                },
-                "name": "webhooksId",
-                "description": "Single Identifier of the Webhook.",
-                "in": "path",
-                "required": true
-            }],
             "get": {
                 "summary": "Get Webhook Details",
                 "responses": {
@@ -355,6 +345,15 @@
                 "operationId": "GetWebhook",
                 "description": "This method allows to retrieve details of a Webhook.",
                 "parameters": [{
+                        "schema": {
+                            "type": "string"
+                        },
+                        "name": "webhooksId",
+                        "description": "Single Identifier of the Webhook.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "schema": {
                             "type": "string"
                         },
@@ -452,13 +451,23 @@
                 },
                 "description": "This method allows to modify the Webhook Rule.",
                 "parameters": [{
-                    "schema": {
-                        "type": "string"
+                        "schema": {
+                            "type": "string"
+                        },
+                        "name": "webhooksId",
+                        "description": "Single Identifier of the Webhook.",
+                        "in": "path",
+                        "required": true
                     },
-                    "in": "header",
-                    "name": "X-API-KEY",
-                    "description": "The API Key required for using Orange Business Services API."
-                }],
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "name": "X-API-KEY",
+                        "description": "The API Key required for using Orange Business Services API."
+                    }
+                ],
                 "tags": [
                     "Webhook Rules API"
                 ],
@@ -516,6 +525,24 @@
                         }
                     }
                 },
+                "parameters": [{
+                        "schema": {
+                            "type": "string"
+                        },
+                        "name": "webhooksId",
+                        "description": "Single Identifier of the Webhook.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "name": "X-API-KEY",
+                        "description": "The API Key required for using Orange Business Services API."
+                    }
+                ],
                 "description": "The endpoint allows cancellation of an existing Webhook rule.",
                 "security": [{
                     "Orange": [
@@ -868,9 +895,9 @@
                     },
                     "maxRate": {
                         "type": "integer",
+                        "format": "int32",
                         "description": "Max Number of requests per second. *Future Use*",
                         "default": 5,
-                        "format": "int32",
                         "minimum": 1,
                         "maximum": 50
                     },
@@ -897,8 +924,7 @@
                         "enum": [
                             "BASIC_AUTHENTICATION",
                             "NONE",
-                            "OAUTH_2",
-                            "OAUTH_2_CUSTOM1"
+                            "OAUTH_2"
                         ]
                     },
                     "clientId": {
@@ -907,7 +933,7 @@
                     },
                     "clientSecret": {
                         "type": "string",
-                        "description": "Paswword for Basic Authentication or Client Secret for OAuth 2.0"
+                        "description": "Password for Basic Authentication or Client Secret for OAuth 2.0"
                     },
                     "tokenUrl": {
                         "type": "string",
@@ -921,11 +947,12 @@
                     },
                     "grantType": {
                         "type": "string",
-                        "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication.",
+                        "description": "Grant Type for OAUTH 2.0, Only Client Credential is supported. Ignored for Basic Authentication. If set as NONE no grant type will be sent in the request",
                         "enum": [
-                            "CLIENT_CREDENTIAL"
+                            "client_credentials",
+                            "NONE"
                         ],
-                        "example": "CLIENT_CREDENTIAL"
+                        "example": "client_credentials"
                     },
                     "clientAuthentication": {
                         "type": "string",
@@ -935,6 +962,72 @@
                             "CLIENT_CREDENTIAL_IN_BODY"
                         ],
                         "example": "AUTHORIZATION_HEADER"
+                    },
+                    "requestTokenPayloadType": {
+                        "description": "Specify how to send the payload data",
+                        "type": "string",
+                        "enum": [
+                            "MULTIPART",
+                            "URLENCODED",
+                            "JSON"
+                        ],
+                        "default": "URLENCODED"
+                    },
+                    "tokenHeaderName": {
+                        "type": "string",
+                        "description": "Header name to use while sending the acquired token",
+                        "default": "Authorization"
+                    },
+                    "tokenType": {
+                        "type": "string",
+                        "description": "type of token received set as NONE if the token doesn't need a type in auth header",
+                        "default": "Bearer"
+                    },
+                    "clientIdName": {
+                        "type": "string",
+                        "description": "Name to use as the CLIENT ID in the CLIENT_CREDENTIAL_IN_BODY clientAuthentication",
+                        "default": "client_id"
+                    },
+                    "clientSecretName": {
+                        "type": "string",
+                        "description": "Name to use as the CLIENT SECRET in the CLIENT_CREDENTIAL_IN_BODY clientAuthentication",
+                        "default": "client_secret"
+                    },
+                    "tokenResponse": {
+                        "type": "object",
+                        "properties": {
+                            "accessTokenPath": {
+                                "type": "string",
+                                "description": "JSONATA to indicate where to get the access token from . e.g $ means the token is the body root",
+                                "default": "access_token"
+                            },
+                            "expiresInPath": {
+                                "type": "string",
+                                "description": "JSONATA to indicate where to get the expiration from",
+                                "default": "expires_in"
+                            },
+                            "expiresIn": {
+                                "type": "string",
+                                "description": "Can be used instead of expires_in_path if the response doesn't return expires_in in the response. can be in seconds e.g 1s or ms e.g 100ms"
+                            }
+                        }
+                    },
+                    "tokenResponseType": {
+                        "type": "string",
+                        "description": "Type of the token response",
+                        "enum": [
+                            "TEXT",
+                            "JSON"
+                        ],
+                        "default": "JSON"
+                    },
+                    "authAdditionalHeaders": {
+                        "type": "object",
+                        "description": "used if the authentication request requires additional headers to be sent"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "description": "Scope for OAUTH 2.0"
                     }
                 }
             },
