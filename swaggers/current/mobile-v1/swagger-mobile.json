@@ -68,8 +68,8 @@
                                 "-billingAccount.id",
                                 "mobileLine.id",
                                 "-mobileLine.id",
-                                "simCard.id",
-                                "-simCard.id",
+                                "simCards.id",
+                                "-simCards.id",
                                 "plan.id",
                                 "-plan.id",
                                 "plan.name",
@@ -4609,7 +4609,7 @@
                                     "type": "string",
                                     "enum": [
                                         "MAIN_SIM",
-                                        "TWIN_SIm"
+                                        "TWIN_SIM"
                                     ]
                                 }
                             }
@@ -4873,8 +4873,8 @@
                         "description": "Type of the SIM Card.",
                         "type": "string",
                         "enum": [
-                            "GSM",
-                            "DATA"
+                            "MAIN_SIM",
+                            "TWIN_SIM"
                         ]
                     },
                     "createdAt": {
